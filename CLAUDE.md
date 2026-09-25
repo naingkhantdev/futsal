@@ -1,0 +1,140 @@
+# CLAUDE.md — Futsal Booking Platform
+
+Source of truth for this project. Full original notes: `futsal_booking_claude_master_notes (1).txt`.
+Where the notes conflict, sections 13 / 36 / 37 (multi-shop, three roles) win over the older two-role wording.
+
+## Product
+
+Multi-tenant Flutter app for booking futsal courts. Firebase backend.
+Top priorities: **no double booking**, **server-enforced authorization**, **fast, clear booking UX**.
+
+Hierarchy:
+
+```
+SUPERADMIN (platform owner)
+  +-- Shop A -> Shop Admin A -> stadiums / courts / bookings
+  +-- Shop B -> Shop Admin B -> stadiums / courts / bookings
+CUSTOMER -> sees active + listed shops, books courts, sees own data
+```
+
+## Roles — `superadmin`, `shopAdmin`, `customer`
+
+- Never one generic "admin" role.
+- Role, `shopId` and `isActive` live in `users/{uid}` (no custom claims) and are enforced by `firestore.rules`.
+  Never trust local role state, hidden UI, or route guards alone.
+- A user may only create their own doc, as an active `customer`. Nobody can change their own role / `shopId` /
+  `isActive`; only a superadmin changes those (never on their own doc). Superadmin bootstrap: set
+  `users/{uid}.role = 'superadmin'` in the Firebase console.
+- Every shop-owned record carries `shopId`. Shop admin may touch a record only if `record.shopId == users/{uid}.shopId`.
+- Suspended/unlisted shop -> no new bookings.
+
+For every new feature, state first: **PLATFORM / SHOP / CUSTOMER** scope, `shopId` impact, required Security Rule,
+and whether it can affect another shop.
+
+## Stack
+
+Flutter 3.22.2 / Dart 3.4.3 (pinned SDK — packages must stay compatible), Material 3, flutter_riverpod 2.x
+(hand-written `Provider`/`Notifier`/`AsyncNotifier`, **no riverpod_generator**), go_router, Firebase
+(Auth, Firestore, Storage, FCM, App Check), cached_network_image, freezed 2.x + json_serializable.
+
+**Firebase Spark (free) plan: no Cloud Functions.** `firestore.rules` is the only line of defence and the client
+is never trusted. The old TypeScript functions are parked in `archive/functions_blaze/` (see its README for
+restoring on Blaze). `cloud_functions` is still in pubspec / `firebase_error_mapper.dart` (leftover).
+
+Native build settings needed by the Firebase/plugin versions on Flutter 3.22 (same as the working MDR project):
+Android minSdk 24, Kotlin plugin 1.9.24, AGP 7.3.0, Gradle 7.6.3; iOS deployment target 15.0. Don't revert these.
+
+Region: Firestore database in **asia-southeast1**.
+
+Schema reference: `docs/architecture/firestore_schema.md` (partly outdated: still describes the `days/` lock doc
+and server-only writes; `firestore.rules` and its header comment are current).
+
+## Architecture
+
+```
+UI -> Riverpod Notifier -> Repository -> Data Agent -> Firebase data source
+   <- VO <- Repository (maps Response -> VO) <- Response
+```
+
+Layout:
+
+```
+lib/
+  core/           constants, errors, extensions, helpers, router, theme, utils, widgets (design system)
+  data/
+    vos/          immutable app models (freezed) used by UI/providers
+    responses/    typed Firestore / Functions DTOs (fromJson/toJson) — no raw Maps upward
+    data_agents/  abstract data agent + *_impl (calls lib/firebase)
+    repositories/ abstract repository + impl + repository providers; maps Response -> VO, errors -> AppException
+  firebase/       thin SDK wrappers: auth, firestore, storage, messaging
+  features/
+    auth/
+    customer/     home, stadiums, booking, bookings, notifications, profile
+    shop_admin/   dashboard, shop_profile, stadiums, courts, bookings, blocked_slots, customers, settings
+    superadmin/   dashboard, shops, onboarding, shop_admins, customers, bookings, announcements, settings
+archive/functions_blaze/  archived Cloud Functions (not deployed; Blaze only)
+firestore.rules, storage.rules
+```
+
+The data layer is shared (not per feature) because stadiums/courts/bookings are used by all three roles;
+this avoids duplicated Firestore queries. Each feature folder holds only `screens/`, `widgets/`, `providers/`
+(create the subfolder when the first file lands).
+
+Rules:
+- No Firebase/Firestore calls in widgets. No booking validation or auth business logic in UI.
+- Every async screen handles loading / success / empty / error. Never a blank screen.
+- Never show raw Firebase error text; map to `AppException` -> friendly message.
+- Theme, colors, spacing, radius, status badges centralized in `core/theme` / `core/widgets`. No hardcoded colors in widgets.
+
+## Firestore (top-level collections)
+
+`users`, `shops`, `stadiums` (+ `courts` subcollection), `bookings`, `blocked_slots`, notifications.
+Shop-owned docs include `shopId`. Bookings store name snapshots (customer/stadium/court).
+Booking status: pending, confirmed, rejected, cancelled, completed. Payment status (separate): unpaid, pending, paid, refunded.
+Shop status: pending, active, suspended, rejected, inactive (+ `isListed`).
+
+## Booking integrity (critical)
+
+- **Slot lock docs** `stadiums/{sid}/courts/{cid}/slots/{date}_{mmmm}`: the client writes the booking plus one slot
+  doc per covered slot in **one atomic batch/transaction**. Slot docs are create-only (never updated), so a request
+  touching a taken slot fails as a whole: no double booking, even under concurrency. Cancel/reject deletes the
+  slots in the same request; blocked slots take slots the same way.
+- `firestore.rules` validates: auth, active user, permission, shop active+listed, stadium/court exist and active,
+  real date (future, < 30 days ahead), opening hours, slot alignment, max 4 slots, all slots held, and that
+  the client's price equals `hourlyPrice * minutes / 60`. The client pre-computes values the rules will accept
+  (`booking_request_builder.dart`) but nothing it sends is trusted.
+- Rules mirrors live in `lib/core/constants/booking_policy.dart` (`blockingStatuses` = pending + confirmed,
+  status/payment transitions, `maxSlotsPerBooking`, Asia/Yangon UTC+06:30). Change both together.
+- Overlap: `existingStart < requestedEnd && existingEnd > requestedStart`.
+- Slot grid must never move: stadium `openMinute` is a whole hour, court `slotMinutes` is 30 or 60 and immutable
+  after create (`lib/core/constants/venue_policy.dart` mirrors the rules). Otherwise new lock docs could miss old ones.
+- Stadium `isPublished` = shop active + listed + stadium active, client-maintained: stadium writes re-derive it, and
+  the superadmin's shop status/listing change re-syncs the shop's stadiums in the same batch.
+- Client price, role, payment status and availability are never authoritative.
+- Slot states: available, selected, booked, blocked, unavailable — never conveyed by color alone.
+
+## Commands — do NOT run automatically
+
+Do not run `flutter analyze`, `flutter test`, `flutter run`, `flutter build`, or build_runner unless the user asks.
+When codegen is needed, tell the user to run:
+
+```
+dart run build_runner build --delete-conflicting-outputs
+```
+
+Never hand-edit `*.g.dart` / `*.freezed.dart`.
+
+## Workflow per feature
+
+1. Understand (inspect code) 2. Plan (files, models, Firebase, providers, routes, security scope)
+3. Implement incrementally 4. Review (architecture, security, booking integrity, roles, UX states)
+5. Report: what changed, files, decisions, commands the user must run, open issues.
+
+Specialist agents: `.claude/agents/senior_flutter_developer.md`, `.claude/agents/senior_ui_ux_designer.md`.
+
+## Phases
+
+1 Setup/theme/router · 2 Auth + roles + guards · 3 Models · 4 Shop admin stadiums · 5 Courts ·
+6 Discovery · 7 Stadium details · 8 Booking flow · 9 Booking validation (in rules) · 10 Customer history ·
+11 Admin booking mgmt · 12 Notifications · 13 Storage · 14 Dashboards · 15 Rules audit · 16 Polish · 17 Tests/prod.
+Superadmin shop onboarding slots in alongside Phase 2–4.

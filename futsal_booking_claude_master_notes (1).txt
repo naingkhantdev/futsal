@@ -1,0 +1,2100 @@
+FUTSAL STADIUM BOOKING APP
+MASTER PROJECT NOTES + CLAUDE CODE INSTRUCTIONS
+================================================
+
+PROJECT GOAL
+------------
+
+Build a production-quality Flutter mobile application for booking futsal football stadiums/courts.
+
+The application has two main roles:
+
+1. CUSTOMER
+2. ADMIN
+
+The backend is Firebase.
+
+The application should be designed as a real booking product, not as a simple demo.
+
+The most important technical requirement is preventing double booking and keeping authorization/business rules secure.
+
+The most important UX requirement is making stadium discovery and booking fast, simple, and clear.
+
+
+================================================
+1. TECHNOLOGY STACK
+================================================
+
+FRONTEND
+--------
+
+- Flutter
+- Dart
+- Material 3
+- Riverpod
+- GoRouter
+- Firebase SDKs
+- Cloud Firestore
+- Firebase Authentication
+- Firebase Storage
+- Firebase Cloud Messaging
+- Firebase Cloud Functions
+- Firebase App Check where appropriate
+- Cached network image solution
+- Freezed/json_serializable when useful
+
+Use a centralized theme and reusable widgets.
+
+Do not put Firebase queries directly inside UI widgets.
+
+
+BACKEND
+-------
+
+Firebase:
+
+- Firebase Authentication
+- Cloud Firestore
+- Firebase Storage
+- Firebase Cloud Messaging
+- Firebase Cloud Functions
+- Firebase Security Rules
+- Firebase App Check where appropriate
+
+
+================================================
+2. APPLICATION ARCHITECTURE
+================================================
+
+Use this application flow:
+
+UI
+-> Riverpod Provider / Notifier
+-> Repository
+-> Data Agent
+-> Firebase / API
+-> Response / Model / VO
+-> Repository
+-> Provider
+-> UI
+
+
+PREFERRED FLOW
+--------------
+
+VO
+-> Response
+-> API / Firebase data source
+-> Data Agent
+-> Data Agent Impl
+-> Repository
+-> Repository Provider
+-> GoRouter
+-> UI
+
+Keep the exact responsibility of each layer clear.
+
+
+RULES
+-----
+
+UI:
+- UI only
+- no direct Firestore logic
+- no authentication business logic
+- no booking validation logic
+
+Provider / Notifier:
+- state management
+- UI-facing async state
+- coordinates repository operations
+
+Repository:
+- domain-facing data access
+- hides Firebase implementation
+- converts lower-level responses into application models
+
+Data Agent:
+- defines data operations
+- separates application logic from Firebase implementation
+
+Data Agent Impl:
+- actual Firebase implementation
+
+Response / VO:
+- typed data structures
+- do not use unstructured Map everywhere
+
+API / Firebase Data Source:
+- Firebase SDK interactions
+- Firestore reads/writes
+- Storage operations
+- Auth operations
+
+
+================================================
+3. PROJECT STRUCTURE
+================================================
+
+Recommended structure:
+
+lib/
+|
++-- core/
+|   +-- constants/
+|   +-- errors/
+|   +-- extensions/
+|   +-- helpers/
+|   +-- router/
+|   +-- theme/
+|   +-- utils/
+|   +-- widgets/
+|
++-- features/
+|   +-- auth/
+|   |   +-- data/
+|   |   +-- domain/
+|   |   +-- presentation/
+|   |
+|   +-- customer/
+|   |   +-- home/
+|   |   +-- stadiums/
+|   |   +-- booking/
+|   |   +-- bookings/
+|   |   +-- notifications/
+|   |   +-- profile/
+|   |
+|   +-- admin/
+|       +-- dashboard/
+|       +-- stadiums/
+|       +-- courts/
+|       +-- bookings/
+|       +-- customers/
+|       +-- notifications/
+|       +-- settings/
+|
++-- firebase/
+|   +-- auth/
+|   +-- firestore/
+|   +-- storage/
+|   +-- messaging/
+|
++-- main.dart
+
+
+Do not restructure the whole project unnecessarily.
+
+First inspect the existing code and reuse patterns that are already good.
+
+
+================================================
+4. USER ROLES
+================================================
+
+Roles:
+
+- customer
+- admin
+
+Every authenticated user has a role.
+
+The role must NOT be trusted from local Flutter state.
+
+The authoritative role must be stored securely in Firebase and enforced with Firebase Security Rules and server-side logic where appropriate.
+
+Never allow a customer to make themselves an admin.
+
+
+================================================
+5. AUTHENTICATION
+================================================
+
+Use Firebase Authentication.
+
+Support:
+
+- Registration
+- Login
+- Logout
+- Forgot password
+- Password reset
+- Persistent login session
+- Authentication state listener
+
+Flow:
+
+Unauthenticated
+-> Login/Register
+
+Authenticated customer
+-> Customer application
+
+Authenticated admin
+-> Admin dashboard
+
+
+GoRouter should protect routes.
+
+Do not rely only on UI hiding to protect admin functionality.
+
+
+================================================
+6. USER MODEL
+================================================
+
+Firestore:
+
+users/{userId}
+
+Suggested fields:
+
+- id
+- name
+- email
+- phone
+- profileImage
+- role
+- isActive
+- createdAt
+- updatedAt
+
+
+CUSTOMER MUST NOT MODIFY:
+
+- role
+- isAdmin
+- permissions
+- account status
+
+
+================================================
+7. STADIUM MODEL
+================================================
+
+A stadium is a futsal venue.
+
+Firestore example:
+
+stadiums/{stadiumId}
+
+Suggested fields:
+
+- id
+- name
+- description
+- address
+- township
+- city
+- latitude
+- longitude
+- images
+- facilities
+- openingTime
+- closingTime
+- isActive
+- createdAt
+- updatedAt
+
+
+FACILITIES EXAMPLES
+
+- Parking
+- Shower
+- Changing Room
+- Drinking Water
+- Flood Lights
+- Seating
+- Restroom
+- Cafe
+- Equipment rental
+
+
+================================================
+8. COURT MODEL
+================================================
+
+A stadium can have multiple futsal courts.
+
+Example:
+
+stadiums/{stadiumId}/courts/{courtId}
+
+Suggested fields:
+
+- id
+- stadiumId
+- name
+- description
+- surfaceType
+- capacity
+- hourlyPrice
+- images
+- isActive
+- createdAt
+- updatedAt
+
+
+Examples:
+
+- Court 1
+- Court 2
+- Court 3
+- VIP Court
+
+
+================================================
+9. BOOKING MODEL
+================================================
+
+Example:
+
+bookings/{bookingId}
+
+Suggested fields:
+
+- id
+- customerId
+- stadiumId
+- courtId
+- bookingDate
+- startTime
+- endTime
+- totalHours
+- pricePerHour
+- totalPrice
+- status
+- paymentStatus
+- customerNameSnapshot
+- stadiumNameSnapshot
+- courtNameSnapshot
+- createdAt
+- updatedAt
+
+
+BOOKING STATUS
+
+- pending
+- confirmed
+- rejected
+- cancelled
+- completed
+
+
+PAYMENT STATUS
+
+- unpaid
+- pending
+- paid
+- refunded
+
+
+Keep payment state separate from booking state.
+
+
+================================================
+10. BOOKING LOGIC
+================================================
+
+Customer chooses:
+
+1. Stadium
+2. Court
+3. Date
+4. Start time
+5. End time
+6. Review
+7. Confirm
+
+
+PRICE
+
+Example:
+
+pricePerHour * totalHours = totalPrice
+
+
+IMPORTANT:
+
+The client-provided total price must NEVER be considered authoritative.
+
+The backend must calculate or validate the final price.
+
+A malicious client must not be able to modify a price from the app.
+
+
+================================================
+11. DOUBLE BOOKING PREVENTION
+================================================
+
+THIS IS A CRITICAL REQUIREMENT.
+
+Flutter-side availability checking is NOT enough.
+
+Two users may open the same slot at the same time.
+
+Therefore final booking confirmation must be protected with server-side logic.
+
+Use appropriate Firestore transaction / Cloud Function logic.
+
+Before confirming a booking:
+
+1. Confirm user is authenticated.
+2. Confirm user has permission.
+3. Confirm stadium exists.
+4. Confirm court exists.
+5. Confirm court is active.
+6. Validate booking date.
+7. Validate opening hours.
+8. Validate start time.
+9. Validate end time.
+10. Validate duration.
+11. Validate slot is not blocked.
+12. Check for overlapping booking.
+13. Calculate/validate price on backend.
+36. Create booking atomically.
+15. Return success or booking conflict.
+
+
+OVERLAP RULE
+
+Two bookings overlap when:
+
+existingStart < requestedEnd
+AND
+existingEnd > requestedStart
+
+Cancelled/rejected bookings should normally not block availability.
+
+Confirmed/pending bookings may block availability depending on the business policy.
+
+The final business rule must be explicit in the implementation.
+
+
+================================================
+12. TIME SLOT SYSTEM
+================================================
+
+Support configurable time slots.
+
+Example:
+
+08:00 - 09:00
+09:00 - 10:00
+10:00 - 11:00
+11:00 - 12:00
+...
+
+The system should generate availability according to:
+
+- stadium operating hours
+- court availability
+- existing bookings
+- blocked slots
+- maintenance periods
+- holidays if supported
+
+
+SLOT STATES
+
+- available
+- selected
+- booked
+- blocked
+- unavailable
+
+
+Never communicate slot state only through color.
+
+
+================================================
+13. MULTI-SHOP / SUPERVISOR / SUPERADMIN SYSTEM
+================================================
+
+The application is a multi-shop futsal booking platform.
+
+The platform owner is the SUPERADMIN.
+
+The Superadmin is the platform-level administrator who owns/operates the app and controls which futsal shops are onboarded and listed in the app.
+
+Each futsal shop has its own SHOP ADMIN.
+
+Roles:
+
+- superadmin
+- shopAdmin
+- customer
+
+ROLE RESPONSIBILITIES
+---------------------
+
+SUPERADMIN
+----------
+
+The Superadmin represents the platform owner.
+
+Superadmin can:
+
+- Create futsal shops
+- Review shop onboarding requests
+- Approve shops
+- Reject shops
+- Activate/deactivate shops
+- Suspend shops
+- Edit shop information
+- Manage all shops
+- Assign/create shop admins
+- Invite shop admins
+- Remove/revoke shop admin access
+- Reset/revoke admin access where appropriate
+- View all customers
+- View all bookings across all shops
+- View all stadium/court data across the platform
+- View platform-wide revenue/statistics
+- View shop-specific revenue/statistics
+- View shop performance
+- Control whether a shop is visible/listed in the customer app
+- Manage platform-level settings
+- Manage platform announcements
+- Manage platform-wide booking rules where appropriate
+- Manage shop onboarding status
+- Control collaboration between the platform and participating futsal shops
+
+SUPERADMIN IS THE ONLY PLATFORM-LEVEL ROLE.
+
+SHOP ADMIN
+----------
+
+A Shop Admin belongs to one specific futsal shop.
+
+Shop Admin can:
+
+- Manage their assigned shop profile where permitted
+- Manage their stadium/venue information
+- Manage their courts
+- Manage court pricing
+- Manage operating hours
+- Manage blocked slots
+- Manage bookings for their shop
+- Confirm/reject/cancel eligible bookings
+- Mark bookings completed
+- View customers who booked their shop
+- View booking history for their shop
+- View shop revenue/statistics
+- Upload stadium/court images
+- Manage shop-specific notifications/settings
+
+Shop Admin MUST NOT:
+
+- access another shop's private management data
+- create another shop
+- assign themselves Superadmin
+- change their own role
+- access platform-wide administration
+- modify another shop's admin permissions
+- access unrelated shops' revenue
+- change platform security settings
+- change platform-wide configuration unless explicitly authorized
+
+CUSTOMER
+--------
+
+Customers can:
+
+- Discover active/listed shops
+- Browse stadiums/courts
+- Book available slots
+- View their own bookings
+- Manage their own profile
+
+MULTI-TENANT RULE
+-----------------
+
+Every shop-admin-owned record must be associated with a shopId.
+
+Examples:
+
+- users.shopId
+- stadiums.shopId
+- courts.shopId
+- bookings.shopId
+- blockedSlots.shopId
+- shopNotifications.shopId
+
+A Shop Admin can only manage records where:
+
+record.shopId == authenticatedUser.shopId
+
+The Superadmin can access all shops.
+
+Customers can only access customer-safe/public data and their own private booking/profile data.
+
+SHOP MODEL
+----------
+
+Use a top-level Firestore collection:
+
+shops/{shopId}
+
+Suggested fields:
+
+- id
+- name
+- slug
+- description
+- logo
+- coverImage
+- phone
+- email
+- address
+- township
+- city
+- latitude
+- longitude
+- status
+- isListed
+- ownerName
+- ownerPhone
+- adminIds
+- operatingHours
+- createdAt
+- updatedAt
+- approvedAt
+- approvedBy
+- suspendedAt
+- suspendedReason
+
+SHOP STATUS
+-----------
+
+Possible states:
+
+- pending
+- active
+- suspended
+- rejected
+- inactive
+
+Only active + listed shops should normally appear in the customer discovery experience.
+
+SHOP ONBOARDING FLOW
+--------------------
+
+Potential flow:
+
+Shop requests/contacts platform
+-> Superadmin reviews shop
+-> Superadmin approves
+-> Superadmin creates/invites Shop Admin
+-> Shop Admin completes shop setup
+-> Superadmin activates/list shop
+-> Customers can discover and book the shop
+
+The exact onboarding UX can be refined during implementation.
+
+ADMIN INVITATION
+----------------
+
+Shop Admin access should be provisioned by the Superadmin.
+
+Do not allow a normal user to simply set their own role to shopAdmin.
+
+Use secure server-side/admin-controlled role assignment.
+
+SUPERADMIN AUTHORIZATION
+------------------------
+
+Superadmin authorization must be enforced server-side.
+
+Do not rely only on:
+
+- hidden UI
+- local role variables
+- route guards
+- user-editable Firestore fields
+
+Use secure Firebase authorization mechanisms, such as custom claims and/or server-controlled role records, together with Firestore Security Rules and Cloud Functions where appropriate.
+
+Do not store sensitive platform privileges in a user-editable field and trust it blindly.
+
+DASHBOARDS
+----------
+
+SUPERADMIN DASHBOARD
+
+Show platform-wide:
+
+- Total shops
+- Active shops
+- Pending shops
+- Suspended shops
+- Total customers
+- Total bookings
+- Today's bookings
+- Upcoming bookings
+- Total revenue
+- Shop performance summaries
+- Recent onboarding requests
+- Recent booking activity
+
+SHOP ADMIN DASHBOARD
+
+Show only the assigned shop:
+
+- Today's bookings
+- Pending bookings
+- Confirmed bookings
+- Completed bookings
+- Cancelled bookings
+- Revenue
+- Active courts
+- Upcoming bookings
+- Recent customers
+
+SECURITY MODEL
+--------------
+
+The system is multi-tenant.
+
+Every protected shop-level read/write must be scoped by shopId.
+
+Superadmin:
+- platform scope
+
+Shop Admin:
+- single-shop scope
+
+Customer:
+- public customer-facing scope + own private data
+
+Security Rules must prevent cross-shop access.
+
+Never solve multi-tenant security only in Flutter.
+
+================================================
+================================================
+14. CUSTOMER FEATURES
+================================================
+
+CUSTOMER HOME
+-------------
+
+Include:
+
+- Greeting
+- Search stadium
+- Nearby stadiums if location is enabled
+- Popular stadiums
+- Recommended stadiums
+- Quick booking
+- Upcoming booking
+- Recent booking
+- Notifications
+
+
+EXPLORE STADIUMS
+----------------
+
+Support:
+
+- Search
+- City filter
+- Township filter
+- Price filter
+- Facilities filter
+- Availability filter
+- Sort options
+
+Do not add filters that are not useful.
+
+
+STADIUM DETAILS
+---------------
+
+Show:
+
+- Large stadium image gallery
+- Stadium name
+- Location
+- Facilities
+- Opening hours
+- Courts
+- Price
+- Availability
+- Map/location
+- Book button
+
+
+BOOKING
+-------
+
+Flow:
+
+Stadium Details
+-> Select Date
+-> Select Court
+-> Select Time
+-> Review
+-> Confirm
+-> Booking Confirmation
+
+
+BOOKING REVIEW
+--------------
+
+Show:
+
+- Stadium
+- Court
+- Date
+- Start time
+- End time
+- Duration
+- Price per hour
+- Total price
+- Booking status
+- Important policy
+
+
+BOOKING CONFIRMATION
+--------------------
+
+Show:
+
+- Booking ID
+- Stadium
+- Court
+- Date
+- Time
+- Total amount
+- Status
+
+
+Allow:
+
+- View booking details
+- Add reminder where supported
+- Return to home
+
+
+MY BOOKINGS
+-----------
+
+Separate or filter:
+
+- Upcoming
+- Pending
+- Confirmed
+- Completed
+- Cancelled
+
+
+PROFILE
+-------
+
+Include:
+
+- Name
+- Email
+- Phone
+- Profile image
+- Edit profile
+- Change password
+- Logout
+
+
+================================================
+14. ADMIN FEATURES
+================================================
+
+ADMIN DASHBOARD
+---------------
+
+Show:
+
+- Today's bookings
+- Upcoming bookings
+- Completed bookings
+- Cancelled bookings
+- Pending bookings
+- Revenue
+- Active stadiums
+- Active courts
+- Customer count
+
+
+STADIUM MANAGEMENT
+------------------
+
+Admin can:
+
+- Create stadium
+- Edit stadium
+- Activate/deactivate stadium
+- Delete/archive stadium where appropriate
+- Upload images
+- Edit address
+- Edit facilities
+- Configure opening hours
+
+
+COURT MANAGEMENT
+----------------
+
+Admin can:
+
+- Create court
+- Edit court
+- Activate/deactivate court
+- Set hourly price
+- Upload images
+- Configure court information
+
+
+BOOKING MANAGEMENT
+------------------
+
+Admin can:
+
+- View bookings
+- Search bookings
+- Filter by date
+- Filter by stadium
+- Filter by court
+- Filter by status
+- Confirm booking
+- Reject booking
+- Cancel booking
+- Mark completed
+- View customer details
+- Block a time period
+
+
+CUSTOMER MANAGEMENT
+-------------------
+
+Admin can:
+
+- Search customers
+- View customers
+- View customer profile
+- View booking history
+- Activate/deactivate account where appropriate
+
+
+================================================
+15. BLOCKED TIME / MAINTENANCE
+================================================
+
+Admin must be able to block a court for:
+
+- Maintenance
+- Private event
+- Cleaning
+- Tournament
+- Temporary closure
+
+
+Suggested model:
+
+blocked_slots/{blockedSlotId}
+
+Fields:
+
+- id
+- stadiumId
+- courtId
+- date
+- startTime
+- endTime
+- reason
+- createdBy
+- createdAt
+
+
+A blocked slot must prevent new bookings.
+
+
+================================================
+16. NOTIFICATIONS
+================================================
+
+Use Firebase Cloud Messaging.
+
+Potential notifications:
+
+- Booking created
+- Booking confirmed
+- Booking rejected
+- Booking cancelled
+- Booking reminder
+- Booking completed
+- Admin announcement
+
+
+Do not put sensitive notification logic entirely in Flutter.
+
+Use backend/server-side logic where appropriate.
+
+
+================================================
+17. FIREBASE STORAGE
+================================================
+
+Use Storage for:
+
+- Stadium images
+- Court images
+- Profile images
+
+
+Before upload:
+
+- Validate file type
+- Validate file size
+- Compress/resize images
+- Use predictable folder structure
+
+
+Example:
+
+stadiums/{stadiumId}/images/...
+courts/{courtId}/images/...
+users/{userId}/profile/...
+
+
+Do not store unnecessarily huge images.
+
+
+================================================
+18. FIRESTORE SECURITY
+================================================
+
+Security Rules must enforce authorization.
+
+CUSTOMER:
+
+Can:
+- read active stadiums
+- read active courts
+- read their own profile
+- create their own eligible booking
+- read their own bookings
+- cancel their own eligible booking
+
+Cannot:
+- modify stadiums
+- modify courts
+- modify pricing
+- modify another user's bookings
+- modify roles
+- access admin-only data
+- mark their own booking as paid
+- change authoritative booking price
+
+
+ADMIN:
+
+Can, according to rules:
+- manage stadiums
+- manage courts
+- manage bookings
+- manage blocked slots
+- manage permitted customer/account records
+- access admin dashboard data
+
+
+Do not rely on:
+
+- hidden buttons
+- hidden routes
+- local role state
+
+
+Security must exist at Firebase Rules/server level.
+
+
+================================================
+19. UI / UX DESIGN
+================================================
+
+Design direction:
+
+- Premium
+- Modern
+- Sports-focused
+- Clean
+- Professional
+- Minimal
+- Strong imagery
+- Fast booking
+- Clear hierarchy
+
+
+AVOID:
+
+- clutter
+- too many colors
+- excessive gradients
+- excessive shadows
+- unnecessary animations
+- tiny text
+- confusing navigation
+- overly complicated forms
+
+
+CUSTOMER NAVIGATION
+-------------------
+
+Recommended:
+
+Home
+Explore
+Bookings
+Notifications
+Profile
+
+
+ADMIN NAVIGATION
+----------------
+
+Recommended:
+
+Dashboard
+Stadiums
+Courts
+Bookings
+Customers
+Settings
+
+
+CUSTOMER UX PRIORITY
+
+The most important user journey is:
+
+Find stadium
+-> Understand stadium
+-> See available court
+-> Select date
+-> Select slot
+-> Review price
+-> Confirm
+-> See confirmation
+
+
+The booking CTA should always be easy to understand.
+
+
+================================================
+20. DESIGN SYSTEM
+================================================
+
+Centralize:
+
+- ColorScheme
+- Typography
+- Spacing
+- Radius
+- Button styles
+- Card styles
+- Input styles
+- Chips
+- Status badges
+- Dialogs
+- Bottom sheets
+- Navigation
+
+
+Do not hardcode colors repeatedly inside widgets.
+
+
+ACCESSIBILITY
+
+Consider:
+
+- readable typography
+- accessible contrast
+- large touch targets
+- clear labels
+- semantic state
+- helpful error messages
+- not relying only on color
+
+
+================================================
+21. STATE MANAGEMENT
+================================================
+
+Use Riverpod.
+
+Choose the correct provider type:
+
+- Provider
+- FutureProvider
+- StreamProvider
+- Notifier
+- AsyncNotifier
+
+
+Avoid unnecessary global mutable state.
+
+Authentication must be reactive.
+
+Booking availability should refresh/update appropriately.
+
+
+================================================
+22. ROUTING
+================================================
+
+Use GoRouter.
+
+Suggested routes:
+
+/login
+/register
+/forgot-password
+
+/customer/home
+/customer/stadiums
+/customer/stadium/:id
+/customer/booking
+/customer/bookings
+/customer/bookings/:id
+/customer/profile
+/customer/notifications
+
+/admin/dashboard
+/admin/stadiums
+/admin/courts
+/admin/bookings
+/admin/customers
+/admin/settings
+
+
+Use route guards for authentication and role authorization.
+
+
+================================================
+23. ERROR HANDLING
+================================================
+
+Create consistent application errors.
+
+Examples:
+
+- authentication failed
+- permission denied
+- network failure
+- Firebase error
+- booking conflict
+- court unavailable
+- stadium unavailable
+- invalid booking time
+- invalid date
+- account disabled
+- unknown error
+
+
+Never show raw Firebase exception text directly to normal users.
+
+Convert errors to understandable UI messages.
+
+
+================================================
+24. ASYNC UI STATES
+================================================
+
+Every asynchronous screen/operation needs:
+
+- loading
+- success
+- empty
+- error
+
+
+Do not show a blank screen while waiting for Firebase.
+
+
+================================================
+25. CODE QUALITY
+================================================
+
+Follow:
+
+- Dart conventions
+- SOLID where useful
+- Clean Architecture principles where useful
+- DRY
+- dependency inversion
+- reusable components
+- meaningful naming
+- immutable models where practical
+
+
+Avoid:
+
+- giant widgets
+- duplicated Firestore queries
+- magic numbers
+- hardcoded business rules
+- unnecessary abstractions
+- massive refactors without reason
+
+
+================================================
+26. GENERATED FILE RULE
+================================================
+
+NEVER manually edit generated files.
+
+Examples:
+
+*.g.dart
+*.freezed.dart
+
+
+When generation is required, tell the user to run:
+
+flutter pub run build_runner build --delete-conflicting-outputs
+
+
+Do NOT automatically run build_runner.
+
+The user will run build_runner manually.
+
+
+================================================
+27. TESTING RULE
+================================================
+
+Important business logic should have tests.
+
+Prioritize:
+
+- booking overlap detection
+- price calculation
+- booking cancellation logic
+- authentication state
+- authorization
+- repository logic
+- data mapping
+- date/time validation
+
+
+DO NOT automatically run:
+
+flutter analyze
+flutter test
+flutter run
+flutter build
+flutter pub run build_runner
+
+
+Only run these commands when the user explicitly asks.
+
+================================================
+28. SENIOR FLUTTER DEVELOPER AGENT
+================================================
+
+ROLE
+----
+
+You are the Senior Flutter Developer.
+
+RESPONSIBILITIES
+----------------
+
+- Flutter architecture
+- Dart implementation
+- Riverpod
+- GoRouter
+- Firebase integration
+- Firestore
+- Storage
+- Authentication
+- FCM
+- Cloud Functions integration
+- Security Rules
+- Booking logic
+- Repository design
+- Data agents
+- Models/VOs
+- Error handling
+- Performance
+- Testing
+- Code review
+
+
+PRIORITY ORDER
+--------------
+
+1. Security
+2. Correctness
+3. Booking integrity
+4. Maintainability
+5. Scalability
+6. Performance
+7. Developer experience
+
+
+BEHAVIOR
+--------
+
+Before changing code:
+
+1. Inspect the existing project.
+2. Understand the architecture.
+3. Find related files.
+4. Reuse good existing patterns.
+5. Identify risks.
+6. Plan the smallest clean change.
+7. Implement.
+8. Review the result.
+
+Never rewrite the whole project without a strong reason.
+
+Never put Firebase queries directly into widgets.
+
+Never trust client-side price/role/payment state.
+
+Never manually edit generated files.
+
+
+================================================
+29. SENIOR UI/UX DESIGNER AGENT
+================================================
+
+ROLE
+----
+
+You are the Senior UI/UX Designer.
+
+RESPONSIBILITIES
+----------------
+
+- Information architecture
+- Customer journey
+- Booking flow
+- Admin dashboard UX
+- Design system
+- Typography
+- Color system
+- Spacing
+- Components
+- Responsive design
+- Accessibility
+- Loading states
+- Empty states
+- Error states
+- Confirmation states
+- Micro-interactions
+
+
+DESIGN GOAL
+-----------
+
+Create a premium, modern, intuitive futsal booking application.
+
+Customer flow must be easy.
+
+Admin flow must be efficient.
+
+The interface should look professional and production-ready rather than like a tutorial project.
+
+
+================================================
+30. AGENT COLLABORATION
+================================================
+
+For important features:
+
+1. UI/UX Designer defines user experience.
+2. Flutter Developer checks technical feasibility.
+3. Developer implements.
+4. Developer reviews architecture/security.
+5. UI/UX Designer reviews consistency/usability.
+6. Developer fixes important issues.
+
+
+For booking features, both agents must pay special attention to:
+
+- slot clarity
+- date handling
+- overlap
+- loading states
+- conflict messages
+- confirmation feedback
+- cancellation
+- admin control
+
+
+================================================
+31. DEVELOPMENT PHASES
+================================================
+
+PHASE 1
+-------
+
+Project inspection
+Firebase configuration
+Architecture
+Theme
+Core utilities
+GoRouter
+
+
+PHASE 2
+-------
+
+Authentication
+Registration
+Login
+Forgot password
+User profile
+Roles
+Route guards
+
+
+PHASE 3
+-------
+
+Firestore models
+Users
+Stadiums
+Courts
+Bookings
+Blocked slots
+
+
+PHASE 4
+-------
+
+Admin stadium management
+
+
+PHASE 5
+-------
+
+Admin court management
+
+
+PHASE 6
+-------
+
+Customer stadium discovery
+Search
+Filters
+Stadium list
+
+
+PHASE 7
+-------
+
+Stadium details
+Images
+Facilities
+Courts
+Pricing
+
+
+PHASE 8
+-------
+
+Booking flow
+Date
+Court
+Time slots
+Review
+
+
+PHASE 9
+-------
+
+Server-side booking validation
+Double-booking prevention
+Transactions / Cloud Functions
+Price validation
+
+
+PHASE 10
+--------
+
+Customer booking history
+Upcoming
+Completed
+Cancelled
+
+
+PHASE 11
+--------
+
+Admin booking management
+
+
+PHASE 12
+--------
+
+Notifications
+
+
+PHASE 13
+--------
+
+Storage/image management
+
+
+PHASE 14
+--------
+
+Admin dashboard
+Statistics
+
+
+PHASE 15
+--------
+
+Security Rules audit
+
+
+PHASE 16
+--------
+
+UI/UX polish
+
+
+PHASE 17
+--------
+
+Testing
+Production preparation
+
+
+================================================
+32. DEVELOPMENT WORKFLOW FOR CLAUDE
+================================================
+
+For every feature use:
+
+STEP 1 - UNDERSTAND
+
+Inspect existing code and requirements.
+
+
+STEP 2 - PLAN
+
+Explain:
+
+- affected files
+- models
+- Firebase changes
+- UI changes
+- provider changes
+- repository changes
+- navigation changes
+- security implications
+
+
+STEP 3 - IMPLEMENT
+
+Implement incrementally.
+
+Do not generate unnecessary files.
+
+
+STEP 4 - REVIEW
+
+Check:
+
+- architecture
+- security
+- booking integrity
+- UI consistency
+- error handling
+- edge cases
+- role permissions
+
+
+STEP 5 - REPORT
+
+Tell the user:
+
+- what changed
+- files changed
+- important decisions
+- commands the user must run manually
+- remaining issues
+
+
+================================================
+33. MASTER PROMPT TO GIVE CLAUDE
+================================================
+
+COPY THIS PROMPT INTO CLAUDE:
+
+Read the project CLAUDE.md completely before doing anything.
+
+You are working on a Flutter Futsal Stadium Booking App.
+
+The project has two roles:
+
+1. Customer
+2. Admin
+
+Firebase is the backend.
+
+You must follow all architecture, security, booking, UI/UX, and development rules defined in CLAUDE.md.
+
+Act as a senior engineering team with these two specialist roles:
+
+- Senior Flutter Developer
+- Senior UI/UX Designer
+
+
+IMPORTANT WORKING RULES
+
+1. Do not blindly generate the whole application.
+2. First inspect the existing Flutter project.
+3. Understand the current structure and dependencies.
+4. Reuse good existing architecture.
+5. Do not perform unnecessary large refactors.
+6. Keep UI, state management, repository, data agent, and Firebase code separated.
+7. Never put direct Firestore logic inside widgets.
+8. Never trust client-provided role, price, payment status, or booking availability.
+9. Booking conflict prevention is a critical requirement.
+10. Final booking validation must happen server-side.
+11. Use Firestore transactions / Cloud Functions where appropriate.
+12. Keep Firebase Security Rules strict.
+13. Never manually modify *.g.dart or *.freezed.dart.
+14. If build_runner is needed, tell me the command and let me run it.
+15. Do not automatically run:
+    - flutter analyze
+    - flutter test
+    - flutter run
+    - flutter build
+    - build_runner
+16. Only run those when I explicitly request them.
+
+
+ARCHITECTURE
+
+Follow:
+
+UI
+-> Riverpod
+-> Repository
+-> Data Agent
+-> Firebase/API
+-> Response/VO
+-> Repository
+-> Provider
+-> UI
+
+Use GoRouter for navigation and route protection.
+
+
+ROLES
+
+Customer:
+- browse stadiums
+- search/filter
+- view stadium details
+- select date
+- select court
+- select time slot
+- review booking
+- confirm booking
+- view booking history
+- cancel eligible bookings
+- notifications
+- profile
+
+Admin:
+- dashboard
+- stadium management
+- court management
+- pricing management
+- booking management
+- blocked slot management
+- customer management
+- statistics
+- settings
+
+
+BOOKING SECURITY
+
+A booking consists of:
+
+- customer
+- stadium
+- court
+- date
+- start time
+- end time
+- duration
+- price
+- status
+- payment status
+
+Prevent double booking.
+
+Use overlap detection:
+
+existingStart < requestedEnd
+AND
+existingEnd > requestedStart
+
+Do not rely only on client availability.
+
+Calculate or validate the final price server-side.
+
+
+FIREBASE
+
+Use:
+
+- Authentication
+- Firestore
+- Storage
+- Cloud Functions
+- FCM
+- Security Rules
+- App Check where useful
+
+
+UI/UX
+
+Create a modern premium sports booking application.
+
+Customer booking flow:
+
+Discover
+-> Stadium Details
+-> Date
+-> Court
+-> Time
+-> Review
+-> Confirm
+-> Confirmation
+
+Make available/booked/selected/blocked states extremely clear.
+
+Admin UI should prioritize operational efficiency.
+
+
+FIRST TASK
+
+Do NOT start implementing a large amount of code.
+
+First inspect:
+
+- Flutter version
+- Dart version
+- pubspec.yaml
+- Android/iOS setup
+- Firebase configuration
+- lib folder structure
+- existing dependencies
+- existing architecture
+- existing routes
+- existing state management
+
+Then give me:
+
+A. Current project assessment
+B. Recommended architecture
+C. Firestore collection/document structure
+D. Authentication + role design
+E. Booking data model
+F. Booking conflict prevention design
+G. Security Rules requirements
+H. Cloud Functions requirements
+I. Customer screen map
+J. Admin screen map
+K. UI/UX design system recommendation
+L. Missing dependencies/configuration
+M. Development phases
+
+Do not implement Phase 1 until I tell you to proceed.
+
+
+================================================
+34. FIRST CLAUDE COMMANDS
+================================================
+
+WINDOWS POWERSHELL
+-------------------
+
+Create the project instruction file:
+
+New-Item CLAUDE.md -ItemType File
+
+
+Create agent directory:
+
+New-Item -ItemType Directory -Force .claude\agents
+
+
+Create Senior Flutter Developer agent:
+
+New-Item .claude\agents\senior_flutter_developer.md -ItemType File
+
+
+Create Senior UI/UX Designer agent:
+
+New-Item .claude\agents\senior_ui_ux_designer.md -ItemType File
+
+
+Open CLAUDE.md:
+
+code CLAUDE.md
+
+
+Open the agent files:
+
+code .claude\agents\senior_flutter_developer.md
+code .claude\agents\senior_ui_ux_designer.md
+
+
+================================================
+35. RECOMMENDED NEXT STEP
+================================================
+
+After creating CLAUDE.md and the agent files:
+
+1. Start Claude Code in the Flutter project.
+2. Ask Claude to read CLAUDE.md.
+3. Give Claude the MASTER PROMPT in this file.
+4. Let Claude inspect the project.
+5. Review the architecture plan.
+6. Then implement one phase at a time.
+
+
+END OF MASTER PROJECT NOTES
+===========================
+
+
+================================================
+36. IMPORTANT MASTER PROMPT ADDITION: SUPERADMIN
+================================================
+
+When working on roles and administration, always use this hierarchy:
+
+SUPERADMIN
+    |
+    +-- Shop A
+    |    +-- Shop Admin A
+    |    +-- Stadiums / Courts / Bookings
+    |
+    +-- Shop B
+         +-- Shop Admin B
+         +-- Stadiums / Courts / Bookings
+
+I am the platform owner and Superadmin.
+
+The business model is that multiple participating futsal shops can join the platform.
+
+The Superadmin controls the relationship between the platform and participating shops.
+
+A Shop Admin controls only their own shop.
+
+The customer sees active/listed shops and books courts from those shops.
+
+Every shop-specific record must carry shopId or otherwise be securely scoped to the shop.
+
+Do not implement this as one global admin role.
+
+The role model must be:
+
+superadmin
+shopAdmin
+customer
+
+Use secure server-side authorization and Firebase Security Rules.
+
+A Shop Admin must never be able to change their own role to superadmin.
+
+A Shop Admin must never be able to change shopId to another shop.
+
+The Superadmin must be able to onboard a new shop and assign/invite its Shop Admin.
+
+When a shop is suspended or unlisted, customers should no longer be able to create new bookings for that shop, while existing booking handling should follow the defined business rules.
+
+When implementing dashboards:
+
+Superadmin dashboard = platform-wide data.
+
+Shop Admin dashboard = assigned-shop data only.
+
+Customer application = customer-facing marketplace/booking experience.
+
+Do not leak private shop data between shops.
+
+For every new feature, ask:
+
+- Is this platform-level?
+- Is this shop-level?
+- Is this customer-level?
+- What shopId scope applies?
+- What Firebase Security Rule is required?
+- Does the Superadmin need access?
+- Does the Shop Admin need access?
+- Can this action affect another shop?
+
+================================================
+37. MASTER CLAUDE INSTRUCTION FOR THIS BUSINESS MODEL
+================================================
+
+Read CLAUDE.md and follow it as the source of truth.
+
+Treat this application as a multi-tenant futsal booking platform.
+
+I am the Superadmin/platform owner.
+
+There are three roles:
+
+- superadmin
+- shopAdmin
+- customer
+
+Superadmin manages the overall platform and participating futsal shops.
+
+Shop Admin manages only the assigned shop.
+
+Customer books available futsal courts.
+
+Never use one generic admin role for both Superadmin and Shop Admin.
+
+Before implementing any role-related or shop-related feature, explain the authorization scope and shopId impact.
+
+Use Firebase Security Rules and secure server-side logic to enforce authorization.
+
+Do not trust client-side role, shopId, price, payment status, or booking availability.
+
+The Superadmin onboarding flow must support:
+
+Shop onboarding request
+-> Superadmin review
+-> Approval
+-> Shop creation/activation
+-> Shop Admin invitation
+-> Shop setup
+-> Shop listing
+-> Customer bookings
+
+The system must support multiple shops without cross-shop data leakage.
+
+Superadmin can see all platform data.
+
+Shop Admin can see only their assigned shop data.
+
+Customer can see public/listed shop information and their own private account/bookings.
+
+Every new feature must be classified as:
+
+PLATFORM
+SHOP
+CUSTOMER
+
+and must use the correct authorization scope.
+
+================================================

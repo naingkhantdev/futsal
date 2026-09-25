@@ -1,0 +1,14 @@
+# Compiled output
+lib/
+
+# Dependencies
+node_modules/
+
+# Local env / emulator files
+*.local
+.env*
+firebase-debug.log*
+
+# NEVER commit service-account keys (used by scripts/set-superadmin.ts)
+*service-account*.json
+*serviceAccount*.json

@@ -1,0 +1,72 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Firestore rules tests (Node)
+firestore-tests/node_modules/
+firestore-debug.log
+ui-debug.log
+
+# Secrets: Firebase Admin service-account keys must never be committed
+service-account.json
+*-firebase-adminsdk-*.json
+**/node_modules/
+
+# Android (standard android/.gitignore entries; that file is missing)
+/android/.gradle/
+/android/captures/
+/android/local.properties
+/android/key.properties
+/android/gradlew
+/android/gradlew.bat
+/android/gradle/wrapper/gradle-wrapper.jar
+**/*.keystore
+**/*.jks
+
+# iOS / plugin generated files (standard ios/.gitignore entries; that file is missing)
+/ios/Flutter/Generated.xcconfig
+/ios/Flutter/flutter_export_environment.sh
+/ios/Flutter/ephemeral/
+/ios/Pods/
+/ios/Runner/GeneratedPluginRegistrant.*
+/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java

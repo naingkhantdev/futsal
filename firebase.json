@@ -1,0 +1,35 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "my-cool-futsal",
+          "appId": "1:148659121195:android:f9f0e2c2cd7975114e0e6e",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "my-cool-futsal",
+          "configurations": {
+            "android": "1:148659121195:android:f9f0e2c2cd7975114e0e6e",
+            "ios": "1:148659121195:ios:7e94131a9a2d7f214e0e6e"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "emulators": {
+    "firestore": {
+      "port": 8080
+    },
+    "ui": {
+      "enabled": false
+    },
+    "singleProjectMode": true
+  }
+}

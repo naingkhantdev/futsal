@@ -1,0 +1,10 @@
+rules_version = '2';
+
+// Deny-all placeholder. Real rules are written with image upload (Phase 13).
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

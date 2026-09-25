@@ -1,0 +1,11 @@
+{
+  "name": "futsal-seed",
+  "private": true,
+  "description": "Local test-account seeder (Admin SDK). Test projects only.",
+  "scripts": {
+    "seed": "node seed.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.7.0"
+  }
+}

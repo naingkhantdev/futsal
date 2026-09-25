@@ -1,0 +1,160 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/router/app_routes.dart';
+import '../../../../core/theme/app_sizes.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/status_tone.dart';
+import '../../../../core/theme/theme_context_ext.dart';
+import '../../../../core/utils/money.dart';
+import '../../../../core/widgets/app_card.dart';
+import '../../../../core/widgets/async_value_view.dart';
+import '../../../../core/widgets/content_constraint.dart';
+import '../../../../core/widgets/detail_row.dart';
+import '../../../../core/widgets/empty_view.dart';
+import '../../../../core/widgets/status_badge.dart';
+import '../../../../data/vos/court_vo.dart';
+import '../../stadiums/providers/shop_venue_providers.dart';
+
+/// `/shop-admin/stadiums/:stadiumId/courts/:courtId` — SHOP scope: court
+/// details, edit, and a shortcut to block time on it.
+class CourtDetailScreen extends ConsumerWidget {
+  const CourtDetailScreen({
+    super.key,
+    required this.stadiumId,
+    required this.courtId,
+  });
+
+  final String stadiumId;
+  final String courtId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final key = (stadiumId: stadiumId, courtId: courtId);
+    final court = ref.watch(adminCourtProvider(key));
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(court.valueOrNull?.name ?? 'Court'),
+        actions: [
+          if (court.valueOrNull != null)
+            IconButton(
+              tooltip: 'Edit court',
+              icon: const Icon(Icons.edit_outlined),
+              onPressed: () => context
+                  .push(AppRoutes.shopAdminCourtEdit(stadiumId, courtId)),
+            ),
+        ],
+      ),
+      body: AsyncValueView<CourtVO?>(
+        value: court,
+        onRetry: () => ref.invalidate(adminCourtProvider(key)),
+        isEmpty: (c) => c == null,
+        empty: const EmptyView(
+          icon: Icons.sports_soccer,
+          title: 'Court not found',
+          message: 'It may have been removed.',
+        ),
+        data: (c) => _CourtBody(court: c!),
+      ),
+    );
+  }
+}
+
+class _CourtBody extends StatelessWidget {
+  const _CourtBody({required this.court});
+
+  final CourtVO court;
+
+  @override
+  Widget build(BuildContext context) {
+    final price = court.hourlyPrice;
+    final muted = context.colors.onSurfaceVariant;
+    return ListView(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
+      children: [
+        ContentConstraint(
+          width: ContentWidth.form,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: court.isActive
+                    ? const StatusBadge(
+                        tone: StatusTone.success,
+                        icon: Icons.check_circle,
+                        label: 'Bookable',
+                        semanticsPrefix: 'Court',
+                        size: StatusBadgeSize.medium,
+                      )
+                    : const StatusBadge(
+                        tone: StatusTone.neutral,
+                        icon: Icons.pause_circle_outline,
+                        label: 'Inactive',
+                        semanticsPrefix: 'Court',
+                        size: StatusBadgeSize.medium,
+                      ),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              AppCard(
+                padding: EdgeInsets.zero,
+                child: Column(
+                  children: [
+                    DetailRow(
+                      icon: Icons.payments_outlined,
+                      label: 'Price per hour',
+                      value: price == null ? null : Money.formatMmk(price),
+                      emptyText: 'No price set',
+                    ),
+                    DetailRow(
+                      icon: Icons.timelapse,
+                      label: 'Slot length',
+                      value: '${court.slotMinutes} minutes',
+                    ),
+                    DetailRow(
+                      icon: Icons.groups_outlined,
+                      label: 'Players',
+                      value: court.capacity?.toString(),
+                    ),
+                    DetailRow(
+                      icon: Icons.grass,
+                      label: 'Surface',
+                      value: court.surfaceType,
+                    ),
+                    if ((court.description ?? '').trim().isNotEmpty)
+                      DetailRow(
+                        icon: Icons.notes,
+                        label: 'Description',
+                        value: court.description,
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              AppCard(
+                padding: EdgeInsets.zero,
+                child: ListTile(
+                  leading: const Icon(Icons.block, size: AppSizes.iconLg),
+                  title: const Text('Block time'),
+                  subtitle: const Text('Close this court for maintenance, '
+                      'events and more'),
+                  trailing: Icon(Icons.chevron_right, color: muted),
+                  onTap: () => context.push(
+                    Uri(
+                      path: AppRoutes.shopAdminBlockedSlotNew,
+                      queryParameters: {
+                        AppRoutes.stadiumIdQuery: court.stadiumId,
+                        AppRoutes.courtIdQuery: court.id,
+                      },
+                    ).toString(),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}

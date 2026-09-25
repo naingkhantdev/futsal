@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "148659121195",
+    "project_id": "my-cool-futsal",
+    "storage_bucket": "my-cool-futsal.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:148659121195:android:f9f0e2c2cd7975114e0e6e",
+        "android_client_info": {
+          "package_name": "com.futsalbooking.futsal_booking"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJtHbCYwsGdSXXL7O26GWbtRPDqnXpOe8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

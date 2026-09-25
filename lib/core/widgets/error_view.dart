@@ -1,0 +1,129 @@
+import 'package:flutter/material.dart';
+
+import '../errors/app_exception.dart';
+import '../theme/app_sizes.dart';
+import '../theme/app_spacing.dart';
+import '../theme/theme_context_ext.dart';
+import 'app_card.dart';
+import 'empty_view.dart';
+
+/// Error state (design_system.md §7.3). Shows only [AppException.message] —
+/// never raw Firebase text.
+class ErrorView extends StatelessWidget {
+  const ErrorView({
+    super.key,
+    required this.error,
+    this.onRetry,
+    this.title,
+    this.secondaryActionLabel,
+    this.onSecondaryAction,
+  }) : _inline = false;
+
+  /// Card-style variant for a section inside a screen.
+  const ErrorView.inline({super.key, required this.error, this.onRetry})
+      : title = null,
+        secondaryActionLabel = null,
+        onSecondaryAction = null,
+        _inline = true;
+
+  final AppException error;
+  final VoidCallback? onRetry;
+
+  /// Overrides the type-derived title (full-screen variant only), e.g.
+  /// splash "We couldn't load your account".
+  final String? title;
+
+  /// Optional text action under "Try again" (e.g. "Sign out").
+  final String? secondaryActionLabel;
+  final VoidCallback? onSecondaryAction;
+  final bool _inline;
+
+  (IconData, String) get _iconAndTitle => switch (error) {
+        NetworkException() => (Icons.cloud_off, "You're offline"),
+        PermissionDeniedException() ||
+        AuthenticationException() =>
+          (Icons.lock_outline, "You don't have access"),
+        NotFoundException() => (Icons.search_off, 'Not found'),
+        _ => (Icons.error_outline, 'Something went wrong'),
+      };
+
+  @override
+  Widget build(BuildContext context) =>
+      _inline ? _buildInline(context) : _buildFull(context);
+
+  Widget _buildFull(BuildContext context) {
+    final colors = context.colors;
+    final styles = context.textStyles;
+    final (icon, typeTitle) = _iconAndTitle;
+    final heading = title ?? typeTitle;
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg,
+          vertical: AppSpacing.xxxl,
+        ),
+        child: ConstrainedBox(
+          constraints:
+              const BoxConstraints(maxWidth: AppSizes.maxWidthEmptyState),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconCircle(
+                icon: icon,
+                background: colors.errorContainer,
+                foreground: colors.onErrorContainer,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              Text(
+                heading,
+                style: styles.titleMedium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              Text(
+                error.message,
+                textAlign: TextAlign.center,
+                style:
+                    styles.bodyMedium?.copyWith(color: colors.onSurfaceVariant),
+              ),
+              if (onRetry != null) ...[
+                const SizedBox(height: AppSpacing.xl),
+                OutlinedButton.icon(
+                  onPressed: onRetry,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Try again'),
+                ),
+              ],
+              if (secondaryActionLabel != null) ...[
+                SizedBox(
+                  height: onRetry != null ? AppSpacing.sm : AppSpacing.xl,
+                ),
+                TextButton(
+                  onPressed: onSecondaryAction,
+                  child: Text(secondaryActionLabel!),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInline(BuildContext context) {
+    final colors = context.colors;
+    return AppCard(
+      child: Row(
+        children: [
+          Icon(Icons.error_outline, size: AppSizes.iconMd, color: colors.error),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Text(error.message, style: context.textStyles.bodyMedium),
+          ),
+          if (onRetry != null)
+            TextButton(onPressed: onRetry, child: const Text('Retry')),
+        ],
+      ),
+    );
+  }
+}
