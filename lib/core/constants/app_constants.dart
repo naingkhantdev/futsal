@@ -5,6 +5,13 @@ abstract final class AppConstants {
   /// Splash shows a spinner only after this delay (design_system.md §7.1).
   static const Duration splashSpinnerDelay = Duration(milliseconds: 600);
 
+  /// Splash intro (emblem, ball shot, wordmark). The router holds on splash
+  /// until it ends (skipped when the OS asks to reduce motion).
+  static const Duration splashIntroDuration = Duration(milliseconds: 3000);
+
+  /// One loop of the splash background drift / glow pulse.
+  static const Duration splashAmbientLoop = Duration(seconds: 4);
+
   static const Duration snackBarDuration = Duration(seconds: 4);
   static const Duration snackBarWithActionDuration = Duration(seconds: 6);
 

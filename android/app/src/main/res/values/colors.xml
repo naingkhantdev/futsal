@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand navy, matches AppBrand.navy in lib/core/theme/app_brand.dart -->
+    <color name="splash_background">#081226</color>
+    <color name="ic_launcher_background">#081226</color>
+</resources>

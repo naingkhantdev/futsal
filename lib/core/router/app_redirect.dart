@@ -9,13 +9,19 @@ import 'app_routes.dart';
 /// on this for authorization.
 ///
 /// [isKnownRoute] is false when the location matched no route.
+/// [holdOnSplash] keeps the user on splash while its intro animation plays
+/// (first launch only); the normal rules apply once it finishes.
 String? resolveRedirect({
   required AuthSession session,
   required Uri uri,
   required bool isKnownRoute,
+  bool holdOnSplash = false,
 }) {
   final path = uri.path;
   final from = uri.queryParameters[AppConstants.fromQueryParam];
+
+  // 0. Splash intro still playing → stay (session is resolved underneath).
+  if (holdOnSplash && path == AppRoutes.splash) return null;
 
   switch (session) {
     // 1. Session loading, missing profile being re-created, or resolution

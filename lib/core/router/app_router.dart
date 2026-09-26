@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../data/vos/auth_session.dart';
 import '../../features/auth/providers/auth_session_provider.dart';
+import '../../features/auth/providers/splash_intro_provider.dart';
 import '../errors/app_exception.dart';
 import '../widgets/error_view.dart';
 import 'app_redirect.dart';
@@ -31,17 +32,24 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     (_, next) => session.value = next,
     fireImmediately: true,
   );
+  final splashIntroDone = ValueNotifier<bool>(false);
+  ref.listen<bool>(
+    splashIntroDoneProvider,
+    (_, next) => splashIntroDone.value = next,
+    fireImmediately: true,
+  );
 
   final router = GoRouter(
     navigatorKey: rootNavigatorKey,
     initialLocation: AppRoutes.splash,
     debugLogDiagnostics: kDebugMode,
-    refreshListenable: session,
+    refreshListenable: Listenable.merge([session, splashIntroDone]),
     redirect: (context, state) => resolveRedirect(
       session: session.value,
       uri: state.uri,
       // No matched route → unknown path (handled by redirect rule 6).
       isKnownRoute: state.topRoute != null,
+      holdOnSplash: !splashIntroDone.value,
     ),
     routes: [
       ...authRoutes,
@@ -58,6 +66,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   ref.onDispose(() {
     router.dispose();
     session.dispose();
+    splashIntroDone.dispose();
   });
   return router;
 });
