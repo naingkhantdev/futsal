@@ -79,27 +79,22 @@ flutter:
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
 
-  # --- Inter font (design_system.md §3) -------------------------------------
-  # The theme already sets fontFamily 'Inter'; until this block is enabled
-  # the app falls back to Roboto / SF. To enable:
-  #   1. Download Inter (SIL OFL) and add these files:
-  #        assets/fonts/Inter-Regular.ttf, Inter-Medium.ttf,
-  #        Inter-SemiBold.ttf, Inter-Bold.ttf
-  #   2. Uncomment the block below (keep the 2-space indent under `flutter:`).
-  #   3. Run `flutter pub get`.
-  # Left commented because a declared-but-missing font asset breaks the build.
-  #
-  # fonts:
-  #   - family: Inter
-  #     fonts:
-  #       - asset: assets/fonts/Inter-Regular.ttf
-  #         weight: 400
-  #       - asset: assets/fonts/Inter-Medium.ttf
-  #         weight: 500
-  #       - asset: assets/fonts/Inter-SemiBold.ttf
-  #         weight: 600
-  #       - asset: assets/fonts/Inter-Bold.ttf
-  #         weight: 700
+  # --- Manrope font (design_system.md §3; SIL OFL, see assets/fonts/OFL.txt) --
+  # Static weights, not the variable font: Flutter 3.22 does not map
+  # fontWeight onto a variable font's wght axis.
+  fonts:
+    - family: Manrope
+      fonts:
+        - asset: assets/fonts/Manrope-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Manrope-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Manrope-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Manrope-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Manrope-ExtraBold.ttf
+          weight: 800
   # ---------------------------------------------------------------------------
 
   # To add custom fonts to your application, add a fonts section here,

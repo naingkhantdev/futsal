@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_depth.dart';
 import '../theme/app_sizes.dart';
 import '../theme/app_spacing.dart';
 import '../theme/theme_context_ext.dart';
+import 'app_button.dart';
 
 /// Empty state (design_system.md §7.2). Icon only — no illustrations.
 class EmptyView extends StatelessWidget {
@@ -67,8 +69,8 @@ class EmptyView extends StatelessWidget {
                 background: colors.surfaceContainerHigh,
                 foreground: colors.onSurfaceVariant,
               ),
-              const SizedBox(height: AppSpacing.lg),
-              Text(title, style: styles.titleMedium, textAlign: TextAlign.center),
+              const SizedBox(height: AppSpacing.xl),
+              Text(title, style: styles.titleLarge, textAlign: TextAlign.center),
               if (message != null) ...[
                 const SizedBox(height: AppSpacing.sm),
                 Text(
@@ -80,17 +82,17 @@ class EmptyView extends StatelessWidget {
               ],
               if (actionLabel != null && onAction != null) ...[
                 const SizedBox(height: AppSpacing.xl),
-                FilledButton.tonal(onPressed: onAction, child: Text(actionLabel!)),
+                PrimaryButton(label: actionLabel!, onPressed: onAction),
               ],
               if (secondaryActionLabel != null) ...[
                 SizedBox(
                   height: actionLabel != null && onAction != null
-                      ? AppSpacing.sm
+                      ? AppSpacing.md
                       : AppSpacing.xl,
                 ),
-                OutlinedButton(
+                SecondaryButton(
+                  label: secondaryActionLabel!,
                   onPressed: onSecondaryAction,
-                  child: Text(secondaryActionLabel!),
                 ),
               ],
             ],
@@ -144,11 +146,22 @@ class IconCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Raised neumorphic disc with a tinted inner well carrying the tone.
+    final depth = context.depth;
     return Container(
       width: AppSizes.emptyStateCircle,
       height: AppSizes.emptyStateCircle,
-      decoration: BoxDecoration(color: background, shape: BoxShape.circle),
-      child: Icon(icon, size: AppSizes.iconEmptyState, color: foreground),
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: depth.base,
+        shape: BoxShape.circle,
+        border: Border.all(color: depth.edge),
+        boxShadow: depth.raised(DepthLevel.high),
+      ),
+      child: DecoratedBox(
+        decoration: BoxDecoration(color: background, shape: BoxShape.circle),
+        child: Icon(icon, size: AppSizes.iconXl, color: foreground),
+      ),
     );
   }
 }

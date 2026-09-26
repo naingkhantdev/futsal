@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_sizes.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/theme_context_ext.dart';
+import '../../../core/widgets/brand_mark.dart';
 import '../../../core/widgets/content_constraint.dart';
 
-/// Shared auth screen layout (design_system.md §9): logo → headline →
-/// subtitle → [children], centered at max width 440.
+/// Shared auth screen layout (design_system.md §9), Swiss-aligned: brand mark
+/// → large left-aligned headline → subtitle → [children], max width 440.
 class AuthLayout extends StatelessWidget {
   const AuthLayout({
     super.key,
@@ -39,21 +39,18 @@ class AuthLayout extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Icon(
-                    Icons.sports_soccer,
-                    size: AppSizes.logoMark,
-                    color: colors.primary,
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: BrandMark(showWordmark: true),
                   ),
-                  const SizedBox(height: AppSpacing.xl),
-                  Text(
-                    headline,
-                    style: styles.headlineMedium,
-                    textAlign: TextAlign.center,
+                  const SizedBox(height: AppSpacing.xxxl),
+                  Semantics(
+                    header: true,
+                    child: Text(headline, style: styles.displaySmall),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
                     subtitle,
-                    textAlign: TextAlign.center,
                     style: styles.bodyLarge
                         ?.copyWith(color: colors.onSurfaceVariant),
                   ),

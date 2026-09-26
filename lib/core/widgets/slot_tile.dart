@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/domain_enums.dart';
+import '../theme/app_depth.dart';
 import '../theme/app_motion.dart';
 import '../theme/app_radius.dart';
 import '../theme/app_sizes.dart';
@@ -43,40 +44,53 @@ class SlotTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    final (Color bg, Color fg, BorderSide border, IconData icon, String label) =
+    final depth = context.depth;
+    final well = depth.wellDecoration();
+    // Available = raised key, selected = solid ink, booked = pressed-in well,
+    // blocked = flat, unavailable = hairline outline. Icon + label always.
+    final (BoxDecoration deco, Color fg, IconData icon, String label) =
         switch (state) {
       SlotState.available => (
-          AppTheme.raisedSurface(c),
+          depth.raisedDecoration(
+            level: DepthLevel.low,
+            borderRadius: AppRadius.mdAll,
+            color: AppTheme.raisedSurface(c),
+          ),
           c.onSurface,
-          BorderSide(color: c.outline),
           Icons.add_circle_outline,
           'Available',
         ),
       SlotState.selected => (
-          c.primary,
+          BoxDecoration(
+            color: c.primary,
+            borderRadius: AppRadius.mdAll,
+            boxShadow: depth.ink(DepthLevel.low),
+          ),
           c.onPrimary,
-          BorderSide(color: c.primary, width: AppSizes.borderThick),
           Icons.check_circle,
           'Selected',
         ),
       SlotState.booked => (
-          c.surfaceContainerHighest,
+          well,
           c.onSurfaceVariant,
-          BorderSide.none,
           Icons.event_busy,
           'Booked',
         ),
       SlotState.blocked => (
-          c.surfaceContainerHigh,
+          BoxDecoration(
+            color: c.surfaceContainerHighest,
+            borderRadius: AppRadius.mdAll,
+          ),
           c.onSurfaceVariant,
-          BorderSide.none,
           Icons.block,
           isAdmin ? 'Blocked' : 'Closed',
         ),
       SlotState.unavailable => (
-          Colors.transparent,
+          BoxDecoration(
+            borderRadius: AppRadius.mdAll,
+            border: Border.all(color: c.outlineVariant),
+          ),
           c.onSurfaceVariant,
-          BorderSide(color: c.outlineVariant),
           Icons.do_not_disturb_on_outlined,
           'Unavailable',
         ),
@@ -85,10 +99,7 @@ class SlotTile extends StatelessWidget {
     final animate = !MediaQuery.disableAnimationsOf(context);
     final scaler = MediaQuery.textScalerOf(context)
         .clamp(maxScaleFactor: AppSizes.compactTextScaleCap);
-    final shape = RoundedRectangleBorder(
-      borderRadius: AppRadius.mdAll,
-      side: border,
-    );
+    const shape = RoundedRectangleBorder(borderRadius: AppRadius.mdAll);
 
     return Semantics(
       button: _tappable,
@@ -106,7 +117,7 @@ class SlotTile extends StatelessWidget {
           curve: AppMotion.curve,
           constraints:
               const BoxConstraints(minHeight: AppSizes.slotTileMinHeight),
-          decoration: ShapeDecoration(color: bg, shape: shape),
+          decoration: deco,
           child: Material(
             type: MaterialType.transparency,
             child: InkWell(

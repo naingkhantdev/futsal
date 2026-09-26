@@ -40,9 +40,15 @@ abstract final class AppSizes {
   static const double chipHeight = 32;
   static const double borderThin = 1;
   static const double borderThick = 2;
+
+  /// Focused input outline.
+  static const double borderFocus = 1.5;
   static const double refreshBarHeight = 2;
   static const double loadingSpinner = 24;
   static const double logoMark = 48;
+
+  /// Raised frame around the ink logo tile ([BrandMark]).
+  static const double logoFrame = 72;
 
   /// Initials avatar in the profile identity header.
   static const double avatarLarge = 64;

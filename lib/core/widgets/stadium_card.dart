@@ -61,34 +61,42 @@ class StadiumCard extends StatelessWidget {
       excludeSemantics: true,
       child: AppCard(
         onTap: onTap,
-        padding: EdgeInsets.zero,
+        padding: const EdgeInsets.all(AppSpacing.sm),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AspectRatio(
-              aspectRatio: aspectRatio,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  _StadiumImage(url: imageUrl),
-                  if (overlayBadge != null)
-                    Positioned(
-                      top: AppSpacing.sm,
-                      left: AppSpacing.sm,
-                      child: overlayBadge!,
-                    ),
-                ],
+            ClipRRect(
+              borderRadius: AppRadius.mdAll,
+              child: AspectRatio(
+                aspectRatio: aspectRatio,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    _StadiumImage(url: imageUrl),
+                    if (overlayBadge != null)
+                      Positioned(
+                        top: AppSpacing.sm,
+                        left: AppSpacing.sm,
+                        child: overlayBadge!,
+                      ),
+                  ],
+                ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(AppSpacing.lg),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.sm,
+                AppSpacing.md,
+                AppSpacing.sm,
+                AppSpacing.sm,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: styles.titleMedium),
+                      style: styles.titleLarge),
                   const SizedBox(height: AppSpacing.xs),
                   Row(
                     children: [
@@ -106,14 +114,14 @@ class StadiumCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: AppSpacing.xs),
+                  const SizedBox(height: AppSpacing.md),
                   Row(
                     children: [
                       Expanded(
                         child: Text(
                           priceLabel,
-                          style: AppTypography.tabular(styles.titleSmall!)
-                              .copyWith(color: colors.primary),
+                          style: AppTypography.tabular(styles.titleMedium!)
+                              .copyWith(fontWeight: FontWeight.w800),
                         ),
                       ),
                       for (final f in shown) _FacilityChip(label: f),
@@ -172,8 +180,8 @@ class _FacilityChip extends StatelessWidget {
         vertical: AppSpacing.xxs,
       ),
       decoration: BoxDecoration(
-        color: context.colors.surfaceContainerHigh,
-        borderRadius: AppRadius.smAll,
+        borderRadius: AppRadius.fullAll,
+        border: Border.all(color: context.colors.outlineVariant),
       ),
       child: Text(
         label,

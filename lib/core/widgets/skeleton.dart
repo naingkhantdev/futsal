@@ -125,16 +125,21 @@ class SkeletonStadiumCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const AppCard(
-      padding: EdgeInsets.zero,
+      padding: EdgeInsets.all(AppSpacing.sm),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AspectRatio(
             aspectRatio: 16 / 9,
-            child: SkeletonBox(borderRadius: BorderRadius.zero),
+            child: SkeletonBox(borderRadius: AppRadius.mdAll),
           ),
           Padding(
-            padding: EdgeInsets.all(AppSpacing.lg),
+            padding: EdgeInsets.fromLTRB(
+              AppSpacing.sm,
+              AppSpacing.md,
+              AppSpacing.sm,
+              AppSpacing.sm,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -158,21 +163,29 @@ class SkeletonStatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const AppCard(
+      padding: EdgeInsets.all(AppSpacing.lg + AppSpacing.xxs),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SkeletonBox(
-            width: AppSizes.statIconCircle,
-            height: AppSizes.statIconCircle,
-            borderRadius: AppRadius.fullAll,
+          Row(
+            children: [
+              SkeletonBox(
+                width: AppSizes.skeletonLabelWidth,
+                height: AppSpacing.md,
+              ),
+              Spacer(),
+              SkeletonBox(
+                width: AppSizes.statIconCircle,
+                height: AppSizes.statIconCircle,
+                borderRadius: AppRadius.fullAll,
+              ),
+            ],
           ),
           SizedBox(height: AppSpacing.md),
           SkeletonBox(
             width: AppSizes.skeletonValueWidth,
-            height: AppSpacing.xl,
+            height: AppSpacing.xxl,
           ),
-          SizedBox(height: AppSpacing.sm),
-          SkeletonBox(width: AppSizes.skeletonLabelWidth),
         ],
       ),
     );

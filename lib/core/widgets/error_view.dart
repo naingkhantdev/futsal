@@ -4,6 +4,7 @@ import '../errors/app_exception.dart';
 import '../theme/app_sizes.dart';
 import '../theme/app_spacing.dart';
 import '../theme/theme_context_ext.dart';
+import 'app_button.dart';
 import 'app_card.dart';
 import 'empty_view.dart';
 
@@ -73,10 +74,10 @@ class ErrorView extends StatelessWidget {
                 background: colors.errorContainer,
                 foreground: colors.onErrorContainer,
               ),
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.xl),
               Text(
                 heading,
-                style: styles.titleMedium,
+                style: styles.titleLarge,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: AppSpacing.sm),
@@ -88,10 +89,10 @@ class ErrorView extends StatelessWidget {
               ),
               if (onRetry != null) ...[
                 const SizedBox(height: AppSpacing.xl),
-                OutlinedButton.icon(
+                SecondaryButton(
+                  label: 'Try again',
+                  icon: Icons.refresh,
                   onPressed: onRetry,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Try again'),
                 ),
               ],
               if (secondaryActionLabel != null) ...[

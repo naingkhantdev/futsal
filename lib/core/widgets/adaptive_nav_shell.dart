@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../constants/app_constants.dart';
-import '../theme/app_sizes.dart';
+import '../theme/app_depth.dart';
 import '../theme/theme_context_ext.dart';
 
 /// One top-level destination: same items, same order on bar and rail.
@@ -52,17 +52,23 @@ class AdaptiveNavShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
-    final border = BorderSide(
-      color: colors.outlineVariant,
-      width: AppSizes.borderThin,
-    );
+    final depth = context.depth;
 
     if (context.isCompact) {
       return Scaffold(
         body: navigationShell,
         bottomNavigationBar: DecoratedBox(
-          decoration: BoxDecoration(border: Border(top: border)),
+          // Soft upward lift instead of a divider line.
+          decoration: BoxDecoration(
+            color: depth.base,
+            boxShadow: [
+              BoxShadow(
+                color: depth.shade.withOpacity(0.35),
+                offset: Offset(0, -DepthLevel.low.distance),
+                blurRadius: DepthLevel.high.blur,
+              ),
+            ],
+          ),
           child: NavigationBar(
             selectedIndex: navigationShell.currentIndex,
             onDestinationSelected: _onSelect,
@@ -85,8 +91,9 @@ class AdaptiveNavShell extends StatelessWidget {
     return Scaffold(
       body: Row(
         children: [
-          DecoratedBox(
-            decoration: BoxDecoration(border: Border(right: border)),
+          // Borderless rail on the shared surface: whitespace separates it.
+          ColoredBox(
+            color: depth.base,
             child: SafeArea(
               right: false,
               child: NavigationRail(

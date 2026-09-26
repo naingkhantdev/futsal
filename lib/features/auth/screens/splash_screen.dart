@@ -8,6 +8,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_sizes.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/theme_context_ext.dart';
+import '../../../core/widgets/brand_mark.dart';
 import '../../../core/widgets/error_view.dart';
 import '../../../core/widgets/loading_view.dart';
 import '../../../data/vos/auth_session.dart';
@@ -62,13 +63,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.sports_soccer,
-              size: AppSizes.logoMark,
-              color: context.colors.primary,
-              semanticLabel: AppConstants.appName,
-            ),
-            const SizedBox(height: AppSpacing.xl),
+            const BrandMark(),
+            const SizedBox(height: AppSpacing.xxl),
             SizedBox.square(
               dimension: AppSizes.loadingSpinner,
               child: _showSpinner

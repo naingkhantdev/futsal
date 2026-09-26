@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_depth.dart';
+import '../theme/app_motion.dart';
+import '../theme/app_radius.dart';
 import '../theme/app_sizes.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_typography.dart';
@@ -100,6 +103,12 @@ abstract class _AppButton extends StatelessWidget {
         TextButton(onPressed: onPressed, style: style, child: child),
     };
 
+    button = _DepthFrame(
+      variant: variant,
+      enabled: onPressed != null,
+      child: button,
+    );
+
     if (expand) button = SizedBox(width: double.infinity, child: button);
     if (!isLoading) return button;
 
@@ -114,12 +123,18 @@ abstract class _AppButton extends StatelessWidget {
   ButtonStyle? _style(BuildContext context) {
     final colors = context.colors;
     final isLarge = size == AppButtonSize.large && variant != _Variant.text;
-    ButtonStyle? style = variant == _Variant.destructive
-        ? FilledButton.styleFrom(
-            backgroundColor: colors.error,
-            foregroundColor: colors.onError,
-          )
-        : null;
+    ButtonStyle? style = switch (variant) {
+      _Variant.destructive => FilledButton.styleFrom(
+          backgroundColor: colors.error,
+          foregroundColor: colors.onError,
+        ),
+      // Raised neumorphic key: the depth frame draws the edge and shadows.
+      _Variant.secondary => OutlinedButton.styleFrom(
+          backgroundColor: colors.surface,
+          side: BorderSide.none,
+        ),
+      _ => null,
+    };
     if (isLarge) {
       final large = ButtonStyle(
         minimumSize: const WidgetStatePropertyAll(
@@ -133,6 +148,61 @@ abstract class _AppButton extends StatelessWidget {
       style = style?.merge(large) ?? large;
     }
     return style;
+  }
+}
+
+/// Soft shadow behind filled / secondary buttons that sinks while pressed.
+class _DepthFrame extends StatefulWidget {
+  const _DepthFrame({
+    required this.variant,
+    required this.enabled,
+    required this.child,
+  });
+
+  final _Variant variant;
+  final bool enabled;
+  final Widget child;
+
+  @override
+  State<_DepthFrame> createState() => _DepthFrameState();
+}
+
+class _DepthFrameState extends State<_DepthFrame> {
+  bool _pressed = false;
+
+  void _setPressed(bool value) {
+    if (_pressed != value) setState(() => _pressed = value);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.variant == _Variant.text) return widget.child;
+    final depth = context.depth;
+    final level = _pressed ? DepthLevel.low : DepthLevel.medium;
+    final shadows = !widget.enabled
+        ? const <BoxShadow>[]
+        : widget.variant == _Variant.secondary
+            ? depth.raised(level)
+            : depth.ink(level);
+    final animate = !MediaQuery.disableAnimationsOf(context);
+
+    return Listener(
+      onPointerDown: (_) => _setPressed(true),
+      onPointerUp: (_) => _setPressed(false),
+      onPointerCancel: (_) => _setPressed(false),
+      child: AnimatedContainer(
+        duration: animate ? AppMotion.state : Duration.zero,
+        curve: AppMotion.curve,
+        decoration: BoxDecoration(
+          borderRadius: AppRadius.mdAll,
+          border: widget.variant == _Variant.secondary && widget.enabled
+              ? Border.all(color: depth.edge)
+              : null,
+          boxShadow: shadows,
+        ),
+        child: widget.child,
+      ),
+    );
   }
 }
 

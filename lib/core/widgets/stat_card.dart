@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_radius.dart';
 import '../theme/app_sizes.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_typography.dart';
@@ -36,29 +37,52 @@ class StatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final toneColors = tone.colorsFor(context);
     final styles = context.textStyles;
+    final colors = context.colors;
+    // Brand / neutral stay monochrome; attention tones keep their hue.
+    final iconColor = tone == StatusTone.brand || tone == StatusTone.neutral
+        ? colors.onSurface
+        : toneColors.foreground;
     return AppCard(
       onTap: onTap,
+      padding: const EdgeInsets.all(AppSpacing.lg + AppSpacing.xxs),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: AppSizes.statIconCircle,
-            height: AppSizes.statIconCircle,
-            decoration: BoxDecoration(
-              color: toneColors.background,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, size: AppSizes.iconMd, color: toneColors.foreground),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  label.toUpperCase(),
+                  semanticsLabel: label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.overline(styles.labelSmall!)
+                      .copyWith(color: colors.onSurfaceVariant),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Container(
+                width: AppSizes.statIconCircle,
+                height: AppSizes.statIconCircle,
+                decoration:
+                    context.depth.wellDecoration(borderRadius: AppRadius.fullAll),
+                child: Icon(icon, size: AppSizes.iconMd, color: iconColor),
+              ),
+            ],
           ),
           const SizedBox(height: AppSpacing.md),
-          Text(value, style: AppTypography.tabular(styles.headlineSmall!)),
           Text(
-            label,
-            style: styles.bodyMedium?.copyWith(color: context.colors.onSurfaceVariant),
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.tabular(styles.headlineLarge!),
           ),
           if (footer != null) ...[
             const SizedBox(height: AppSpacing.xs),
-            Text(footer!, style: styles.labelMedium),
+            Text(
+              footer!,
+              style: styles.labelMedium?.copyWith(color: colors.onSurfaceVariant),
+            ),
           ],
         ],
       ),

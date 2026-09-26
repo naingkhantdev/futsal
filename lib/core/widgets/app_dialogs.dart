@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_sizes.dart';
+import '../theme/theme_context_ext.dart';
 
 /// Short blocking decision (design_system.md §5.6). Use verb labels only —
 /// never "OK / Yes / No". Resolves to `true` when confirmed.
@@ -21,6 +22,9 @@ Future<bool> showConfirmDialog(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: AppSizes.maxWidthDialog),
           child: AlertDialog(
+            // Soft neumorphic shade instead of a flat Material shadow.
+            elevation: 12,
+            shadowColor: context.depth.shade,
             title: Text(title),
             content: Text(message),
             actions: [

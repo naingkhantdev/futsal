@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
+import 'app_depth.dart';
 import 'app_sizes.dart';
 
 /// Shorthand access to theme tokens and window-size classes.
@@ -9,6 +10,9 @@ extension ThemeContextX on BuildContext {
 
   AppColors get appColors =>
       Theme.of(this).extension<AppColors>() ?? AppColors.light;
+
+  /// Neumorphic shadow / well tokens.
+  AppDepth get depth => Theme.of(this).extension<AppDepth>() ?? AppDepth.light;
 
   TextTheme get textStyles => Theme.of(this).textTheme;
 

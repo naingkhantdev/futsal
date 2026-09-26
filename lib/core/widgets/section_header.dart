@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_sizes.dart';
 import '../theme/app_spacing.dart';
 import '../theme/theme_context_ext.dart';
 
@@ -25,11 +26,25 @@ class SectionHeader extends StatelessWidget {
           Expanded(
             child: Semantics(
               header: true,
-              child: Text(title, style: context.textStyles.titleMedium),
+              child: Text(title, style: context.textStyles.titleLarge),
             ),
           ),
           if (onAction != null)
-            TextButton(onPressed: onAction, child: Text(actionLabel)),
+            TextButton(
+              onPressed: onAction,
+              style: TextButton.styleFrom(
+                foregroundColor: context.colors.onSurfaceVariant,
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(actionLabel),
+                  const SizedBox(width: AppSpacing.xs),
+                  const Icon(Icons.arrow_forward, size: AppSizes.iconSm),
+                ],
+              ),
+            ),
         ],
       ),
     );

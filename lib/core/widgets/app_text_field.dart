@@ -6,8 +6,9 @@ import '../theme/app_sizes.dart';
 import '../theme/app_spacing.dart';
 import '../theme/theme_context_ext.dart';
 
-/// Outlined + filled text field (design_system.md §5.2). Styling comes from
-/// the theme's `inputDecorationTheme`. A floating label is always required.
+/// Filled "well" text field (design_system.md §5.2): recessed fill, no border
+/// until focus (ink) or error. Styling comes from the theme's
+/// `inputDecorationTheme`. A floating label is always required.
 class AppTextField extends StatefulWidget {
   const AppTextField({
     super.key,
@@ -204,7 +205,7 @@ class _PasswordFieldState extends State<PasswordField> {
   }
 }
 
-/// Pill search field: height 48, no border, `surfaceContainerHigh` fill.
+/// Pill search field: height 48, no border, recessed neumorphic well.
 class SearchField extends StatelessWidget {
   const SearchField({
     super.key,
@@ -227,8 +228,10 @@ class SearchField extends StatelessWidget {
       borderRadius: AppRadius.fullAll,
       borderSide: BorderSide.none,
     );
-    return SizedBox(
+    return Container(
       height: AppSizes.searchFieldHeight,
+      decoration:
+          context.depth.wellDecoration(borderRadius: AppRadius.fullAll),
       child: TextField(
         controller: controller,
         onChanged: onChanged,
@@ -238,7 +241,7 @@ class SearchField extends StatelessWidget {
         keyboardType: TextInputType.text,
         decoration: InputDecoration(
           hintText: hintText,
-          fillColor: context.colors.surfaceContainerHigh,
+          fillColor: Colors.transparent,
           prefixIcon: const Icon(Icons.search, size: AppSizes.iconMd),
           contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
           border: border,
