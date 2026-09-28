@@ -4,9 +4,10 @@ abstract final class AppAssets {
   static const String logoMark = 'assets/images/logo/logo_mark.png';
 
   /// [logoMark] split into layers for the splash animation: the emblem
-  /// without ball, light arcs and swoosh; the light arcs at the right edge;
-  /// the swoosh (ball's light ray) on its own; and the ball on its own.
-  /// Stacked, they recreate [logoMark].
+  /// without ball, light arcs and swoosh; one light arc at the right edge
+  /// (the artwork's inner, second arc is removed); the swoosh (ball's light
+  /// ray) on its own; and the ball on its own. Stacked, they recreate
+  /// [logoMark] minus that second arc.
   static const String logoEmblem = 'assets/images/logo/logo_emblem.png';
   static const String logoArcs = 'assets/images/logo/logo_arcs.png';
   static const String logoSwoosh = 'assets/images/logo/logo_swoosh.png';

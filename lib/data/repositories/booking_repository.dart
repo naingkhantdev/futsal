@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/domain_enums.dart';
 import '../data_agents/auth_data_agent_impl.dart';
+import '../data_agents/blacklist_data_agent_impl.dart';
 import '../data_agents/booking_data_agent_impl.dart';
 import '../data_agents/user_data_agent_impl.dart';
 import '../vos/booking_draft.dart';
@@ -85,5 +86,6 @@ final bookingRepositoryProvider = Provider<BookingRepository>(
     bookingDataAgent: ref.watch(bookingDataAgentProvider),
     authDataAgent: ref.watch(authDataAgentProvider),
     userDataAgent: ref.watch(userDataAgentProvider),
+    blacklistDataAgent: ref.watch(blacklistDataAgentProvider),
   ),
 );

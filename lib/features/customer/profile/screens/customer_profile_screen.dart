@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_sizes.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -9,6 +10,7 @@ import '../../../../core/theme/theme_context_ext.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/content_constraint.dart';
+import '../../../../core/widgets/language_picker.dart';
 import '../../../../data/vos/user_vo.dart';
 import '../../../auth/widgets/sign_out_button.dart';
 import '../providers/current_user_profile_provider.dart';
@@ -23,7 +25,7 @@ class CustomerProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profile = ref.watch(currentUserProfileProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
+      appBar: AppBar(title: Text(context.l10n.navProfile)),
       body: AsyncValueView<UserVO?>(
         value: profile,
         onRetry: () => ref.invalidate(currentUserProfileProvider),
@@ -45,6 +47,7 @@ class _ProfileBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final muted = context.colors.onSurfaceVariant;
+    final l = context.l10n;
     return ListView(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
       children: [
@@ -59,8 +62,8 @@ class _ProfileBody extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 child: _InfoTile(
                   icon: Icons.phone_outlined,
-                  label: 'Phone',
-                  value: user.hasPhone ? user.phone! : 'Not added',
+                  label: l.profilePhone,
+                  value: user.hasPhone ? user.phone! : l.commonNotAdded,
                   muted: !user.hasPhone,
                 ),
               ),
@@ -72,14 +75,14 @@ class _ProfileBody extends StatelessWidget {
                     ListTile(
                       leading: const Icon(Icons.edit_outlined,
                           size: AppSizes.iconLg),
-                      title: const Text('Edit profile'),
+                      title: Text(l.editProfile),
                       trailing: Icon(Icons.chevron_right, color: muted),
                       onTap: () => context.push(AppRoutes.customerProfileEdit),
                     ),
                     ListTile(
                       leading: const Icon(Icons.lock_reset,
                           size: AppSizes.iconLg),
-                      title: const Text('Change password'),
+                      title: Text(l.changePassword),
                       trailing: Icon(Icons.chevron_right, color: muted),
                       onTap: () =>
                           context.push(AppRoutes.customerChangePassword),
@@ -87,6 +90,8 @@ class _ProfileBody extends StatelessWidget {
                   ],
                 ),
               ),
+              const SizedBox(height: AppSpacing.lg),
+              const AppCard(padding: EdgeInsets.zero, child: LanguageTile()),
               const SizedBox(height: AppSpacing.xl),
               const SignOutButton(),
             ],
@@ -138,7 +143,7 @@ class _IdentityHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                user.hasName ? user.name : 'Add your name',
+                user.hasName ? user.name : context.l10n.addYourName,
                 style: styles.titleLarge?.copyWith(
                   color: user.hasName ? colors.onSurface : colors.onSurfaceVariant,
                 ),

@@ -6,6 +6,10 @@ abstract final class FirestoreCollections {
 
   /// Subcollection of `shops/{shopId}` holding admin-only fields.
   static const String shopPrivate = 'private';
+
+  /// Subcollection of `shops/{shopId}`: customers blocked from booking at
+  /// that shop, doc id = customer uid.
+  static const String blacklist = 'blacklist';
   static const String stadiums = 'stadiums';
 
   /// Subcollection of `stadiums/{stadiumId}`.
@@ -27,6 +31,12 @@ abstract final class FirestorePaths {
 
   static String shopPrivateDetails(String shopId) =>
       '${shop(shopId)}/${FirestoreCollections.shopPrivate}/$shopPrivateDocId';
+
+  static String shopBlacklist(String shopId) =>
+      '${shop(shopId)}/${FirestoreCollections.blacklist}';
+
+  static String shopBlacklistEntry(String shopId, String customerId) =>
+      '${shopBlacklist(shopId)}/$customerId';
 
   static String stadium(String stadiumId) =>
       '${FirestoreCollections.stadiums}/$stadiumId';

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_depth.dart';
-import '../theme/app_motion.dart';
-import '../theme/app_radius.dart';
 import '../theme/app_sizes.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_typography.dart';
 import '../theme/theme_context_ext.dart';
+import 'app_loader.dart';
 
 /// Button heights: 48 (default) / 56 (sticky booking CTAs).
 enum AppButtonSize { medium, large }
@@ -103,12 +101,6 @@ abstract class _AppButton extends StatelessWidget {
         TextButton(onPressed: onPressed, style: style, child: child),
     };
 
-    button = _DepthFrame(
-      variant: variant,
-      enabled: onPressed != null,
-      child: button,
-    );
-
     if (expand) button = SizedBox(width: double.infinity, child: button);
     if (!isLoading) return button;
 
@@ -128,10 +120,9 @@ abstract class _AppButton extends StatelessWidget {
           backgroundColor: colors.error,
           foregroundColor: colors.onError,
         ),
-      // Raised neumorphic key: the depth frame draws the edge and shadows.
+      // Plain outline (theme side color) on a transparent fill.
       _Variant.secondary => OutlinedButton.styleFrom(
-          backgroundColor: colors.surface,
-          side: BorderSide.none,
+          backgroundColor: Colors.transparent,
         ),
       _ => null,
     };
@@ -148,61 +139,6 @@ abstract class _AppButton extends StatelessWidget {
       style = style?.merge(large) ?? large;
     }
     return style;
-  }
-}
-
-/// Soft shadow behind filled / secondary buttons that sinks while pressed.
-class _DepthFrame extends StatefulWidget {
-  const _DepthFrame({
-    required this.variant,
-    required this.enabled,
-    required this.child,
-  });
-
-  final _Variant variant;
-  final bool enabled;
-  final Widget child;
-
-  @override
-  State<_DepthFrame> createState() => _DepthFrameState();
-}
-
-class _DepthFrameState extends State<_DepthFrame> {
-  bool _pressed = false;
-
-  void _setPressed(bool value) {
-    if (_pressed != value) setState(() => _pressed = value);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (widget.variant == _Variant.text) return widget.child;
-    final depth = context.depth;
-    final level = _pressed ? DepthLevel.low : DepthLevel.medium;
-    final shadows = !widget.enabled
-        ? const <BoxShadow>[]
-        : widget.variant == _Variant.secondary
-            ? depth.raised(level)
-            : depth.ink(level);
-    final animate = !MediaQuery.disableAnimationsOf(context);
-
-    return Listener(
-      onPointerDown: (_) => _setPressed(true),
-      onPointerUp: (_) => _setPressed(false),
-      onPointerCancel: (_) => _setPressed(false),
-      child: AnimatedContainer(
-        duration: animate ? AppMotion.state : Duration.zero,
-        curve: AppMotion.curve,
-        decoration: BoxDecoration(
-          borderRadius: AppRadius.mdAll,
-          border: widget.variant == _Variant.secondary && widget.enabled
-              ? Border.all(color: depth.edge)
-              : null,
-          boxShadow: shadows,
-        ),
-        child: widget.child,
-      ),
-    );
   }
 }
 
@@ -243,14 +179,8 @@ class _ButtonContent extends StatelessWidget {
           maintainState: true,
           child: content,
         ),
-        SizedBox.square(
-          dimension: AppSizes.buttonSpinner,
-          child: CircularProgressIndicator(
-            strokeWidth: AppSizes.buttonSpinnerStroke,
-            // The button sets IconTheme color to its foreground color.
-            color: IconTheme.of(context).color,
-          ),
-        ),
+        // The button sets IconTheme color to its foreground color.
+        AppLoader.small(color: IconTheme.of(context).color),
       ],
     );
   }

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../constants/domain_enums.dart';
+import '../l10n/l10n.dart';
+import '../l10n/l10n_labels.dart';
 import '../theme/app_radius.dart';
 import '../theme/app_sizes.dart';
 import '../theme/app_spacing.dart';
 import '../theme/status_tone.dart';
+import '../theme/status_visuals.dart';
 import '../theme/theme_context_ext.dart';
 
 enum StatusBadgeSize { small, medium }
@@ -19,6 +23,7 @@ class StatusBadge extends StatelessWidget {
     required this.label,
     required this.semanticsPrefix,
     this.size = StatusBadgeSize.small,
+    this.source,
   });
 
   StatusBadge.fromVisual(
@@ -33,6 +38,7 @@ class StatusBadge extends StatelessWidget {
           label: visual.label,
           semanticsPrefix: semanticsPrefix,
           size: size,
+          source: visual.source,
         );
 
   final StatusTone tone;
@@ -42,6 +48,22 @@ class StatusBadge extends StatelessWidget {
   /// Spoken kind, e.g. "Booking status" → "Booking status: Confirmed".
   final String semanticsPrefix;
   final StatusBadgeSize size;
+
+  /// Status the badge shows ([StatusVisual.source]); when set, the label is
+  /// translated for the current locale instead of using [label].
+  final Object? source;
+
+  String _text(BuildContext context) {
+    final l = context.l10n;
+    return switch (source) {
+      final BookingStatus s => s.labelIn(l),
+      final PaymentStatus s => s.labelIn(l),
+      final ShopStatus s => s.labelIn(l),
+      ListingState.listed => l.shopListed,
+      ListingState.unlisted => l.shopUnlisted,
+      _ => label,
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +75,7 @@ class StatusBadge extends StatelessWidget {
         .clamp(maxScaleFactor: AppSizes.compactTextScaleCap);
 
     return Semantics(
-      label: '$semanticsPrefix: $label',
+      label: '$semanticsPrefix: ${_text(context)}',
       excludeSemantics: true,
       child: MediaQuery(
         data: MediaQuery.of(context).copyWith(textScaler: scaler),
@@ -80,7 +102,7 @@ class StatusBadge extends StatelessWidget {
               const SizedBox(width: AppSpacing.xs),
               Flexible(
                 child: Text(
-                  label,
+                  _text(context),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: baseStyle?.copyWith(

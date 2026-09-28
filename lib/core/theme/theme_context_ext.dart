@@ -11,7 +11,7 @@ extension ThemeContextX on BuildContext {
   AppColors get appColors =>
       Theme.of(this).extension<AppColors>() ?? AppColors.light;
 
-  /// Neumorphic shadow / well tokens.
+  /// Card / hairline / well surface tokens.
   AppDepth get depth => Theme.of(this).extension<AppDepth>() ?? AppDepth.light;
 
   TextTheme get textStyles => Theme.of(this).textTheme;

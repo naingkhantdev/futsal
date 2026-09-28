@@ -33,16 +33,19 @@ rules_version = '2';
 //   bookings  -> where('customerId', '==', auth.uid)       (customers)
 //             -> where('shopId', '==', users/{uid}.shopId) (shop admins)
 //   blocked_slots -> where('shopId', '==', users/{uid}.shopId)
+//   shops/{shopId}/blacklist -> admins of that shop / superadmin only
 // Queries live in lib/firebase/firestore/*_collection.dart.
 //
 // DOCUMENT-ACCESS BUDGET (get/exists/getAfter/existsAfter). Limits: 10 per
 // single operation, 20 per multi-document request (batch/transaction);
 // repeated access to the same document is cached. Worst case, 4-slot
 // booking create (1 booking + 4 slot writes):
-//   booking op : users/{uid}, court, stadium, shop, getAfter(slot 0..3)   = 8
+//   booking op : users/{uid}, court, stadium, shop, exists(blacklist entry),
+//                getAfter(slot 0..3)                                      = 9
 //   each slot  : users/{uid}, getAfter(booking), exists(booking)          = 3
-//   distinct documents in the request                                    = 10
-//   (even with no cross-operation caching: 8 + 4 * 3 = 20 <= 20)
+//   distinct documents in the request                                    = 11
+//   (users/{uid} and the booking are shared by every operation, so the
+//   cached count stays well under 20)
 // Customer cancel / staff reject (1 booking update + 4 slot deletes):
 //   booking op : users/{uid}, existsAfter(slot 0..3) = 5; each slot delete:
 //   users/{uid}, getAfter(booking) = 2 -> 6 distinct (13 uncached).
@@ -80,6 +83,10 @@ service cloud.firestore {
 
     function blockPath(blockedSlotId) {
       return /databases/$(database)/documents/blocked_slots/$(blockedSlotId);
+    }
+
+    function blacklistPath(shopId, customerId) {
+      return /databases/$(database)/documents/shops/$(shopId)/blacklist/$(customerId);
     }
 
     // --- Identity / roles (users/{uid}) -----------------------------------
@@ -424,6 +431,47 @@ service cloud.firestore {
           && validShopPrivate(shopDocId, docId);
         allow delete: if false;
       }
+
+      // SHOP scope blacklist: a shop's admins stop a customer (e.g. repeated
+      // no-shows) from making NEW bookings at this shop only. Existing
+      // bookings are untouched. Doc id = the customer's uid. The customer
+      // may read their own entry (booking pre-check); validNewBooking
+      // enforces it. Immutable: delete to lift, re-create to change.
+      match /blacklist/{customerId} {
+        allow get: if isSuperadmin()
+          || isAdminOfShop(shopDocId)
+          || (isSelf(customerId) && isActiveUser());
+        allow list: if isSuperadmin() || isAdminOfShop(shopDocId);
+        allow create: if (isAdminOfShop(shopDocId) || isSuperadmin())
+          && validBlacklistEntry(shopDocId, customerId);
+        allow update: if false;
+        allow delete: if isAdminOfShop(shopDocId) || isSuperadmin();
+      }
+    }
+
+    function blacklistKeys() {
+      return ['shopId', 'customerId', 'customerNameSnapshot',
+              'customerPhoneSnapshot', 'reason', 'note', 'createdBy',
+              'createdAt'];
+    }
+
+    // Name/phone are display snapshots taken from the customer's booking
+    // (admins can't read users/{uid}); they grant nothing.
+    // Mirror: BlacklistPolicy (lib/core/constants/blacklist_policy.dart).
+    function validBlacklistEntry(shopId, customerId) {
+      let d = request.resource.data;
+      return d.keys().hasOnly(blacklistKeys())
+        && d.keys().hasAll(['shopId', 'customerId', 'customerNameSnapshot',
+                            'reason', 'createdBy', 'createdAt'])
+        && d.shopId == shopId
+        && d.customerId == customerId
+        && customerId != request.auth.uid
+        && validName(d.customerNameSnapshot)
+        && validPhone(d.get('customerPhoneSnapshot', null))
+        && d.reason in ['noShow', 'other']
+        && optText(d.get('note', null), 200)
+        && d.createdBy == request.auth.uid
+        && d.createdAt == request.time;
     }
 
     // --- stadiums/{stadiumId} ---------------------------------------------
@@ -703,6 +751,9 @@ service cloud.firestore {
              get(stadiumPath(b.stadiumId)).data,
              get(shopPath(b.shopId)).data)
         && newBookingPriceOk(b, get(courtPath(b.stadiumId, b.courtId)).data)
+        // Not blacklisted by this shop (b.shopId is checked against the
+        // court/stadium/shop above).
+        && !exists(blacklistPath(b.shopId, request.auth.uid))
         && allSlotsHeld(b, b.bookingDate, 'booked', bookingId);
     }
 

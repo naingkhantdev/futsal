@@ -154,6 +154,16 @@ final class StadiumUnavailableException extends AppException {
   String get message => "This stadium isn't available for booking right now.";
 }
 
+/// The shop blacklisted this customer (e.g. repeated no-shows): no new
+/// bookings there. Other shops are unaffected.
+final class CustomerBlacklistedException extends AppException {
+  const CustomerBlacklistedException({super.cause, super.stackTrace});
+
+  @override
+  String get message =>
+      "This venue isn't taking bookings from your account. Contact the venue.";
+}
+
 /// Shop suspended, unlisted or inactive — no new bookings.
 final class ShopUnavailableException extends AppException {
   const ShopUnavailableException({super.cause, super.stackTrace});

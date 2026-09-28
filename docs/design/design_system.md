@@ -6,26 +6,23 @@ Scope: PLATFORM-wide UI foundation (no data, no `shopId` impact). Everything her
 
 ---
 
-## 0. v2 visual language: "Soft Swiss" (supersedes §1–5 where they conflict)
+## 0. v3 visual language: "Clean" (supersedes §1–5 and the v2 "Soft Swiss" neumorphism where they conflict)
 
-Minimal · Swiss typography · soft neumorphism. The code in `lib/core/theme` is the source of truth for exact values.
+Minimal · premium · flat. Replaced v2 neumorphism (2026-09-28): the double light/shade shadows, gradient wells and
+black nav pills read as busy. The code in `lib/core/theme` is the source of truth for exact values.
 
-- **Type: Manrope** (bundled static 400–800, `assets/fonts/`). Heavy, tightly tracked headings (w800, negative
-  letter-spacing); w500 body with no extra tracking; `AppTypography.overline` = 11sp w700, +1.4 tracking, uppercase,
-  used for KPI labels and the wordmark. Left-aligned layouts (auth screens included).
-- **Color: ink on mist.** `primary` is near-black ink (`#15181E` light / `#EEF1F5` dark) for CTAs, selection, active
-  nav pill. `surface` `#E9EDF2` is also the neumorphic base. No brand hue: color means status only
-  (success / warning / info / danger containers, softened). Contrast of `onSurfaceVariant` on `surface` ≈ 5.2:1.
-- **Depth: `AppDepth` ThemeExtension** (`context.depth`). Raised = same fill as surface + highlight (top-left) and
-  shade (bottom-right) shadows + faint `edge` hairline, at `DepthLevel.low / medium / high`. Recessed "well" =
-  top-left-dark gradient (no inset BoxShadow in Flutter 3.22). Ink elements get a single soft `ink()` drop shadow.
-  Rules: raised elements sit on the page surface only, never raised-on-raised; never convey state by depth alone.
-- **Components:** `AppCard` raised (r20) · `PrimaryButton` ink + soft drop shadow · `SecondaryButton` raised key,
-  no outline · both sink while pressed · inputs are wells with no border until focus (1.5dp ink) / error ·
-  `SearchField` pill well · nav bar floats on an upward shade with an ink pill indicator · `StickyBottomBar` rounded
-  top, floating · `SlotTile`: available = raised, selected = ink, booked = well, blocked = flat, unavailable =
-  hairline (icon + label on all) · `StatCard` overline label + large numerals + icon in a well · `BrandMark` ink
-  tile in a raised frame.
+- **Type: Manrope** (unchanged): heavy tight headings, w500 body, `AppTypography.overline` for KPI labels / wordmark.
+- **Color: navy on off-white.** `primary` = brand navy `#0E1A33` (light) / `#E6EBF5` (dark) for CTAs and selection.
+  Page `surface` `#F6F7F9`; cards, bars, sheets, dialogs are white (`surfaceContainerLowest` = `AppDepth.base`).
+  Separation by hairline (`outlineVariant` / `AppDepth.edge` `#E5E8EE`), not shadow. Color otherwise means status only.
+- **Depth: `AppDepth`** (`context.depth`): `base`, `edge`, `well`, `shade`. `raisedDecoration` = white + hairline, no
+  shadow; `wellDecoration` = flat gray fill; `ink()` = none; only `DepthLevel.high` (dialogs, menus) casts one faint
+  shadow.
+- **Components:** `AppCard` white + hairline (r16) · `PrimaryButton` flat navy · `SecondaryButton` plain outline ·
+  inputs flat gray fill, no border until focus / error · `SearchField` gray pill · nav bar / rail white with a
+  hairline, soft tinted indicator + navy icon · `StickyBottomBar` white with a top hairline · `SlotTile`: available
+  = white + hairline, selected = navy, booked = gray, blocked = darker gray, unavailable = outline (icon + label on
+  all) · empty/error icon = flat tinted circle · `BrandMark` flat navy tile.
 
 ## 1. Design direction (v1 — see §0 for the current look)
 

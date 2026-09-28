@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_constants.dart';
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/widgets/empty_view.dart';
 import '../../../../core/widgets/loading_view.dart';
 
@@ -50,15 +51,15 @@ class _ProfilePendingViewState extends State<ProfilePendingView> {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     if (!_timedOut) {
-      return const LoadingView(semanticLabel: 'Loading your profile');
+      return LoadingView(semanticLabel: l.loadingProfile);
     }
     return EmptyView(
       icon: Icons.person_outline,
-      title: "Your profile isn't ready yet",
-      message: 'This is taking longer than usual. Check your connection and '
-          'try again.',
-      actionLabel: 'Try again',
+      title: l.profileNotReadyTitle,
+      message: l.profileNotReadyMessage,
+      actionLabel: l.commonTryAgain,
       onAction: _retry,
     );
   }

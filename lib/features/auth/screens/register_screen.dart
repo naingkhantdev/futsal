@@ -6,6 +6,8 @@ import 'package:go_router/go_router.dart';
 import '../../../core/errors/app_exception.dart';
 import '../../../core/extensions/async_value_ext.dart';
 import '../../../core/helpers/form_submit.dart';
+import '../../../core/l10n/l10n.dart';
+import '../../../core/l10n/l10n_labels.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/theme/app_sizes.dart';
 import '../../../core/theme/app_spacing.dart';
@@ -22,12 +24,6 @@ import '../widgets/auth_layout.dart';
 /// Function). Shop admins are provisioned by the superadmin.
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
-
-  static const String _venueOwnerNote =
-      'Own a futsal venue? Shop accounts are set up by our team — '
-      'contact us to join.';
-  static const String _termsNote =
-      'By continuing you agree to the Terms and Privacy Policy.';
 
   @override
   ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
@@ -98,10 +94,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final autovalidate = _submitted
         ? AutovalidateMode.onUserInteraction
         : AutovalidateMode.disabled;
+    final l = context.l10n;
 
     return AuthLayout(
-      headline: 'Create your account',
-      subtitle: 'Book futsal courts in a few taps.',
+      headline: l.registerHeadline,
+      subtitle: l.registerSubtitle,
       children: [
         Form(
           key: _formKey,
@@ -110,7 +107,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 AppTextField(
-                  label: 'Full name',
+                  label: l.fullNameLabel,
                   controller: _name,
                   focusNode: _nameFocus,
                   prefixIcon: Icons.person_outline,
@@ -124,7 +121,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 AppTextField(
-                  label: 'Email',
+                  label: l.emailLabel,
                   controller: _email,
                   focusNode: _emailFocus,
                   prefixIcon: Icons.mail_outline,
@@ -137,11 +134,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 AppTextField(
-                  label: 'Phone (optional)',
+                  label: l.phoneOptionalLabel,
                   controller: _phone,
                   focusNode: _phoneFocus,
                   prefixIcon: Icons.phone_outlined,
-                  helperText: 'Venues use this to reach you about bookings',
+                  helperText: l.phoneHelper,
                   keyboardType: TextInputType.phone,
                   textInputAction: TextInputAction.next,
                   autofillHints: const [AutofillHints.telephoneNumber],
@@ -153,7 +150,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 PasswordField(
                   controller: _password,
                   focusNode: _passwordFocus,
-                  helperText: 'At least 8 characters',
+                  helperText: l.passwordHelper,
                   autofillHints: const [AutofillHints.newPassword],
                   validator: AppValidators.newPassword,
                   autovalidateMode: autovalidate,
@@ -167,14 +164,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         const SizedBox(height: AppSpacing.lg),
         // Terms / Privacy links arrive with the legal pages (Phase 16).
         Text(
-          RegisterScreen._termsNote,
+          l.termsNote,
           style: context.textStyles.bodySmall?.copyWith(color: muted),
         ),
         const SizedBox(height: AppSpacing.lg),
         if (error != null) ...[
           InlineBanner(
-            message: error.message,
-            actionLabel: error is EmailAlreadyInUseException ? 'Log in' : null,
+            message: error.messageIn(l),
+            actionLabel:
+                error is EmailAlreadyInUseException ? l.loginButton : null,
             onAction: error is EmailAlreadyInUseException
                 ? () => context.go(AppRoutes.login)
                 : null,
@@ -182,7 +180,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           const SizedBox(height: AppSpacing.lg),
         ],
         PrimaryButton(
-          label: 'Create account',
+          label: l.createAccountButton,
           onPressed: _submit,
           isLoading: isLoading,
           size: AppButtonSize.large,
@@ -193,9 +191,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           alignment: WrapAlignment.center,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            const Text('Already have an account?'),
+            Text(l.haveAccount),
             AppTextButton(
-              label: 'Log in',
+              label: l.loginButton,
               onPressed: isLoading ? null : () => context.go(AppRoutes.login),
             ),
           ],
@@ -212,7 +210,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             const SizedBox(width: AppSpacing.sm),
             Expanded(
               child: Text(
-                RegisterScreen._venueOwnerNote,
+                l.venueOwnerNote,
                 style: context.textStyles.bodySmall?.copyWith(color: muted),
               ),
             ),

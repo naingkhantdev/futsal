@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// "Soft Swiss" type scale (design_system.md §3).
+/// "Clean" type scale (design_system.md §3).
 ///
 /// Manrope, bundled from `assets/fonts/` (static 400–800 weights). Swiss rules:
 /// heavy, tightly-tracked headings; neutral, un-tracked body; small labels in
@@ -25,6 +25,35 @@ abstract final class AppTypography {
     labelMedium: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, height: 16 / 12, letterSpacing: 0.2),
     labelSmall: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, height: 14 / 11, letterSpacing: 0.3),
   );
+
+  /// Myanmar script needs room: stacked vowel signs and medials sit above
+  /// and below the line, and the Latin scale's tight heights and negative
+  /// tracking would clip or crowd them. Manrope has no Myanmar glyphs, so
+  /// Flutter falls back to the system Myanmar font (Noto Sans Myanmar on
+  /// Android, Myanmar Sangam MN on iOS) per glyph.
+  static TextTheme forMyanmar(TextTheme theme) {
+    TextStyle? adjust(TextStyle? style, double height) => style?.copyWith(
+          height: height,
+          letterSpacing: 0,
+        );
+    return theme.copyWith(
+      displayLarge: adjust(theme.displayLarge, 1.35),
+      displayMedium: adjust(theme.displayMedium, 1.35),
+      displaySmall: adjust(theme.displaySmall, 1.4),
+      headlineLarge: adjust(theme.headlineLarge, 1.45),
+      headlineMedium: adjust(theme.headlineMedium, 1.45),
+      headlineSmall: adjust(theme.headlineSmall, 1.5),
+      titleLarge: adjust(theme.titleLarge, 1.55),
+      titleMedium: adjust(theme.titleMedium, 1.6),
+      titleSmall: adjust(theme.titleSmall, 1.6),
+      bodyLarge: adjust(theme.bodyLarge, 1.7),
+      bodyMedium: adjust(theme.bodyMedium, 1.7),
+      bodySmall: adjust(theme.bodySmall, 1.7),
+      labelLarge: adjust(theme.labelLarge, 1.6),
+      labelMedium: adjust(theme.labelMedium, 1.6),
+      labelSmall: adjust(theme.labelSmall, 1.6),
+    );
+  }
 
   /// Label size used on large (56dp) buttons.
   static const double largeButtonLabelSize = 15;

@@ -9,6 +9,8 @@ import '../../../../core/constants/venue_policy.dart';
 import '../../../../core/extensions/async_value_ext.dart';
 import '../../../../core/helpers/form_leave_guard.dart';
 import '../../../../core/helpers/form_submit.dart';
+import '../../../../core/l10n/l10n.dart';
+import '../../../../core/l10n/l10n_labels.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_sizes.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -39,22 +41,23 @@ class StadiumFormScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final id = stadiumId;
+    final l = context.l10n;
     if (id == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('New stadium')),
+        appBar: AppBar(title: Text(l.stadiumNew)),
         body: const _StadiumForm(stadium: null),
       );
     }
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit stadium')),
+      appBar: AppBar(title: Text(l.stadiumEdit)),
       body: AsyncValueView<StadiumVO?>(
         value: ref.watch(adminStadiumProvider(id)),
         onRetry: () => ref.invalidate(adminStadiumProvider(id)),
         isEmpty: (s) => s == null,
-        empty: const EmptyView(
+        empty: EmptyView(
           icon: Icons.stadium_outlined,
-          title: 'Stadium not found',
-          message: 'It may have been removed.',
+          title: l.stadiumNotFound,
+          message: l.notFoundRemoved,
         ),
         data: (s) => _StadiumForm(stadium: s),
       ),
@@ -159,11 +162,10 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
       ? AppRoutes.shopAdminStadiums
       : AppRoutes.shopAdminStadium(widget.stadium!.id);
 
-  @override
-  String get discardSubject => 'this stadium';
-
-  static String? _nameError(String? v) =>
-      VenueValidators.title(v, emptyMessage: 'Enter the stadium name');
+  String? _nameError(String? v) => VenueValidators.title(
+        v,
+        emptyMessage: context.l10n.stadiumNameRequired,
+      );
   static String? _placeError(String? v) =>
       VenueValidators.optionalText(v, VenuePolicy.placeMaxLength);
   static String? _addressError(String? v) =>
@@ -225,12 +227,16 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
     if (_isCreate) {
       showAppSnackBar(
         context,
-        'Stadium added. Now add its courts.',
+        context.l10n.stadiumAdded,
         tone: SnackTone.success,
       );
       context.pushReplacement(AppRoutes.shopAdminStadium(id));
     } else {
-      showAppSnackBar(context, 'Stadium updated', tone: SnackTone.success);
+      showAppSnackBar(
+        context,
+        context.l10n.stadiumUpdated,
+        tone: SnackTone.success,
+      );
       leave();
     }
   }
@@ -244,6 +250,7 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
         ? AutovalidateMode.onUserInteraction
         : AutovalidateMode.disabled;
     final muted = context.colors.onSurfaceVariant;
+    final l = context.l10n;
 
     Widget text(
       String label,
@@ -288,29 +295,29 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                text('Stadium name', _name,
+                text(l.stadiumNameLabel, _name,
                     icon: Icons.stadium_outlined,
                     focusNode: _nameFocus,
                     validator: _nameError),
-                text('Address (optional)', _address,
+                text(l.addressOptional, _address,
                     icon: Icons.place_outlined, validator: _addressError),
-                text('Township (optional)', _township,
+                text(l.townshipOptional, _township,
                     icon: Icons.map_outlined, validator: _placeError),
-                text('City (optional)', _city,
+                text(l.cityOptional, _city,
                     icon: Icons.location_city_outlined,
                     validator: _placeError),
-                text('Description (optional)', _description,
+                text(l.descriptionOptional, _description,
                     icon: Icons.notes,
                     multiline: true,
                     validator: _descriptionError),
                 const SizedBox(height: AppSpacing.sm),
-                Text('Opening hours', style: context.textStyles.titleSmall),
+                Text(l.openingHoursTitle, style: context.textStyles.titleSmall),
                 const SizedBox(height: AppSpacing.md),
                 Row(
                   children: [
                     Expanded(
                       child: _TimeDropdown(
-                        label: 'Opens',
+                        label: l.opensLabel,
                         value: _open,
                         options: _openOptions,
                         onChanged: isLoading ? null : _setOpen,
@@ -319,7 +326,7 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
                     const SizedBox(width: AppSpacing.md),
                     Expanded(
                       child: _TimeDropdown(
-                        label: 'Closes',
+                        label: l.closesLabel,
                         value: _close,
                         options: _closeOptions,
                         onChanged: isLoading
@@ -331,12 +338,11 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 Text(
-                  'Stadiums open on the hour. Changing hours never moves or '
-                  'cancels existing bookings.',
+                  l.openingHoursNote,
                   style: context.textStyles.bodySmall?.copyWith(color: muted),
                 ),
                 const SizedBox(height: AppSpacing.xl),
-                Text('Facilities', style: context.textStyles.titleSmall),
+                Text(l.facilitiesTitle, style: context.textStyles.titleSmall),
                 const SizedBox(height: AppSpacing.md),
                 Wrap(
                   spacing: AppSpacing.sm,
@@ -345,7 +351,7 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
                     for (final f in Facility.values)
                       FilterChip(
                         avatar: Icon(f.icon, size: AppSizes.iconSm),
-                        label: Text(f.label),
+                        label: Text(f.labelIn(l)),
                         selected: _facilities.contains(f),
                         onSelected: isLoading
                             ? null
@@ -361,10 +367,8 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
                 AppCard(
                   padding: EdgeInsets.zero,
                   child: SwitchListTile(
-                    title: const Text('Open for bookings'),
-                    subtitle: const Text(
-                      "When off, customers can't see or book this stadium.",
-                    ),
+                    title: Text(l.openForBookings),
+                    subtitle: Text(l.stadiumOpenSubtitle),
                     value: _isActive,
                     onChanged: isLoading
                         ? null
@@ -373,11 +377,11 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
                 ),
                 const SizedBox(height: AppSpacing.xl),
                 if (error != null) ...[
-                  InlineBanner(message: error.message),
+                  InlineBanner(message: error.messageIn(l)),
                   const SizedBox(height: AppSpacing.lg),
                 ],
                 PrimaryButton(
-                  label: _isCreate ? 'Add stadium' : 'Save changes',
+                  label: _isCreate ? l.addStadium : l.commonSaveChanges,
                   onPressed: _save,
                   isLoading: isLoading,
                   size: AppButtonSize.large,

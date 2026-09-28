@@ -8,27 +8,42 @@ import 'app_sizes.dart';
 import 'app_spacing.dart';
 import 'app_typography.dart';
 
-/// Light and dark "Soft Swiss" [ThemeData] built from the design tokens
-/// (design_system.md §2–5): ink-on-mist, flat Material components, neumorphic
-/// depth only where `core/widgets` opts in via [AppDepth]. Flutter 3.22 API:
+/// Light and dark "Clean" [ThemeData] built from the design tokens
+/// (design_system.md §0, §2–5): navy on off-white, white cards with hairline
+/// borders, flat Material components, no decorative shadows. Flutter 3.22 API:
 /// `CardTheme`, `DialogTheme`, `TabBarTheme` (not `*ThemeData`).
 abstract final class AppTheme {
-  static ThemeData light() =>
-      _build(AppColorSchemes.light, AppColors.light, AppDepth.light);
+  /// [myanmar] loosens line heights for Myanmar script
+  /// ([AppTypography.forMyanmar]).
+  static ThemeData light({bool myanmar = false}) => _build(
+        AppColorSchemes.light,
+        AppColors.light,
+        AppDepth.light,
+        myanmar: myanmar,
+      );
 
-  static ThemeData dark() =>
-      _build(AppColorSchemes.dark, AppColors.dark, AppDepth.dark);
+  static ThemeData dark({bool myanmar = false}) => _build(
+        AppColorSchemes.dark,
+        AppColors.dark,
+        AppDepth.dark,
+        myanmar: myanmar,
+      );
 
-  /// Fill for raised elements (cards, available slots): the page surface
-  /// itself, lifted by [AppDepth.raised] shadows.
-  static Color raisedSurface(ColorScheme scheme) => scheme.surface;
+  /// Fill for raised elements (cards, available slots): white on the
+  /// off-white page, same as [AppDepth.base].
+  static Color raisedSurface(ColorScheme scheme) =>
+      scheme.surfaceContainerLowest;
 
   static ThemeData _build(
     ColorScheme scheme,
     AppColors appColors,
-    AppDepth depth,
-  ) {
-    final text = AppTypography.textTheme.apply(
+    AppDepth depth, {
+    required bool myanmar,
+  }) {
+    final base = myanmar
+        ? AppTypography.forMyanmar(AppTypography.textTheme)
+        : AppTypography.textTheme;
+    final text = base.apply(
       fontFamily: AppTypography.fontFamily,
       bodyColor: scheme.onSurface,
       displayColor: scheme.onSurface,
@@ -108,14 +123,14 @@ abstract final class AppTheme {
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: scheme.primary,
         foregroundColor: scheme.onPrimary,
-        elevation: 4,
-        focusElevation: 4,
-        hoverElevation: 6,
-        highlightElevation: 2,
+        elevation: 0,
+        focusElevation: 0,
+        hoverElevation: 1,
+        highlightElevation: 0,
         shape: const RoundedRectangleBorder(borderRadius: AppRadius.lgAll),
         extendedTextStyle: text.labelLarge,
       ),
-      // Recessed well: darker fill, no border until focus / error.
+      // Flat light-gray fill, no border until focus / error.
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: scheme.surfaceContainerHigh,
@@ -153,15 +168,18 @@ abstract final class AppTheme {
         ),
       ),
       cardTheme: CardTheme(
-        color: scheme.surface,
+        color: scheme.surfaceContainerLowest,
         elevation: 0,
         margin: EdgeInsets.zero,
         surfaceTintColor: Colors.transparent,
         clipBehavior: Clip.antiAlias,
-        shape: const RoundedRectangleBorder(borderRadius: AppRadius.lgAll),
+        shape: RoundedRectangleBorder(
+          borderRadius: AppRadius.lgAll,
+          side: BorderSide(color: scheme.outlineVariant),
+        ),
       ),
       chipTheme: ChipThemeData(
-        backgroundColor: scheme.surface,
+        backgroundColor: scheme.surfaceContainerLowest,
         selectedColor: scheme.primary,
         disabledColor: disabledBg,
         checkmarkColor: scheme.onPrimary,
@@ -183,18 +201,19 @@ abstract final class AppTheme {
       ),
       navigationBarTheme: NavigationBarThemeData(
         height: AppSizes.navBarHeight,
-        backgroundColor: scheme.surface,
+        backgroundColor: scheme.surfaceContainerLowest,
         surfaceTintColor: Colors.transparent,
         shadowColor: Colors.transparent,
         elevation: 0,
-        indicatorColor: scheme.primary,
+        // Soft tint pill + navy icon: selection without a heavy block.
+        indicatorColor: scheme.secondaryContainer,
         indicatorShape: const StadiumBorder(),
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         labelTextStyle: WidgetStateProperty.resolveWith(
           (states) => states.contains(WidgetState.selected)
               ? text.labelMedium?.copyWith(
-                  color: scheme.onSurface,
-                  fontWeight: FontWeight.w800,
+                  color: scheme.primary,
+                  fontWeight: FontWeight.w700,
                 )
               : text.labelMedium?.copyWith(color: scheme.onSurfaceVariant),
         ),
@@ -202,36 +221,36 @@ abstract final class AppTheme {
           (states) => IconThemeData(
             size: AppSizes.iconLg,
             color: states.contains(WidgetState.selected)
-                ? scheme.onPrimary
+                ? scheme.primary
                 : scheme.onSurfaceVariant,
           ),
         ),
       ),
       navigationRailTheme: NavigationRailThemeData(
-        backgroundColor: scheme.surface,
+        backgroundColor: scheme.surfaceContainerLowest,
         elevation: 0,
         useIndicator: true,
-        indicatorColor: scheme.primary,
+        indicatorColor: scheme.secondaryContainer,
         indicatorShape: const StadiumBorder(),
         labelType: NavigationRailLabelType.all,
         selectedIconTheme: IconThemeData(
           size: AppSizes.iconLg,
-          color: scheme.onPrimary,
+          color: scheme.primary,
         ),
         unselectedIconTheme: IconThemeData(
           size: AppSizes.iconLg,
           color: scheme.onSurfaceVariant,
         ),
         selectedLabelTextStyle: text.labelMedium?.copyWith(
-          color: scheme.onSurface,
-          fontWeight: FontWeight.w800,
+          color: scheme.primary,
+          fontWeight: FontWeight.w700,
         ),
         unselectedLabelTextStyle:
             text.labelMedium?.copyWith(color: scheme.onSurfaceVariant),
       ),
       bottomSheetTheme: BottomSheetThemeData(
-        backgroundColor: scheme.surface,
-        modalBackgroundColor: scheme.surface,
+        backgroundColor: scheme.surfaceContainerLowest,
+        modalBackgroundColor: scheme.surfaceContainerLowest,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         modalElevation: 0,
@@ -241,7 +260,7 @@ abstract final class AppTheme {
         constraints: const BoxConstraints(maxWidth: AppSizes.maxWidthSheet),
       ),
       dialogTheme: DialogTheme(
-        backgroundColor: scheme.surface,
+        backgroundColor: scheme.surfaceContainerLowest,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         shape: const RoundedRectangleBorder(borderRadius: AppRadius.xlAll),
@@ -269,7 +288,8 @@ abstract final class AppTheme {
       ),
       menuTheme: MenuThemeData(
         style: MenuStyle(
-          backgroundColor: WidgetStatePropertyAll<Color?>(scheme.surface),
+          backgroundColor:
+              WidgetStatePropertyAll<Color?>(scheme.surfaceContainerLowest),
           elevation: const WidgetStatePropertyAll<double?>(6),
           shadowColor: WidgetStatePropertyAll<Color?>(depth.shade),
           surfaceTintColor:
@@ -280,7 +300,7 @@ abstract final class AppTheme {
         ),
       ),
       popupMenuTheme: PopupMenuThemeData(
-        color: scheme.surface,
+        color: scheme.surfaceContainerLowest,
         elevation: 6,
         shadowColor: depth.shade,
         surfaceTintColor: Colors.transparent,

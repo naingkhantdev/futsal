@@ -1,13 +1,13 @@
 import 'package:flutter/widgets.dart';
 
-/// Corner radii (design_system.md §4.2). Slightly softer than stock M3 so the
-/// neumorphic light/shadow pair reads as a continuous surface.
+/// Corner radii (design_system.md §4.2). Moderate, not bubbly: the flat
+/// "Clean" look keeps corners calm.
 abstract final class AppRadius {
   static const double xs = 6;
   static const double sm = 10;
-  static const double md = 14;
-  static const double lg = 20;
-  static const double xl = 28;
+  static const double md = 12;
+  static const double lg = 16;
+  static const double xl = 24;
   static const double full = 999;
 
   static const BorderRadius xsAll = BorderRadius.all(Radius.circular(xs));

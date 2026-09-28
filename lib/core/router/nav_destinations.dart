@@ -7,29 +7,29 @@ import '../widgets/adaptive_nav_shell.dart';
 /// the branch order of the role's `StatefulShellRoute` in app_router.dart.
 abstract final class NavDestinations {
   static const List<NavDestination> customer = [
-    NavDestination(label: 'Home', icon: Icons.home_outlined, selectedIcon: Icons.home),
-    NavDestination(label: 'Explore', icon: Icons.explore_outlined, selectedIcon: Icons.explore),
-    NavDestination(label: 'Bookings', icon: Icons.calendar_month_outlined, selectedIcon: Icons.calendar_month),
-    NavDestination(label: 'Notifications', icon: Icons.notifications_outlined, selectedIcon: Icons.notifications),
-    NavDestination(label: 'Profile', icon: Icons.person_outline, selectedIcon: Icons.person),
+    NavDestination(label: NavLabel.home, icon: Icons.home_outlined, selectedIcon: Icons.home),
+    NavDestination(label: NavLabel.explore, icon: Icons.explore_outlined, selectedIcon: Icons.explore),
+    NavDestination(label: NavLabel.bookings, icon: Icons.calendar_month_outlined, selectedIcon: Icons.calendar_month),
+    NavDestination(label: NavLabel.notifications, icon: Icons.notifications_outlined, selectedIcon: Icons.notifications),
+    NavDestination(label: NavLabel.profile, icon: Icons.person_outline, selectedIcon: Icons.person),
   ];
 
   /// Courts are managed inside Stadiums; blocked slots from Bookings.
   static const List<NavDestination> shopAdmin = [
-    NavDestination(label: 'Dashboard', icon: Icons.space_dashboard_outlined, selectedIcon: Icons.space_dashboard),
-    NavDestination(label: 'Bookings', icon: Icons.calendar_month_outlined, selectedIcon: Icons.calendar_month),
-    NavDestination(label: 'Stadiums', icon: Icons.stadium_outlined, selectedIcon: Icons.stadium),
-    NavDestination(label: 'Customers', icon: Icons.groups_outlined, selectedIcon: Icons.groups),
-    NavDestination(label: 'Settings', icon: Icons.settings_outlined, selectedIcon: Icons.settings),
+    NavDestination(label: NavLabel.dashboard, icon: Icons.space_dashboard_outlined, selectedIcon: Icons.space_dashboard),
+    NavDestination(label: NavLabel.bookings, icon: Icons.calendar_month_outlined, selectedIcon: Icons.calendar_month),
+    NavDestination(label: NavLabel.stadiums, icon: Icons.stadium_outlined, selectedIcon: Icons.stadium),
+    NavDestination(label: NavLabel.customers, icon: Icons.groups_outlined, selectedIcon: Icons.groups),
+    NavDestination(label: NavLabel.settings, icon: Icons.settings_outlined, selectedIcon: Icons.settings),
   ];
 
   /// Onboarding requests live in the Shops tab.
   static const List<NavDestination> superadmin = [
-    NavDestination(label: 'Dashboard', icon: Icons.space_dashboard_outlined, selectedIcon: Icons.space_dashboard),
-    NavDestination(label: 'Shops', icon: Icons.storefront_outlined, selectedIcon: Icons.storefront),
-    NavDestination(label: 'Bookings', icon: Icons.calendar_month_outlined, selectedIcon: Icons.calendar_month),
-    NavDestination(label: 'Customers', icon: Icons.groups_outlined, selectedIcon: Icons.groups),
-    NavDestination(label: 'Settings', icon: Icons.settings_outlined, selectedIcon: Icons.settings),
+    NavDestination(label: NavLabel.dashboard, icon: Icons.space_dashboard_outlined, selectedIcon: Icons.space_dashboard),
+    NavDestination(label: NavLabel.shops, icon: Icons.storefront_outlined, selectedIcon: Icons.storefront),
+    NavDestination(label: NavLabel.bookings, icon: Icons.calendar_month_outlined, selectedIcon: Icons.calendar_month),
+    NavDestination(label: NavLabel.customers, icon: Icons.groups_outlined, selectedIcon: Icons.groups),
+    NavDestination(label: NavLabel.settings, icon: Icons.settings_outlined, selectedIcon: Icons.settings),
   ];
 
   static List<NavDestination> forRole(UserRole role) => switch (role) {

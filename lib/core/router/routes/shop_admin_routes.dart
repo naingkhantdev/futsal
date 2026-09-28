@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 
+import '../../../features/shop_admin/blacklist/screens/blacklist_screen.dart';
 import '../../../features/shop_admin/blocked_slots/screens/blocked_slot_form_screen.dart';
 import '../../../features/shop_admin/blocked_slots/screens/blocked_slots_screen.dart';
 import '../../../features/shop_admin/bookings/screens/shop_admin_booking_detail_screen.dart';
@@ -97,6 +98,11 @@ final List<RouteBase> shopAdminRoutes = [
               path: 'shop-profile',
               parentNavigatorKey: rootNavigatorKey,
               builder: (_, __) => const ShopProfileScreen(),
+            ),
+            GoRoute(
+              path: 'blacklist',
+              parentNavigatorKey: rootNavigatorKey,
+              builder: (_, __) => const BlacklistScreen(),
             ),
           ],
         ),

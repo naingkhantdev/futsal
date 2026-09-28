@@ -6,6 +6,8 @@ import '../../../../core/constants/venue_policy.dart';
 import '../../../../core/extensions/async_value_ext.dart';
 import '../../../../core/helpers/form_leave_guard.dart';
 import '../../../../core/helpers/form_submit.dart';
+import '../../../../core/l10n/l10n.dart';
+import '../../../../core/l10n/l10n_labels.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/theme_context_ext.dart';
@@ -36,9 +38,10 @@ class ShopFormScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final id = shopId;
+    final l = context.l10n;
     if (id == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('New shop')),
+        appBar: AppBar(title: Text(l.shopNew)),
         body: const _ShopForm(shopId: null, shop: null, details: null),
       );
     }
@@ -54,7 +57,7 @@ class ShopFormScreen extends ConsumerWidget {
       _ => const AsyncValue.loading(),
     };
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit shop')),
+      appBar: AppBar(title: Text(l.shopEdit)),
       body: AsyncValueView<({ShopVO? shop, ShopPrivateVO? details})>(
         value: both,
         onRetry: () {
@@ -62,10 +65,10 @@ class ShopFormScreen extends ConsumerWidget {
           ref.invalidate(shopPrivateProvider(id));
         },
         isEmpty: (v) => v.shop == null,
-        empty: const EmptyView(
+        empty: EmptyView(
           icon: Icons.storefront_outlined,
-          title: 'Shop not found',
-          message: 'It may have been removed.',
+          title: l.shopNotFound,
+          message: l.notFoundRemoved,
         ),
         data: (v) => _ShopForm(shopId: id, shop: v.shop, details: v.details),
       ),
@@ -159,17 +162,16 @@ class _ShopFormState extends ConsumerState<_ShopForm>
       ? AppRoutes.superadminShops
       : AppRoutes.superadminShop(widget.shopId!);
 
-  @override
-  String get discardSubject => 'this shop';
-
   String? _descriptionError(String? v) =>
       VenueValidators.optionalText(v, VenuePolicy.descriptionMaxLength);
   String? _addressError(String? v) =>
       VenueValidators.optionalText(v, VenuePolicy.addressMaxLength);
   String? _placeError(String? v) =>
       VenueValidators.optionalText(v, VenuePolicy.placeMaxLength);
-  static String? _nameError(String? v) =>
-      VenueValidators.title(v, emptyMessage: 'Enter the shop name');
+  String? _nameError(String? v) => VenueValidators.title(
+        v,
+        emptyMessage: context.l10n.shopNameRequired,
+      );
 
   Future<void> _save() async {
     if (widget.shopId != null && !hasChanges) {
@@ -216,7 +218,7 @@ class _ShopFormState extends ConsumerState<_ShopForm>
     final creating = widget.shopId == null;
     showAppSnackBar(
       context,
-      creating ? 'Shop created. Review it to approve.' : 'Shop updated',
+      creating ? context.l10n.shopCreated : context.l10n.shopUpdated,
       tone: SnackTone.success,
     );
     if (creating) {
@@ -235,6 +237,7 @@ class _ShopFormState extends ConsumerState<_ShopForm>
     final autovalidate = _submitted
         ? AutovalidateMode.onUserInteraction
         : AutovalidateMode.disabled;
+    final l = context.l10n;
 
     Widget field(
       String label,
@@ -284,37 +287,36 @@ class _ShopFormState extends ConsumerState<_ShopForm>
               children: [
                 if (widget.shopId == null) ...[
                   Text(
-                    'New shops start as "Pending review" and stay hidden '
-                    'from customers until you approve them.',
+                    l.shopNewNote,
                     style: context.textStyles.bodyMedium
                         ?.copyWith(color: context.colors.onSurfaceVariant),
                   ),
                   const SizedBox(height: AppSpacing.xl),
                 ],
-                field('Shop name', _name,
+                field(l.shopNameLabel, _name,
                     icon: Icons.storefront_outlined,
                     focusNode: _nameFocus,
                     validator: _nameError),
-                field('Phone (optional)', _phone,
+                field(l.phoneOptionalLabel, _phone,
                     icon: Icons.phone_outlined,
                     focusNode: _phoneFocus,
                     keyboardType: TextInputType.phone,
-                    helperText: 'Shown to customers',
+                    helperText: l.shopPhoneHelper,
                     validator: AppValidators.optionalPhone),
-                field('Email (optional)', _email,
+                field(l.emailOptional, _email,
                     icon: Icons.mail_outline,
                     focusNode: _emailFocus,
                     keyboardType: TextInputType.emailAddress,
                     caps: TextCapitalization.none,
                     validator: VenueValidators.optionalEmail),
-                field('Address (optional)', _address,
+                field(l.addressOptional, _address,
                     icon: Icons.place_outlined, validator: _addressError),
-                field('Township (optional)', _township,
+                field(l.townshipOptional, _township,
                     icon: Icons.map_outlined, validator: _placeError),
-                field('City (optional)', _city,
+                field(l.cityOptional, _city,
                     icon: Icons.location_city_outlined,
                     validator: _placeError),
-                field('Description (optional)', _description,
+                field(l.descriptionOptional, _description,
                     icon: Icons.notes,
                     keyboardType: TextInputType.multiline,
                     caps: TextCapitalization.sentences,
@@ -322,28 +324,29 @@ class _ShopFormState extends ConsumerState<_ShopForm>
                     maxLines: 6,
                     validator: _descriptionError),
                 const SizedBox(height: AppSpacing.sm),
-                Text('Owner (private)', style: context.textStyles.titleSmall),
+                Text(l.ownerPrivateTitle, style: context.textStyles.titleSmall),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
-                  "Only you and this shop's admins can see these.",
+                  l.ownerPrivateNote,
                   style: context.textStyles.bodySmall
                       ?.copyWith(color: context.colors.onSurfaceVariant),
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                field('Owner name (optional)', _ownerName,
+                field(l.ownerNameOptional, _ownerName,
                     icon: Icons.person_outline, validator: _placeError),
-                field('Owner phone (optional)', _ownerPhone,
+                field(l.ownerPhoneOptional, _ownerPhone,
                     icon: Icons.phone_outlined,
                     focusNode: _ownerPhoneFocus,
                     keyboardType: TextInputType.phone,
                     validator: AppValidators.optionalPhone),
                 const SizedBox(height: AppSpacing.sm),
                 if (error != null) ...[
-                  InlineBanner(message: error.message),
+                  InlineBanner(message: error.messageIn(l)),
                   const SizedBox(height: AppSpacing.lg),
                 ],
                 PrimaryButton(
-                  label: widget.shopId == null ? 'Create shop' : 'Save changes',
+                  label:
+                      widget.shopId == null ? l.createShop : l.commonSaveChanges,
                   onPressed: _save,
                   isLoading: isLoading,
                   size: AppButtonSize.large,

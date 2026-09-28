@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/extensions/async_value_ext.dart';
 import '../../../../core/helpers/form_submit.dart';
+import '../../../../core/l10n/l10n.dart';
+import '../../../../core/l10n/l10n_labels.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/validators.dart';
@@ -28,7 +30,7 @@ class EditProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profile = ref.watch(currentUserProfileProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit profile')),
+      appBar: AppBar(title: Text(context.l10n.editProfile)),
       body: AsyncValueView<UserVO?>(
         value: profile,
         onRetry: () => ref.invalidate(currentUserProfileProvider),
@@ -108,12 +110,13 @@ class _EditProfileFormState extends ConsumerState<_EditProfileForm> {
 
   Future<void> _onPopBlocked(bool didPop) async {
     if (didPop) return;
+    final l = context.l10n;
     final discard = await showConfirmDialog(
       context,
-      title: 'Discard changes?',
-      message: "Your edits to your profile won't be saved.",
-      confirmLabel: 'Discard',
-      dismissLabel: 'Keep editing',
+      title: l.commonDiscardTitle,
+      message: l.profileDiscardMessage,
+      confirmLabel: l.commonDiscard,
+      dismissLabel: l.commonKeepEditing,
       destructive: true,
     );
     if (discard && mounted) _leave();
@@ -142,7 +145,11 @@ class _EditProfileFormState extends ConsumerState<_EditProfileForm> {
         .read(editProfileControllerProvider.notifier)
         .save(name: _name.text, phone: _phone.text);
     if (!ok || !mounted) return;
-    showAppSnackBar(context, 'Profile updated', tone: SnackTone.success);
+    showAppSnackBar(
+      context,
+      context.l10n.profileUpdated,
+      tone: SnackTone.success,
+    );
     _leave();
   }
 
@@ -154,6 +161,7 @@ class _EditProfileFormState extends ConsumerState<_EditProfileForm> {
     final autovalidate = _submitted
         ? AutovalidateMode.onUserInteraction
         : AutovalidateMode.disabled;
+    final l = context.l10n;
 
     return PopScope(
       canPop: _allowPop || !_isDirty,
@@ -169,7 +177,7 @@ class _EditProfileFormState extends ConsumerState<_EditProfileForm> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   AppTextField(
-                    label: 'Full name',
+                    label: l.fullNameLabel,
                     controller: _name,
                     focusNode: _nameFocus,
                     prefixIcon: Icons.person_outline,
@@ -183,11 +191,11 @@ class _EditProfileFormState extends ConsumerState<_EditProfileForm> {
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   AppTextField(
-                    label: 'Phone (optional)',
+                    label: l.phoneOptionalLabel,
                     controller: _phone,
                     focusNode: _phoneFocus,
                     prefixIcon: Icons.phone_outlined,
-                    helperText: 'Venues use this to reach you about bookings',
+                    helperText: l.phoneHelper,
                     keyboardType: TextInputType.phone,
                     textInputAction: TextInputAction.done,
                     autofillHints: const [AutofillHints.telephoneNumber],
@@ -200,21 +208,21 @@ class _EditProfileFormState extends ConsumerState<_EditProfileForm> {
                   // Read-only (full contrast), not disabled: users should be
                   // able to read and copy it, just not change it.
                   AppTextField(
-                    label: 'Email',
+                    label: l.emailLabel,
                     controller: _email,
                     prefixIcon: Icons.mail_outline,
-                    helperText: "Email can't be changed here",
+                    helperText: l.emailCantChange,
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.done,
                     readOnly: true,
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   if (error != null) ...[
-                    InlineBanner(message: error.message),
+                    InlineBanner(message: error.messageIn(l)),
                     const SizedBox(height: AppSpacing.lg),
                   ],
                   PrimaryButton(
-                    label: 'Save changes',
+                    label: l.commonSaveChanges,
                     onPressed: _save,
                     isLoading: isLoading,
                     size: AppButtonSize.large,

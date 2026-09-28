@@ -4,6 +4,7 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/theme_context_ext.dart';
 import '../../../core/widgets/brand_mark.dart';
 import '../../../core/widgets/content_constraint.dart';
+import '../../../core/widgets/language_picker.dart';
 
 /// Shared auth screen layout (design_system.md §9), Swiss-aligned: brand mark
 /// → large left-aligned headline → subtitle → [children], max width 440.
@@ -39,9 +40,17 @@ class AuthLayout extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: BrandMark(showWordmark: true),
+                  // Language is chosen before signing in, so it's here too.
+                  const Row(
+                    children: [
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: BrandMark(showWordmark: true),
+                        ),
+                      ),
+                      LanguageButton(),
+                    ],
                   ),
                   const SizedBox(height: AppSpacing.xxxl),
                   Semantics(

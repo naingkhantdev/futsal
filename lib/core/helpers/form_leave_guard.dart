@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
+import '../l10n/l10n.dart';
 import '../widgets/app_dialogs.dart';
 
 /// "Discard changes?" handling for edit forms (same behaviour as the
@@ -15,9 +16,6 @@ mixin FormLeaveGuard<T extends StatefulWidget> on State<T> {
 
   /// Where to go when there is nothing to pop (deep link into the form).
   String get fallbackRoute;
-
-  /// What the confirm dialog says is lost, e.g. "this shop".
-  String get discardSubject;
 
   bool get canLeave => _allowPop || !hasChanges;
 
@@ -37,12 +35,13 @@ mixin FormLeaveGuard<T extends StatefulWidget> on State<T> {
 
   Future<void> onPopBlocked(bool didPop) async {
     if (didPop) return;
+    final l = context.l10n;
     final discard = await showConfirmDialog(
       context,
-      title: 'Discard changes?',
-      message: "Your changes to $discardSubject won't be saved.",
-      confirmLabel: 'Discard',
-      dismissLabel: 'Keep editing',
+      title: l.commonDiscardTitle,
+      message: l.formDiscardMessage,
+      confirmLabel: l.commonDiscard,
+      dismissLabel: l.commonKeepEditing,
       destructive: true,
     );
     if (discard && mounted) leave();

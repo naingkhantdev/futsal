@@ -44,9 +44,15 @@ extension StatusToneColors on StatusTone {
 /// Everything a [StatusBadge] needs to render a status: never color alone.
 @immutable
 class StatusVisual {
-  const StatusVisual(this.tone, this.icon, this.label);
+  const StatusVisual(this.tone, this.icon, this.label, [this.source]);
 
   final StatusTone tone;
   final IconData icon;
+
+  /// English label (fallback).
   final String label;
+
+  /// The value this visual describes (a status enum or `ListingState`), so
+  /// `StatusBadge` can show the translated label.
+  final Object? source;
 }

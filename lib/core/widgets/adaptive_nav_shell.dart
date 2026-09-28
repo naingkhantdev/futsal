@@ -2,8 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../constants/app_constants.dart';
-import '../theme/app_depth.dart';
+import '../l10n/l10n.dart';
 import '../theme/theme_context_ext.dart';
+
+/// Top-level destination names, translated at build time.
+enum NavLabel {
+  home,
+  explore,
+  bookings,
+  notifications,
+  profile,
+  dashboard,
+  stadiums,
+  customers,
+  settings,
+  shops;
+
+  String text(AppLocalizations l) => switch (this) {
+        NavLabel.home => l.navHome,
+        NavLabel.explore => l.navExplore,
+        NavLabel.bookings => l.navBookings,
+        NavLabel.notifications => l.navNotifications,
+        NavLabel.profile => l.navProfile,
+        NavLabel.dashboard => l.navDashboard,
+        NavLabel.stadiums => l.navStadiums,
+        NavLabel.customers => l.navCustomers,
+        NavLabel.settings => l.navSettings,
+        NavLabel.shops => l.navShops,
+      };
+}
 
 /// One top-level destination: same items, same order on bar and rail.
 @immutable
@@ -15,14 +42,15 @@ class NavDestination {
     this.badgeCount = 0,
   });
 
-  final String label;
+  final NavLabel label;
   final IconData icon;
   final IconData selectedIcon;
   final int badgeCount;
 
   /// Tooltip / spoken label, e.g. "Notifications, 3 new".
-  String get semanticLabel =>
-      badgeCount > 0 ? '$label, $badgeCount new' : label;
+  String semanticLabelIn(AppLocalizations l) => badgeCount > 0
+      ? l.navBadgeNew(label.text(l), badgeCount)
+      : label.text(l);
 
   NavDestination withBadge(int count) => NavDestination(
         label: label,
@@ -53,21 +81,16 @@ class AdaptiveNavShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final depth = context.depth;
+    final l = context.l10n;
 
     if (context.isCompact) {
       return Scaffold(
         body: navigationShell,
         bottomNavigationBar: DecoratedBox(
-          // Soft upward lift instead of a divider line.
+          // White bar with a hairline on top; no shadow.
           decoration: BoxDecoration(
             color: depth.base,
-            boxShadow: [
-              BoxShadow(
-                color: depth.shade.withOpacity(0.35),
-                offset: Offset(0, -DepthLevel.low.distance),
-                blurRadius: DepthLevel.high.blur,
-              ),
-            ],
+            border: Border(top: BorderSide(color: depth.edge)),
           ),
           child: NavigationBar(
             selectedIndex: navigationShell.currentIndex,
@@ -75,8 +98,8 @@ class AdaptiveNavShell extends StatelessWidget {
             destinations: [
               for (final d in destinations)
                 NavigationDestination(
-                  label: d.label,
-                  tooltip: d.semanticLabel,
+                  label: d.label.text(l),
+                  tooltip: d.semanticLabelIn(l),
                   icon: _BadgedIcon(icon: d.icon, count: d.badgeCount),
                   selectedIcon:
                       _BadgedIcon(icon: d.selectedIcon, count: d.badgeCount),
@@ -91,9 +114,12 @@ class AdaptiveNavShell extends StatelessWidget {
     return Scaffold(
       body: Row(
         children: [
-          // Borderless rail on the shared surface: whitespace separates it.
-          ColoredBox(
-            color: depth.base,
+          // White rail with a hairline on its right edge.
+          DecoratedBox(
+            decoration: BoxDecoration(
+              color: depth.base,
+              border: Border(right: BorderSide(color: depth.edge)),
+            ),
             child: SafeArea(
               right: false,
               child: NavigationRail(
@@ -106,7 +132,7 @@ class AdaptiveNavShell extends StatelessWidget {
                 destinations: [
                   for (final d in destinations)
                     NavigationRailDestination(
-                      label: Text(d.label),
+                      label: Text(d.label.text(l)),
                       icon: _BadgedIcon(icon: d.icon, count: d.badgeCount),
                       selectedIcon: _BadgedIcon(
                         icon: d.selectedIcon,

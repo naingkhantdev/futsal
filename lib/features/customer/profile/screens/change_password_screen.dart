@@ -6,6 +6,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/errors/app_exception.dart';
 import '../../../../core/extensions/async_value_ext.dart';
 import '../../../../core/helpers/form_submit.dart';
+import '../../../../core/l10n/l10n.dart';
+import '../../../../core/l10n/l10n_labels.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/validators.dart';
@@ -57,7 +59,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
 
   void _onResult(AsyncValue<void>? _, AsyncValue<void> next) {
     if (next.appError is! IncorrectPasswordException) return;
-    setState(() => _currentError = next.appError!.message);
+    setState(() => _currentError = next.appError!.messageIn(context.l10n));
     _current.clear();
     _currentFocus.requestFocus();
   }
@@ -89,7 +91,11 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
         );
     if (!ok || !mounted) return;
     TextInput.finishAutofillContext();
-    showAppSnackBar(context, 'Password updated', tone: SnackTone.success);
+    showAppSnackBar(
+      context,
+      context.l10n.passwordUpdated,
+      tone: SnackTone.success,
+    );
     if (context.canPop()) {
       context.pop();
     } else {
@@ -108,9 +114,10 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     final autovalidate = _submitted
         ? AutovalidateMode.onUserInteraction
         : AutovalidateMode.disabled;
+    final l = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Change password')),
+      appBar: AppBar(title: Text(l.changePassword)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
         child: ContentConstraint(
@@ -122,7 +129,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   PasswordField(
-                    label: 'Current password',
+                    label: l.currentPasswordLabel,
                     controller: _current,
                     focusNode: _currentFocus,
                     errorText: _currentError,
@@ -138,11 +145,11 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   PasswordField(
-                    label: 'New password',
+                    label: l.newPasswordLabel,
                     controller: _new,
                     focusNode: _newFocus,
                     fieldKey: _newFieldKey,
-                    helperText: 'At least 8 characters',
+                    helperText: l.passwordHelper,
                     autofillHints: const [AutofillHints.newPassword],
                     validator: (v) =>
                         AppValidators.changedPassword(v, _current.text),
@@ -152,11 +159,11 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   if (error != null) ...[
-                    InlineBanner(message: error.message),
+                    InlineBanner(message: error.messageIn(l)),
                     const SizedBox(height: AppSpacing.lg),
                   ],
                   PrimaryButton(
-                    label: 'Update password',
+                    label: l.updatePassword,
                     onPressed: _submit,
                     isLoading: isLoading,
                     size: AppButtonSize.large,

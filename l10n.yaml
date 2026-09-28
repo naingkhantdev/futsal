@@ -1,0 +1,10 @@
+# App strings: English template + Myanmar (Burmese, `my`).
+# Regenerated automatically by `flutter pub get` / `flutter run`, or manually
+# with `flutter gen-l10n`. Never hand-edit lib/core/l10n/generated/.
+arb-dir: lib/core/l10n/arb
+template-arb-file: app_en.arb
+output-dir: lib/core/l10n/generated
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+synthetic-package: false
+nullable-getter: false

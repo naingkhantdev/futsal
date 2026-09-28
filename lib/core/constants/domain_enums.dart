@@ -77,6 +77,15 @@ enum BlockedSlotReason {
   static BlockedSlotReason? tryParse(String? value) => _parse(values, value);
 }
 
+/// Why a shop blacklisted a customer (`shops/{id}/blacklist/{uid}.reason`).
+/// Mirror: firestore.rules `validBlacklistEntry`.
+enum BlacklistReason {
+  noShow,
+  other;
+
+  static BlacklistReason? tryParse(String? value) => _parse(values, value);
+}
+
 /// What holds a slot lock doc (`stadiums/{id}/courts/{id}/slots/{slotId}`,
 /// field `kind`): a booking or a blocked slot.
 enum BusyKind {

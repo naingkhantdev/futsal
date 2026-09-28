@@ -1,0 +1,628 @@
+{
+  "@@locale": "en",
+  "splashTagline": "Book your court in seconds",
+  "splashSettingUp": "Setting up your account…",
+  "splashLoadingAccount": "Loading your account",
+  "splashLoadError": "We couldn't load your account",
+  "commonTryAgain": "Try again",
+  "commonRetry": "Retry",
+  "commonSeeAll": "See all",
+  "commonLoading": "Loading",
+  "commonContinue": "Continue",
+  "commonSaveChanges": "Save changes",
+  "commonDiscard": "Discard",
+  "commonKeepEditing": "Keep editing",
+  "commonDiscardTitle": "Discard changes?",
+  "commonNotAdded": "Not added",
+  "languageTitle": "Language",
+  "languageSubtitle": "Choose the app language",
+  "languageMyanmar": "မြန်မာ",
+  "languageEnglish": "English",
+  "demoBanner": "Sample data · preview only, changes are not saved",
+  "previewOnly": "{action} · preview only, nothing was saved",
+  "@previewOnly": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "logOut": "Log out",
+  "logOutConfirmTitle": "Log out?",
+  "logOutConfirmMessage": "You'll need to log in again to use the app.",
+  "stayLoggedIn": "Stay logged in",
+  "signOut": "Sign out",
+  "accountUnavailableTitle": "Account unavailable",
+  "accountDisabledMessage": "Your account has been disabled. Contact support if you think this is a mistake.",
+  "accountMissingShopMessage": "Your shop access isn't set up yet. Contact the platform team.",
+  "passwordLabel": "Password",
+  "showPassword": "Show password",
+  "hidePassword": "Hide password",
+  "searchHint": "Search",
+  "errorOfflineTitle": "You're offline",
+  "errorNoAccessTitle": "You don't have access",
+  "errorNotFoundTitle": "Not found",
+  "errorGenericTitle": "Something went wrong",
+  "errAuthentication": "Please log in again to continue.",
+  "errInvalidCredentials": "Email or password is incorrect.",
+  "errInvalidEmail": "Enter a valid email address.",
+  "errEmailInUse": "An account with this email already exists. Log in instead?",
+  "errWeakPassword": "Use at least 8 characters.",
+  "errTooManyRequests": "Too many attempts. Try again in a few minutes.",
+  "errIncorrectPassword": "Your current password is incorrect.",
+  "errSetupTimeout": "Your account didn't finish loading. Check your connection and try again.",
+  "errUnauthorizedRole": "This account doesn't have access to the app. Contact support.",
+  "errPermissionDenied": "You don't have permission to do that.",
+  "errNetwork": "You're offline. Check your connection and try again.",
+  "errNotFound": "We couldn't find what you were looking for.",
+  "errInvalidVenueDetails": "Some details aren't valid. Check the form and try again.",
+  "errShopAdminAssignment": "This account can't be made a shop admin.",
+  "errBookingConflict": "That time was just booked by someone else. Pick another time.",
+  "errCourtUnavailable": "This court isn't available for booking right now.",
+  "errStadiumUnavailable": "This stadium isn't available for booking right now.",
+  "errShopUnavailable": "This venue isn't taking bookings right now.",
+  "errInvalidBookingTime": "That time can't be booked. Check the opening hours and try another time.",
+  "errBookingTooLong": "You can book up to 4 slots at a time.",
+  "errProfileIncomplete": "Add your name in Profile before booking.",
+  "errInvalidBookingChange": "This booking can't be changed that way anymore.",
+  "errInvalidDate": "That date can't be booked. Choose another date.",
+  "errServer": "Something went wrong on our side. Please try again.",
+  "errUnknown": "Something went wrong. Please try again.",
+  "valNameRequired": "Enter your name",
+  "valNameTooLong": "Use 80 characters or fewer",
+  "valEmailRequired": "Enter your email",
+  "valEmailInvalid": "Enter a valid email address",
+  "valPhoneInvalid": "Enter a valid phone number",
+  "valPasswordRequired": "Enter your password",
+  "valPasswordTooShort": "Use at least 8 characters",
+  "valCurrentPasswordRequired": "Enter your current password",
+  "valPasswordSame": "Choose a password different from your current one",
+  "navHome": "Home",
+  "navExplore": "Explore",
+  "navBookings": "Bookings",
+  "navNotifications": "Notifications",
+  "navProfile": "Profile",
+  "navDashboard": "Dashboard",
+  "navStadiums": "Stadiums",
+  "navCustomers": "Customers",
+  "navSettings": "Settings",
+  "navShops": "Shops",
+  "navBadgeNew": "{label}, {count} new",
+  "@navBadgeNew": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bookingPending": "Pending",
+  "bookingConfirmed": "Confirmed",
+  "bookingRejected": "Rejected",
+  "bookingCancelled": "Cancelled",
+  "bookingCompleted": "Completed",
+  "paymentUnpaid": "Unpaid",
+  "paymentPending": "Payment pending",
+  "paymentPaid": "Paid",
+  "paymentRefunded": "Refunded",
+  "shopPendingReview": "Pending review",
+  "shopActive": "Active",
+  "shopSuspended": "Suspended",
+  "shopRejected": "Rejected",
+  "shopInactive": "Inactive",
+  "shopListed": "Listed",
+  "shopUnlisted": "Unlisted",
+  "bookingStatusPrefix": "Booking status",
+  "paymentStatusPrefix": "Payment status",
+  "facilityParking": "Parking",
+  "facilityShower": "Shower",
+  "facilityChangingRoom": "Changing room",
+  "facilityDrinkingWater": "Drinking water",
+  "facilityFloodLights": "Flood lights",
+  "facilitySeating": "Seating",
+  "facilityRestroom": "Restroom",
+  "facilityCafe": "Cafe",
+  "facilityEquipmentRental": "Equipment rental",
+  "reasonMaintenance": "Maintenance",
+  "reasonPrivateEvent": "Private event",
+  "reasonCleaning": "Cleaning",
+  "reasonTournament": "Tournament",
+  "reasonTemporaryClosure": "Temporary closure",
+  "reasonOther": "Other",
+  "slotAvailable": "Available",
+  "slotSelected": "Selected",
+  "slotBooked": "Booked",
+  "slotBlocked": "Blocked",
+  "slotClosed": "Closed",
+  "slotUnavailable": "Unavailable",
+  "dayToday": "Today",
+  "dayTomorrow": "Tomorrow",
+  "dayYesterday": "Yesterday",
+  "durationMinutes": "{minutes} min",
+  "@durationMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "durationOneHour": "1 hour",
+  "durationHours": "{hours} hours",
+  "@durationHours": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "agoJustNow": "Just now",
+  "agoMinutes": "{count} min ago",
+  "@agoMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "agoHours": "{count} h ago",
+  "@agoHours": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "agoDays": "{count} d ago",
+  "@agoDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "loginHeadline": "Welcome back",
+  "loginSubtitle": "Log in to book your next game.",
+  "emailLabel": "Email",
+  "forgotPasswordLink": "Forgot password?",
+  "loginButton": "Log in",
+  "newHere": "New here?",
+  "createAccountLink": "Create an account",
+  "registerHeadline": "Create your account",
+  "registerSubtitle": "Book futsal courts in a few taps.",
+  "fullNameLabel": "Full name",
+  "phoneOptionalLabel": "Phone (optional)",
+  "phoneHelper": "Venues use this to reach you about bookings",
+  "passwordHelper": "At least 8 characters",
+  "termsNote": "By continuing you agree to the Terms and Privacy Policy.",
+  "venueOwnerNote": "Own a futsal venue? Shop accounts are set up by our team — contact us to join.",
+  "createAccountButton": "Create account",
+  "haveAccount": "Already have an account?",
+  "forgotHeadline": "Reset your password",
+  "forgotSubtitle": "Enter your email and we'll send you a reset link.",
+  "sendResetLink": "Send reset link",
+  "backToLogin": "Back to log in",
+  "resetSentHeadline": "Check your email",
+  "resetSentMessage": "If an account exists for {email}, a reset link is on its way.",
+  "@resetSentMessage": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "resetResent": "Reset link sent again",
+  "resend": "Resend",
+  "resendIn": "Resend in {seconds}s",
+  "@resendIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "profilePhone": "Phone",
+  "editProfile": "Edit profile",
+  "changePassword": "Change password",
+  "addYourName": "Add your name",
+  "profileUpdated": "Profile updated",
+  "profileDiscardMessage": "Your edits to your profile won't be saved.",
+  "emailCantChange": "Email can't be changed here",
+  "passwordUpdated": "Password updated",
+  "currentPasswordLabel": "Current password",
+  "newPasswordLabel": "New password",
+  "updatePassword": "Update password",
+  "loadingProfile": "Loading your profile",
+  "profileNotReadyTitle": "Your profile isn't ready yet",
+  "profileNotReadyMessage": "This is taking longer than usual. Check your connection and try again.",
+  "homeGreeting": "Hi, {name}",
+  "@homeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "homeReady": "Ready to play?",
+  "homeSearchHint": "Search stadiums or townships",
+  "homeNextGame": "Your next game",
+  "homeAllBookings": "All bookings",
+  "homeNoGames": "No games booked. Pick a court below.",
+  "homePopular": "Popular near you",
+  "exploreEmptyTitle": "No stadiums found",
+  "exploreEmptyMessage": "Try another name or remove a filter.",
+  "priceFromPerHour": "From {price}/hr",
+  "@priceFromPerHour": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "pricePerHour": "{price}/hr",
+  "@pricePerHour": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "pricePerHourLong": "{price} / hour",
+  "@pricePerHourLong": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "priceOnRequest": "Price on request",
+  "priceFrom": "From",
+  "bookACourt": "Book a court",
+  "openDaily": "Open {hours} daily",
+  "@openDaily": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "byShop": "by {shop}",
+  "@byShop": {
+    "placeholders": {
+      "shop": {
+        "type": "String"
+      }
+    }
+  },
+  "facilitiesTitle": "Facilities",
+  "courtsTitle": "Courts",
+  "upToPlayers": "Up to {count} players",
+  "@upToPlayers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "slotLengthLabel": "{minutes}-min slots",
+  "@slotLengthLabel": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "courtLabel": "Court",
+  "dayLabel": "Day",
+  "pickStartTime": "Pick a start time",
+  "slotRules": "Up to {max} consecutive {minutes}-min slots · {price}/hr",
+  "@slotRules": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewTitle": "Review booking",
+  "reviewNothingTitle": "Nothing to review",
+  "reviewNothingMessage": "Pick a court and a time first.",
+  "reviewPickTime": "Pick a time",
+  "requestBookingButton": "Request booking · {total}",
+  "@requestBookingButton": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "bookingRequestAction": "Booking request",
+  "dateLabel": "Date",
+  "timeLabel": "Time",
+  "totalLabel": "Total",
+  "payAtVenueNote": "Pay at the venue. The shop confirms your request, usually within a few hours.",
+  "confirmTitle": "Booking requested",
+  "confirmMessage": "We'll notify you as soon as {stadium} confirms.",
+  "@confirmMessage": {
+    "placeholders": {
+      "stadium": {
+        "type": "String"
+      }
+    }
+  },
+  "totalPayAtVenue": "Total · pay at the venue",
+  "viewBooking": "View booking",
+  "backToHome": "Back to home",
+  "tabUpcoming": "Upcoming ({count})",
+  "@tabUpcoming": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tabPast": "Past ({count})",
+  "@tabPast": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "emptyUpcomingTitle": "No upcoming games",
+  "emptyUpcomingMessage": "Book a court and it shows up here.",
+  "emptyPastTitle": "No past bookings",
+  "emptyPastMessage": "Games you have played appear here.",
+  "allStadiums": "All stadiums ({count})",
+  "@allStadiums": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bookingTitle": "Booking",
+  "viewVenue": "View venue",
+  "cancelBooking": "Cancel booking",
+  "cancelBookingTitle": "Cancel this booking?",
+  "cancelBookingMessage": "The court will be released for others.",
+  "keepIt": "Keep it",
+  "reasonLabel": "Reason: {reason}",
+  "@reasonLabel": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "venueLabel": "Venue",
+  "shopLabel": "Shop",
+  "noPhone": "No phone number",
+  "markAllRead": "Mark all read",
+  "markAllReadAction": "Mark all as read",
+  "unreadPrefix": "Unread.",
+  "formDiscardMessage": "Your changes won't be saved.",
+  "formFixFields": "Fix the highlighted fields",
+  "notFoundRemoved": "It may have been removed.",
+  "addressOptional": "Address (optional)",
+  "townshipOptional": "Township (optional)",
+  "cityOptional": "City (optional)",
+  "descriptionOptional": "Description (optional)",
+  "emailOptional": "Email (optional)",
+  "openForBookings": "Open for bookings",
+  "valMaxChars": "Use {max} characters or fewer",
+  "@valMaxChars": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "valPriceRequired": "Enter the price per hour",
+  "valPriceDigits": "Use whole kyat, digits only",
+  "valPriceMax": "Enter a price up to {max}",
+  "@valPriceMax": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "valCapacityRange": "Enter a number from 1 to {max}",
+  "@valCapacityRange": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "stadiumNew": "New stadium",
+  "stadiumEdit": "Edit stadium",
+  "stadiumNotFound": "Stadium not found",
+  "stadiumNameLabel": "Stadium name",
+  "stadiumNameRequired": "Enter the stadium name",
+  "stadiumAdded": "Stadium added. Now add its courts.",
+  "stadiumUpdated": "Stadium updated",
+  "openingHoursTitle": "Opening hours",
+  "opensLabel": "Opens",
+  "closesLabel": "Closes",
+  "openingHoursNote": "Stadiums open on the hour. Changing hours never moves or cancels existing bookings.",
+  "stadiumOpenSubtitle": "When off, customers can't see or book this stadium.",
+  "addStadium": "Add stadium",
+  "courtNew": "New court",
+  "courtEdit": "Edit court",
+  "courtNotFound": "Court not found",
+  "courtNameLabel": "Court name",
+  "courtNameRequired": "Enter a court name, e.g. \"Court 1\"",
+  "courtAdded": "Court added",
+  "courtUpdated": "Court updated",
+  "pricePerHourLabel": "Price per hour ({currency})",
+  "@pricePerHourLabel": {
+    "placeholders": {
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "priceHelper": "Whole kyat. Existing bookings keep the price they were made at.",
+  "slotLengthTitle": "Slot length",
+  "slotLengthNote": "Customers book 1–{max} slots at a time. This can't be changed after the court is created.",
+  "@slotLengthNote": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "slotLengthFixed": "{minutes}-minute slots. Fixed when the court was created so existing bookings can't overlap new ones.",
+  "@slotLengthFixed": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "playersOptional": "Players (optional)",
+  "playersHint": "e.g. 10",
+  "surfaceOptional": "Surface (optional)",
+  "surfaceHint": "e.g. Artificial turf",
+  "courtOpenSubtitle": "When off, customers can't see or book this court. Existing bookings stay.",
+  "addCourt": "Add court",
+  "shopNew": "New shop",
+  "shopEdit": "Edit shop",
+  "shopNotFound": "Shop not found",
+  "shopNameLabel": "Shop name",
+  "shopNameRequired": "Enter the shop name",
+  "shopCreated": "Shop created. Review it to approve.",
+  "shopUpdated": "Shop updated",
+  "shopNewNote": "New shops start as \"Pending review\" and stay hidden from customers until you approve them.",
+  "shopPhoneHelper": "Shown to customers",
+  "ownerPrivateTitle": "Owner (private)",
+  "ownerPrivateNote": "Only you and this shop's admins can see these.",
+  "ownerNameOptional": "Owner name (optional)",
+  "ownerPhoneOptional": "Owner phone (optional)",
+  "createShop": "Create shop",
+  "addShopAdminTitle": "Add shop admin",
+  "inviteIntro": "Ask the shop owner to sign up in the app with their email first. Then find their account here.",
+  "accountEmailLabel": "Account email",
+  "findAccount": "Find account",
+  "noAccountForEmail": "No account uses {email}. Ask them to sign up with this email, then try again.",
+  "@noAccountForEmail": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "nowShopAdmin": "{name} is now a shop admin",
+  "@nowShopAdmin": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cantChangeOwnRole": "You can't change your own role.",
+  "platformAdminCantBeShopAdmin": "Platform admins can't be shop admins. Change their role first.",
+  "alreadyAdminHere": "Already an admin of this shop.",
+  "managesOtherShop": "This account manages another shop. Adding it here removes it from that shop.",
+  "roleUnknownFix": "This account's role is unknown. Fix it in the console.",
+  "currentRole": "Current role: {role}",
+  "@currentRole": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "roleUnknown": "Unknown",
+  "accountDisabledTag": "account disabled",
+  "makeShopAdmin": "Make shop admin",
+  "rolePlatformAdmin": "Platform admin",
+  "roleShopAdmin": "Shop admin",
+  "roleCustomer": "Customer",
+  "blockTimeTitle": "Block time",
+  "stadiumLabel": "Stadium",
+  "fromLabel": "From",
+  "slotsLabel": "Slots",
+  "reasonFieldLabel": "Reason",
+  "noteOptional": "Note (optional)",
+  "newAnnouncementTitle": "New announcement",
+  "sendTo": "Send to {audience}",
+  "@sendTo": {
+    "placeholders": {
+      "audience": {
+        "type": "String"
+      }
+    }
+  },
+  "sendAnnouncementAction": "Send announcement",
+  "audienceLabel": "Audience",
+  "titleLabel": "Title",
+  "messageLabel": "Message",
+  "audienceEveryone": "Everyone",
+  "audienceCustomers": "Customers",
+  "audienceShopAdmins": "Shop admins",
+  "errBlacklisted": "This venue isn't taking bookings from your account. Contact the venue.",
+  "blacklistTitle": "Blacklist",
+  "blacklistSubtitle": "Customers who can't book at your shop",
+  "blacklistIntro": "Blacklisted customers can't make new bookings at your shop. Their existing bookings stay, and they can still book at other shops.",
+  "blacklistEmptyTitle": "No one is blacklisted",
+  "blacklistEmptyMessage": "Blacklist a customer from their profile, or from a booking they didn't show up for.",
+  "blacklistAdd": "Add to blacklist",
+  "blacklistNoShowAction": "Didn't show up · blacklist",
+  "blacklistRemove": "Remove from blacklist",
+  "blacklistRemoveTitle": "Remove {name} from the blacklist?",
+  "@blacklistRemoveTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "blacklistRemoveMessage": "They'll be able to book at your shop again.",
+  "blacklistRemoveConfirm": "Remove",
+  "blacklistKeep": "Keep",
+  "blacklistSheetTitle": "Blacklist {name}",
+  "@blacklistSheetTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "blacklistSheetMessage": "They won't be able to make new bookings at your shop. Existing bookings stay.",
+  "blacklistReasonNoShow": "Didn't show up",
+  "blacklistConfirm": "Blacklist",
+  "blacklistAdded": "{name} is blacklisted",
+  "@blacklistAdded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "blacklistRemoved": "{name} can book again",
+  "@blacklistRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "blacklistedBadge": "Blacklisted",
+  "blacklistedOn": "Blacklisted {date}",
+  "@blacklistedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  }
+}

@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/extensions/async_value_ext.dart';
 import '../../../core/helpers/form_submit.dart';
+import '../../../core/l10n/l10n.dart';
+import '../../../core/l10n/l10n_labels.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/utils/validators.dart';
@@ -71,10 +73,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final autovalidate = _submitted
         ? AutovalidateMode.onUserInteraction
         : AutovalidateMode.disabled;
+    final l = context.l10n;
 
     return AuthLayout(
-      headline: 'Welcome back',
-      subtitle: 'Log in to book your next game.',
+      headline: l.loginHeadline,
+      subtitle: l.loginSubtitle,
       children: [
         Form(
           key: _formKey,
@@ -83,7 +86,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 AppTextField(
-                  label: 'Email',
+                  label: l.emailLabel,
                   controller: _email,
                   focusNode: _emailFocus,
                   prefixIcon: Icons.mail_outline,
@@ -110,18 +113,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         Align(
           alignment: Alignment.centerRight,
           child: AppTextButton(
-            label: 'Forgot password?',
+            label: l.forgotPasswordLink,
             onPressed:
                 isLoading ? null : () => context.push(AppRoutes.forgotPassword),
           ),
         ),
         const SizedBox(height: AppSpacing.lg),
         if (error != null) ...[
-          InlineBanner(message: error.message),
+          InlineBanner(message: error.messageIn(l)),
           const SizedBox(height: AppSpacing.lg),
         ],
         PrimaryButton(
-          label: 'Log in',
+          label: l.loginButton,
           onPressed: _submit,
           isLoading: isLoading,
           size: AppButtonSize.large,
@@ -132,9 +135,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           alignment: WrapAlignment.center,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            const Text('New here?'),
+            Text(l.newHere),
             AppTextButton(
-              label: 'Create an account',
+              label: l.createAccountLink,
               onPressed: isLoading ? null : () => context.go(AppRoutes.register),
             ),
           ],

@@ -8,47 +8,52 @@ import 'status_tone.dart';
 extension BookingStatusVisual on BookingStatus {
   StatusVisual get visual => switch (this) {
         BookingStatus.pending =>
-          const StatusVisual(StatusTone.warning, Icons.hourglass_top, 'Pending'),
+          const StatusVisual(StatusTone.warning, Icons.hourglass_top, 'Pending', BookingStatus.pending),
         BookingStatus.confirmed =>
-          const StatusVisual(StatusTone.success, Icons.check_circle, 'Confirmed'),
+          const StatusVisual(StatusTone.success, Icons.check_circle, 'Confirmed', BookingStatus.confirmed),
         BookingStatus.rejected =>
-          const StatusVisual(StatusTone.danger, Icons.cancel, 'Rejected'),
+          const StatusVisual(StatusTone.danger, Icons.cancel, 'Rejected', BookingStatus.rejected),
         BookingStatus.cancelled =>
-          const StatusVisual(StatusTone.neutral, Icons.event_busy, 'Cancelled'),
+          const StatusVisual(StatusTone.neutral, Icons.event_busy, 'Cancelled', BookingStatus.cancelled),
         BookingStatus.completed =>
-          const StatusVisual(StatusTone.brand, Icons.task_alt, 'Completed'),
+          const StatusVisual(StatusTone.brand, Icons.task_alt, 'Completed', BookingStatus.completed),
       };
 }
 
 extension PaymentStatusVisual on PaymentStatus {
   StatusVisual get visual => switch (this) {
         PaymentStatus.unpaid =>
-          const StatusVisual(StatusTone.neutral, Icons.money_off, 'Unpaid'),
+          const StatusVisual(StatusTone.neutral, Icons.money_off, 'Unpaid', PaymentStatus.unpaid),
         PaymentStatus.pending =>
-          const StatusVisual(StatusTone.warning, Icons.schedule, 'Payment pending'),
+          const StatusVisual(StatusTone.warning, Icons.schedule, 'Payment pending', PaymentStatus.pending),
         PaymentStatus.paid =>
-          const StatusVisual(StatusTone.success, Icons.paid, 'Paid'),
+          const StatusVisual(StatusTone.success, Icons.paid, 'Paid', PaymentStatus.paid),
         PaymentStatus.refunded => const StatusVisual(
-            StatusTone.info, Icons.currency_exchange, 'Refunded'),
+            StatusTone.info, Icons.currency_exchange, 'Refunded', PaymentStatus.refunded),
       };
 }
 
 extension ShopStatusVisual on ShopStatus {
   StatusVisual get visual => switch (this) {
         ShopStatus.pending =>
-          const StatusVisual(StatusTone.warning, Icons.pending, 'Pending review'),
+          const StatusVisual(StatusTone.warning, Icons.pending, 'Pending review', ShopStatus.pending),
         ShopStatus.active =>
-          const StatusVisual(StatusTone.success, Icons.verified, 'Active'),
+          const StatusVisual(StatusTone.success, Icons.verified, 'Active', ShopStatus.active),
         ShopStatus.suspended =>
-          const StatusVisual(StatusTone.danger, Icons.pause_circle, 'Suspended'),
+          const StatusVisual(StatusTone.danger, Icons.pause_circle, 'Suspended', ShopStatus.suspended),
         ShopStatus.rejected =>
-          const StatusVisual(StatusTone.danger, Icons.cancel, 'Rejected'),
+          const StatusVisual(StatusTone.danger, Icons.cancel, 'Rejected', ShopStatus.rejected),
         ShopStatus.inactive => const StatusVisual(
-            StatusTone.neutral, Icons.power_settings_new, 'Inactive'),
+            StatusTone.neutral, Icons.power_settings_new, 'Inactive', ShopStatus.inactive),
       };
 }
 
 /// Shop listing flag (`isListed`) badge.
 StatusVisual shopListingVisual({required bool isListed}) => isListed
-    ? const StatusVisual(StatusTone.brand, Icons.visibility, 'Listed')
-    : const StatusVisual(StatusTone.neutral, Icons.visibility_off, 'Unlisted');
+    ? const StatusVisual(
+        StatusTone.brand, Icons.visibility, 'Listed', ListingState.listed)
+    : const StatusVisual(StatusTone.neutral, Icons.visibility_off, 'Unlisted',
+        ListingState.unlisted);
+
+/// Source key of the listing badge (see [StatusVisual.source]).
+enum ListingState { listed, unlisted }

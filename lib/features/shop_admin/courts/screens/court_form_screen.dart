@@ -7,6 +7,8 @@ import '../../../../core/constants/venue_policy.dart';
 import '../../../../core/extensions/async_value_ext.dart';
 import '../../../../core/helpers/form_leave_guard.dart';
 import '../../../../core/helpers/form_submit.dart';
+import '../../../../core/l10n/l10n.dart';
+import '../../../../core/l10n/l10n_labels.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/status_tone.dart';
@@ -40,23 +42,24 @@ class CourtFormScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final id = courtId;
+    final l = context.l10n;
     if (id == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('New court')),
+        appBar: AppBar(title: Text(l.courtNew)),
         body: _CourtForm(stadiumId: stadiumId, court: null),
       );
     }
     final key = (stadiumId: stadiumId, courtId: id);
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit court')),
+      appBar: AppBar(title: Text(l.courtEdit)),
       body: AsyncValueView<CourtVO?>(
         value: ref.watch(adminCourtProvider(key)),
         onRetry: () => ref.invalidate(adminCourtProvider(key)),
         isEmpty: (c) => c == null,
-        empty: const EmptyView(
+        empty: EmptyView(
           icon: Icons.sports_soccer,
-          title: 'Court not found',
-          message: 'It may have been removed.',
+          title: l.courtNotFound,
+          message: l.notFoundRemoved,
         ),
         data: (c) => _CourtForm(stadiumId: stadiumId, court: c),
       ),
@@ -141,12 +144,9 @@ class _CourtFormState extends ConsumerState<_CourtForm>
       ? AppRoutes.shopAdminStadium(widget.stadiumId)
       : AppRoutes.shopAdminCourt(widget.stadiumId, widget.court!.id);
 
-  @override
-  String get discardSubject => 'this court';
-
-  static String? _nameError(String? v) => VenueValidators.title(
+  String? _nameError(String? v) => VenueValidators.title(
         v,
-        emptyMessage: 'Enter a court name, e.g. "Court 1"',
+        emptyMessage: context.l10n.courtNameRequired,
       );
   static String? _surfaceError(String? v) =>
       VenueValidators.optionalText(v, VenuePolicy.surfaceMaxLength);
@@ -192,7 +192,7 @@ class _CourtFormState extends ConsumerState<_CourtForm>
     if (id == null || !mounted) return;
     showAppSnackBar(
       context,
-      _isCreate ? 'Court added' : 'Court updated',
+      _isCreate ? context.l10n.courtAdded : context.l10n.courtUpdated,
       tone: SnackTone.success,
     );
     leave();
@@ -207,6 +207,7 @@ class _CourtFormState extends ConsumerState<_CourtForm>
         ? AutovalidateMode.onUserInteraction
         : AutovalidateMode.disabled;
     final muted = context.colors.onSurfaceVariant;
+    final l = context.l10n;
 
     return PopScope(
       canPop: canLeave,
@@ -221,7 +222,7 @@ class _CourtFormState extends ConsumerState<_CourtForm>
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 AppTextField(
-                  label: 'Court name',
+                  label: l.courtNameLabel,
                   controller: _name,
                   focusNode: _nameFocus,
                   prefixIcon: Icons.sports_soccer,
@@ -234,12 +235,11 @@ class _CourtFormState extends ConsumerState<_CourtForm>
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 AppTextField(
-                  label: 'Price per hour (${BookingPolicy.currency})',
+                  label: l.pricePerHourLabel(BookingPolicy.currency),
                   controller: _price,
                   focusNode: _priceFocus,
                   prefixIcon: Icons.payments_outlined,
-                  helperText: 'Whole kyat. Existing bookings keep the price '
-                      'they were made at.',
+                  helperText: l.priceHelper,
                   keyboardType: TextInputType.number,
                   textInputAction: TextInputAction.next,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -248,13 +248,16 @@ class _CourtFormState extends ConsumerState<_CourtForm>
                   readOnly: isLoading,
                 ),
                 const SizedBox(height: AppSpacing.xl),
-                Text('Slot length', style: context.textStyles.titleSmall),
+                Text(l.slotLengthTitle, style: context.textStyles.titleSmall),
                 const SizedBox(height: AppSpacing.md),
                 if (_isCreate) ...[
                   SegmentedButton<int>(
                     segments: [
                       for (final m in VenuePolicy.allowedSlotMinutes)
-                        ButtonSegment(value: m, label: Text('$m min')),
+                        ButtonSegment(
+                          value: m,
+                          label: Text(l.durationMinutes(m)),
+                        ),
                     ],
                     selected: {_slotMinutes},
                     onSelectionChanged: isLoading
@@ -263,9 +266,7 @@ class _CourtFormState extends ConsumerState<_CourtForm>
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
-                    "Customers book 1–${BookingPolicy.maxSlotsPerBooking} "
-                    "slots at a time. This can't be changed after the "
-                    'court is created.',
+                    l.slotLengthNote(BookingPolicy.maxSlotsPerBooking),
                     style:
                         context.textStyles.bodySmall?.copyWith(color: muted),
                   ),
@@ -273,17 +274,15 @@ class _CourtFormState extends ConsumerState<_CourtForm>
                   InlineBanner(
                     tone: StatusTone.neutral,
                     icon: Icons.lock_outline,
-                    message: '$_slotMinutes-minute slots. Fixed when the '
-                        "court was created so existing bookings can't "
-                        'overlap new ones.',
+                    message: l.slotLengthFixed(_slotMinutes),
                   ),
                 const SizedBox(height: AppSpacing.xl),
                 AppTextField(
-                  label: 'Players (optional)',
+                  label: l.playersOptional,
                   controller: _capacity,
                   focusNode: _capacityFocus,
                   prefixIcon: Icons.groups_outlined,
-                  hintText: 'e.g. 10',
+                  hintText: l.playersHint,
                   keyboardType: TextInputType.number,
                   textInputAction: TextInputAction.next,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -293,10 +292,10 @@ class _CourtFormState extends ConsumerState<_CourtForm>
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 AppTextField(
-                  label: 'Surface (optional)',
+                  label: l.surfaceOptional,
                   controller: _surface,
                   prefixIcon: Icons.grass,
-                  hintText: 'e.g. Artificial turf',
+                  hintText: l.surfaceHint,
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
                   textCapitalization: TextCapitalization.sentences,
@@ -306,7 +305,7 @@ class _CourtFormState extends ConsumerState<_CourtForm>
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 AppTextField(
-                  label: 'Description (optional)',
+                  label: l.descriptionOptional,
                   controller: _description,
                   prefixIcon: Icons.notes,
                   keyboardType: TextInputType.multiline,
@@ -322,11 +321,8 @@ class _CourtFormState extends ConsumerState<_CourtForm>
                 AppCard(
                   padding: EdgeInsets.zero,
                   child: SwitchListTile(
-                    title: const Text('Open for bookings'),
-                    subtitle: const Text(
-                      "When off, customers can't see or book this court. "
-                      'Existing bookings stay.',
-                    ),
+                    title: Text(l.openForBookings),
+                    subtitle: Text(l.courtOpenSubtitle),
                     value: _isActive,
                     onChanged: isLoading
                         ? null
@@ -335,11 +331,11 @@ class _CourtFormState extends ConsumerState<_CourtForm>
                 ),
                 const SizedBox(height: AppSpacing.xl),
                 if (error != null) ...[
-                  InlineBanner(message: error.message),
+                  InlineBanner(message: error.messageIn(l)),
                   const SizedBox(height: AppSpacing.lg),
                 ],
                 PrimaryButton(
-                  label: _isCreate ? 'Add court' : 'Save changes',
+                  label: _isCreate ? l.addCourt : l.commonSaveChanges,
                   onPressed: _save,
                   isLoading: isLoading,
                   size: AppButtonSize.large,

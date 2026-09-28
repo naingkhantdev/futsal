@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../l10n/l10n.dart';
+import '../l10n/l10n_labels.dart';
 import '../theme/app_radius.dart';
 import '../theme/app_sizes.dart';
 import '../theme/app_spacing.dart';
 import '../theme/theme_context_ext.dart';
 
-/// Filled "well" text field (design_system.md §5.2): recessed fill, no border
+/// Filled text field (design_system.md §5.2): flat light-gray fill, no border
 /// until focus (ink) or error. Styling comes from the theme's
 /// `inputDecorationTheme`. A floating label is always required.
 class AppTextField extends StatefulWidget {
@@ -83,7 +85,9 @@ class _AppTextFieldState extends State<AppTextField> {
   bool _hasError = false;
 
   String? _validate(String? value) {
-    final error = widget.validator?.call(value);
+    final raw = widget.validator?.call(value);
+    // Validators return fixed English copy; show it in the app language.
+    final error = raw == null ? null : localizeValidation(context.l10n, raw);
     final hasError = error != null;
     if (hasError != _hasError) {
       // Validation can run during build; defer the icon update.
@@ -138,7 +142,7 @@ class _AppTextFieldState extends State<AppTextField> {
 class PasswordField extends StatefulWidget {
   const PasswordField({
     super.key,
-    this.label = 'Password',
+    this.label,
     this.controller,
     this.helperText,
     this.validator,
@@ -153,7 +157,8 @@ class PasswordField extends StatefulWidget {
     this.fieldKey,
   });
 
-  final String label;
+  /// Defaults to "Password" in the app language.
+  final String? label;
   final TextEditingController? controller;
   final String? helperText;
   final FormFieldValidator<String>? validator;
@@ -176,8 +181,9 @@ class _PasswordFieldState extends State<PasswordField> {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     return AppTextField(
-      label: widget.label,
+      label: widget.label ?? l.passwordLabel,
       controller: widget.controller,
       helperText: widget.helperText,
       validator: widget.validator,
@@ -194,7 +200,7 @@ class _PasswordFieldState extends State<PasswordField> {
       obscureText: _obscured,
       prefixIcon: Icons.lock_outline,
       suffixIcon: IconButton(
-        tooltip: _obscured ? 'Show password' : 'Hide password',
+        tooltip: _obscured ? l.showPassword : l.hidePassword,
         icon: Icon(
           _obscured ? Icons.visibility_outlined : Icons.visibility_off_outlined,
           size: AppSizes.iconMd,
@@ -205,18 +211,19 @@ class _PasswordFieldState extends State<PasswordField> {
   }
 }
 
-/// Pill search field: height 48, no border, recessed neumorphic well.
+/// Pill search field: height 48, no border, flat light-gray fill.
 class SearchField extends StatelessWidget {
   const SearchField({
     super.key,
-    this.hintText = 'Search',
+    this.hintText,
     this.controller,
     this.onChanged,
     this.onSubmitted,
     this.autofocus = false,
   });
 
-  final String hintText;
+  /// Defaults to "Search" in the app language.
+  final String? hintText;
   final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
@@ -240,7 +247,7 @@ class SearchField extends StatelessWidget {
         textInputAction: TextInputAction.search,
         keyboardType: TextInputType.text,
         decoration: InputDecoration(
-          hintText: hintText,
+          hintText: hintText ?? context.l10n.searchHint,
           fillColor: Colors.transparent,
           prefixIcon: const Icon(Icons.search, size: AppSizes.iconMd),
           contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),

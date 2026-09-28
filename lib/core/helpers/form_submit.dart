@@ -1,10 +1,7 @@
 import 'package:flutter/semantics.dart';
 import 'package:flutter/widgets.dart';
 
-/// Copy announced when a submit fails client validation.
-abstract final class FormCopy {
-  static const String fixHighlightedFields = 'Fix the highlighted fields';
-}
+import '../l10n/l10n.dart';
 
 /// A form field for [validateFormForSubmit]: its focus node and a check
 /// that re-runs its validator against the current value.
@@ -32,7 +29,7 @@ bool validateFormForSubmit(
     }
   }
   SemanticsService.announce(
-    FormCopy.fixHighlightedFields,
+    context.l10n.formFixFields,
     Directionality.of(context),
   );
   return false;

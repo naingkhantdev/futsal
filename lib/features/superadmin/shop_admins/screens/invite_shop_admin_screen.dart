@@ -3,9 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/domain_enums.dart';
-import '../../../../core/constants/domain_labels.dart';
 import '../../../../core/extensions/async_value_ext.dart';
 import '../../../../core/helpers/form_submit.dart';
+import '../../../../core/l10n/l10n.dart';
+import '../../../../core/l10n/l10n_labels.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/status_tone.dart';
@@ -78,7 +79,7 @@ class _InviteShopAdminScreenState extends ConsumerState<InviteShopAdminScreen> {
     if (!ok || !mounted) return;
     showAppSnackBar(
       context,
-      '${user.hasName ? user.name : user.email} is now a shop admin',
+      context.l10n.nowShopAdmin(user.hasName ? user.name : user.email),
       tone: SnackTone.success,
     );
     if (context.canPop()) {
@@ -96,9 +97,10 @@ class _InviteShopAdminScreenState extends ConsumerState<InviteShopAdminScreen> {
       currentAuthSessionProvider.select((s) => s is SignedIn ? s.uid : null),
     );
     final error = lookup.appError ?? assigning.appError;
+    final l = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Add shop admin')),
+      appBar: AppBar(title: Text(l.addShopAdminTitle)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
         child: ContentConstraint(
@@ -107,8 +109,7 @@ class _InviteShopAdminScreenState extends ConsumerState<InviteShopAdminScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Ask the shop owner to sign up in the app with their email '
-                'first. Then find their account here.',
+                l.inviteIntro,
                 style: context.textStyles.bodyMedium
                     ?.copyWith(color: context.colors.onSurfaceVariant),
               ),
@@ -116,7 +117,7 @@ class _InviteShopAdminScreenState extends ConsumerState<InviteShopAdminScreen> {
               Form(
                 key: _formKey,
                 child: AppTextField(
-                  label: 'Account email',
+                  label: l.accountEmailLabel,
                   controller: _email,
                   focusNode: _emailFocus,
                   prefixIcon: Icons.mail_outline,
@@ -138,7 +139,7 @@ class _InviteShopAdminScreenState extends ConsumerState<InviteShopAdminScreen> {
               ),
               const SizedBox(height: AppSpacing.lg),
               SecondaryButton(
-                label: 'Find account',
+                label: l.findAccount,
                 icon: Icons.search,
                 isLoading: lookup.isLoading,
                 expand: true,
@@ -146,7 +147,7 @@ class _InviteShopAdminScreenState extends ConsumerState<InviteShopAdminScreen> {
               ),
               const SizedBox(height: AppSpacing.xl),
               if (error != null) ...[
-                InlineBanner(message: error.message),
+                InlineBanner(message: error.messageIn(l)),
                 const SizedBox(height: AppSpacing.lg),
               ],
               if (lookup.valueOrNull case final result?)
@@ -154,8 +155,7 @@ class _InviteShopAdminScreenState extends ConsumerState<InviteShopAdminScreen> {
                     ? InlineBanner(
                         tone: StatusTone.info,
                         icon: Icons.person_search_outlined,
-                        message: 'No account uses ${result.email}. Ask them '
-                            'to sign up with this email, then try again.',
+                        message: l.noAccountForEmail(result.email),
                       )
                     : _CandidateCard(
                         user: result.user!,
@@ -190,23 +190,17 @@ class _CandidateCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final role = user.role;
+    final l = context.l10n;
     // Why this account can't (or shouldn't silently) be assigned.
     final (String? blocker, String? warning) = switch (role) {
-      _ when isMe => ("You can't change your own role.", null),
-      UserRole.superadmin => (
-          "Platform admins can't be shop admins. Change their role first.",
-          null,
-        ),
+      _ when isMe => (l.cantChangeOwnRole, null),
+      UserRole.superadmin => (l.platformAdminCantBeShopAdmin, null),
       UserRole.shopAdmin when user.shopId == shopId => (
-          'Already an admin of this shop.',
+          l.alreadyAdminHere,
           null,
         ),
-      UserRole.shopAdmin => (
-          null,
-          'This account manages another shop. Adding it here removes it '
-              'from that shop.',
-        ),
-      null => ("This account's role is unknown. Fix it in the console.", null),
+      UserRole.shopAdmin => (null, l.managesOtherShop),
+      null => (l.roleUnknownFix, null),
       UserRole.customer => (null, null),
     };
 
@@ -228,8 +222,8 @@ class _CandidateCard extends StatelessWidget {
           ],
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'Current role: ${role?.label ?? 'Unknown'}'
-            '${user.isActive ? '' : ' · account disabled'}',
+            l.currentRole(role?.labelIn(l) ?? l.roleUnknown) +
+                (user.isActive ? '' : ' · ${l.accountDisabledTag}'),
             style: context.textStyles.bodySmall
                 ?.copyWith(color: context.colors.onSurfaceVariant),
           ),
@@ -243,7 +237,7 @@ class _CandidateCard extends StatelessWidget {
           if (blocker == null) ...[
             const SizedBox(height: AppSpacing.lg),
             PrimaryButton(
-              label: 'Make shop admin',
+              label: l.makeShopAdmin,
               icon: Icons.admin_panel_settings_outlined,
               isLoading: isAssigning,
               expand: true,

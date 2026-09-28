@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../errors/app_exception.dart';
+import '../l10n/l10n.dart';
+import '../l10n/l10n_labels.dart';
 import '../theme/app_sizes.dart';
 import '../theme/app_spacing.dart';
 import '../theme/theme_context_ext.dart';
@@ -39,13 +41,13 @@ class ErrorView extends StatelessWidget {
   final VoidCallback? onSecondaryAction;
   final bool _inline;
 
-  (IconData, String) get _iconAndTitle => switch (error) {
-        NetworkException() => (Icons.cloud_off, "You're offline"),
+  (IconData, String) _iconAndTitle(AppLocalizations l) => switch (error) {
+        NetworkException() => (Icons.cloud_off, l.errorOfflineTitle),
         PermissionDeniedException() ||
         AuthenticationException() =>
-          (Icons.lock_outline, "You don't have access"),
-        NotFoundException() => (Icons.search_off, 'Not found'),
-        _ => (Icons.error_outline, 'Something went wrong'),
+          (Icons.lock_outline, l.errorNoAccessTitle),
+        NotFoundException() => (Icons.search_off, l.errorNotFoundTitle),
+        _ => (Icons.error_outline, l.errorGenericTitle),
       };
 
   @override
@@ -55,7 +57,8 @@ class ErrorView extends StatelessWidget {
   Widget _buildFull(BuildContext context) {
     final colors = context.colors;
     final styles = context.textStyles;
-    final (icon, typeTitle) = _iconAndTitle;
+    final l = context.l10n;
+    final (icon, typeTitle) = _iconAndTitle(l);
     final heading = title ?? typeTitle;
     return Center(
       child: SingleChildScrollView(
@@ -82,7 +85,7 @@ class ErrorView extends StatelessWidget {
               ),
               const SizedBox(height: AppSpacing.sm),
               Text(
-                error.message,
+                error.messageIn(l),
                 textAlign: TextAlign.center,
                 style:
                     styles.bodyMedium?.copyWith(color: colors.onSurfaceVariant),
@@ -90,7 +93,7 @@ class ErrorView extends StatelessWidget {
               if (onRetry != null) ...[
                 const SizedBox(height: AppSpacing.xl),
                 SecondaryButton(
-                  label: 'Try again',
+                  label: l.commonTryAgain,
                   icon: Icons.refresh,
                   onPressed: onRetry,
                 ),
@@ -119,10 +122,16 @@ class ErrorView extends StatelessWidget {
           Icon(Icons.error_outline, size: AppSizes.iconMd, color: colors.error),
           const SizedBox(width: AppSpacing.md),
           Expanded(
-            child: Text(error.message, style: context.textStyles.bodyMedium),
+            child: Text(
+              error.messageIn(context.l10n),
+              style: context.textStyles.bodyMedium,
+            ),
           ),
           if (onRetry != null)
-            TextButton(onPressed: onRetry, child: const Text('Retry')),
+            TextButton(
+              onPressed: onRetry,
+              child: Text(context.l10n.commonRetry),
+            ),
         ],
       ),
     );

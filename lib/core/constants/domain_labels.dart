@@ -38,3 +38,24 @@ extension UserRoleLabel on UserRole {
         UserRole.customer => 'Customer',
       };
 }
+
+/// Display copy for [BlockedSlotReason].
+extension BlockedSlotReasonLabel on BlockedSlotReason {
+  String get label => switch (this) {
+        BlockedSlotReason.maintenance => 'Maintenance',
+        BlockedSlotReason.privateEvent => 'Private event',
+        BlockedSlotReason.cleaning => 'Cleaning',
+        BlockedSlotReason.tournament => 'Tournament',
+        BlockedSlotReason.temporaryClosure => 'Temporary closure',
+        BlockedSlotReason.other => 'Other',
+      };
+
+  IconData get icon => switch (this) {
+        BlockedSlotReason.maintenance => Icons.build_outlined,
+        BlockedSlotReason.privateEvent => Icons.celebration_outlined,
+        BlockedSlotReason.cleaning => Icons.cleaning_services_outlined,
+        BlockedSlotReason.tournament => Icons.emoji_events_outlined,
+        BlockedSlotReason.temporaryClosure => Icons.do_not_disturb_on_outlined,
+        BlockedSlotReason.other => Icons.block,
+      };
+}

@@ -22,7 +22,7 @@ Future<bool> showConfirmDialog(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: AppSizes.maxWidthDialog),
           child: AlertDialog(
-            // Soft neumorphic shade instead of a flat Material shadow.
+            // One faint shadow: the dialog floats, nothing else does.
             elevation: 12,
             shadowColor: context.depth.shade,
             title: Text(title),

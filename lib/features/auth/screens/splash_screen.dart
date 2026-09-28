@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/constants/account_copy.dart';
 import '../../../core/constants/app_assets.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../core/theme/app_brand.dart';
 import '../../../core/theme/app_sizes.dart';
 import '../../../core/theme/app_spacing.dart';
@@ -21,10 +21,10 @@ import '../providers/splash_intro_provider.dart';
 /// `/splash` — animated brand intro, shown while the session resolves (auth
 /// state, `users/{uid}` profile, re-creating a missing profile).
 ///
-/// The emblem fades in without its light arcs and swoosh, then the ball
-/// enters on the light arcs at the right, rides them down, crosses behind the emblem and
+/// The emblem fades in without its light arc and swoosh, then the ball
+/// enters on the single light arc at the right, rides it down, crosses behind the emblem and
 /// runs the swoosh ray (from its tip, around the lower left and up) with a
-/// comet light trail, drawing the arcs and swoosh in behind it; it hits its spot with a flash
+/// comet light trail, drawing the arc and swoosh in behind it; it hits its spot with a flash
 /// and the wordmark slides up. A constellation background (from the logo
 /// artwork) drifts behind and a light shine sweeps the emblem afterwards.
 ///
@@ -55,8 +55,6 @@ class _AnimatedSplash extends ConsumerStatefulWidget {
 
 class _AnimatedSplashState extends ConsumerState<_AnimatedSplash>
     with TickerProviderStateMixin {
-  static const String _tagline = 'Book your court in seconds';
-  static const String _setupCaption = 'Setting up your account…';
   static const double _logoSize = 180;
   static const double _progressWidth = 120;
 
@@ -169,7 +167,7 @@ class _AnimatedSplashState extends ConsumerState<_AnimatedSplash>
                     _slideFade(
                       _tag,
                       Text(
-                        _tagline,
+                        context.l10n.splashTagline,
                         textAlign: TextAlign.center,
                         style: text.bodyMedium?.copyWith(
                           color: AppBrand.onNavyMuted,
@@ -216,11 +214,11 @@ class _AnimatedSplashState extends ConsumerState<_AnimatedSplash>
             width: _progressWidth,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(AppSizes.refreshBarHeight),
-              child: const LinearProgressIndicator(
+              child: LinearProgressIndicator(
                 minHeight: AppSizes.refreshBarHeight,
                 color: AppBrand.gold,
                 backgroundColor: AppBrand.navyLight,
-                semanticsLabel: 'Loading your account',
+                semanticsLabel: context.l10n.splashLoadingAccount,
               ),
             ),
           ),
@@ -229,7 +227,7 @@ class _AnimatedSplashState extends ConsumerState<_AnimatedSplash>
             height: captionHeight,
             child: _showCaption && _introDone
                 ? Text(
-                    _setupCaption,
+                    context.l10n.splashSettingUp,
                     textAlign: TextAlign.center,
                     style:
                         text.bodySmall?.copyWith(color: AppBrand.onNavyMuted),
@@ -259,7 +257,7 @@ class _LogoStage extends StatelessWidget {
       Interval(0.1, 0.58, curve: Curves.easeInOutCubic);
   static const double _landAt = 0.58;
 
-  /// Part of the flight over which the ball fades in on the right arcs.
+  /// Part of the flight over which the ball fades in on the right arc.
   static const double _ballFadeIn = 0.06;
 
   /// The swoosh is revealed this far (path fraction) behind the ball, so it
@@ -295,43 +293,66 @@ class _LogoStage extends StatelessWidget {
   static const Offset ballCenter = Offset(0.6217, 0.4219);
   static const double ballDiameter = 0.1953;
 
-  /// The ball's path, traced from logo_mark.png (fractions of the logo
-  /// size, logo top-left = 0,0): in on the light arcs at the right edge,
-  /// down them, across behind the emblem to the swoosh's gold tip at the
-  /// left, then along the swoosh ray — down and around the left side, along
-  /// the bottom, up-right through the streaks into the ball's spot. First
-  /// and last points are Catmull-Rom guides only (start / end direction).
+  /// The ball's path (fractions of the logo size, logo top-left = 0,0).
+  /// The arc and swoosh parts are the centerlines of the gold strokes,
+  /// skeletonized from logo_arcs.png and logo_swoosh.png, so the ball runs
+  /// exactly on them: down the light arc at the right edge, across behind
+  /// the emblem to the swoosh's gold tip at the left, then along the main
+  /// gold band — down and around the left side, along the bottom, up-right —
+  /// and up into the ball's spot. First and last points are Catmull-Rom
+  /// guides only (start / end direction).
   static const List<Offset> _swoosh = [
-    Offset(0.79, 0.28), // guide
-    Offset(0.825, 0.34), // right arcs, top
-    Offset(0.865, 0.41),
-    Offset(0.848, 0.48),
-    Offset(0.80, 0.53),
-    Offset(0.70, 0.575), // right arcs end (inner tip)
-    Offset(0.57, 0.605), // behind the emblem
-    Offset(0.42, 0.58),
-    Offset(0.28, 0.52),
-    Offset(0.20, 0.47),
-    Offset(0.155, 0.49), // gold tip (swoosh ray starts)
-    Offset(0.12, 0.55),
-    Offset(0.11, 0.60),
-    Offset(0.14, 0.66),
-    Offset(0.22, 0.70),
-    Offset(0.31, 0.71),
-    Offset(0.40, 0.68),
-    Offset(0.46, 0.62),
-    Offset(0.52, 0.555),
-    Offset(0.57, 0.50),
+    Offset(0.8011, 0.3171), // guide
+    // Right light arc, top to tip.
+    Offset(0.8242, 0.3320),
+    Offset(0.8473, 0.3469),
+    Offset(0.8647, 0.3691),
+    Offset(0.8743, 0.3926),
+    Offset(0.8751, 0.4160),
+    Offset(0.8721, 0.4395),
+    Offset(0.8642, 0.4629),
+    Offset(0.8493, 0.4863),
+    Offset(0.8298, 0.5085),
+    Offset(0.8066, 0.5294),
+    Offset(0.7852, 0.5449), // arc tip
+    // Behind the emblem (not in the artwork).
+    Offset(0.73, 0.572),
+    Offset(0.62, 0.59),
+    Offset(0.50, 0.57),
+    Offset(0.38, 0.52),
+    Offset(0.28, 0.468),
+    Offset(0.205, 0.45),
+    // Swoosh main gold band, from its tip.
+    Offset(0.1543, 0.4902), // gold tip (swoosh ray starts)
+    Offset(0.1327, 0.5215),
+    Offset(0.1177, 0.5527),
+    Offset(0.1107, 0.5840),
+    Offset(0.1100, 0.6152),
+    Offset(0.1184, 0.6465),
+    Offset(0.1445, 0.6699),
+    Offset(0.1758, 0.6859),
+    Offset(0.2070, 0.6936),
+    Offset(0.2383, 0.7010),
+    Offset(0.2695, 0.7004),
+    Offset(0.3008, 0.6924),
+    Offset(0.3320, 0.6814),
+    Offset(0.3633, 0.6674),
+    Offset(0.3914, 0.6465),
+    Offset(0.4199, 0.6227),
+    Offset(0.4512, 0.6007),
+    Offset(0.4824, 0.5839),
+    Offset(0.5137, 0.5596),
+    Offset(0.5449, 0.5316), // band end
     ballCenter,
     Offset(0.66, 0.36), // guide
   ];
 
-  /// Indices in [_swoosh] of the right arcs' end and of the gold tip,
+  /// Indices in [_swoosh] of the right arc's tip and of the gold tip,
   /// where the swoosh ray starts.
-  static const int _arcsEndIndex = 5;
-  static const int _tipIndex = 10;
+  static const int _arcsEndIndex = 11;
+  static const int _tipIndex = 18;
 
-  /// Ball scale as it enters on the right arcs, shrinking to [launchScale]
+  /// Ball scale as it enters on the right arc, shrinking to [launchScale]
   /// at the tip (far side of the orbit), then growing to 1 on landing.
   static const double entryScale = 0.75;
   static const double launchScale = 0.45;
@@ -384,10 +405,10 @@ class _LogoStage extends StatelessWidget {
   /// [tipT]..1, everything before it is the approach from the right.
   static double get tipT => _path.tip;
 
-  /// Path fraction where the ball leaves the right arcs (0..[arcsEndT]).
+  /// Path fraction where the ball leaves the right arc (0..[arcsEndT]).
   static double get arcsEndT => _path.arcsEnd;
 
-  /// Point on the path at [t] (0 = right arcs, 1 = ball spot) by arc length.
+  /// Point on the path at [t] (0 = right arc, 1 = ball spot) by arc length.
   static Offset pathAt(double t) {
     final points = _path.points;
     final lengths = _path.lengths;
@@ -505,7 +526,7 @@ class _LogoStage extends StatelessWidget {
                             filterQuality: FilterQuality.medium,
                             excludeFromSemantics: true,
                           ),
-                          // Light arcs (right) and swoosh ray (left), each
+                          // Light arc (right) and swoosh ray (left), each
                           // shown only where the ball has already passed.
                           if (reveal > 0)
                             ClipPath(
@@ -1019,14 +1040,15 @@ class _SessionErrorView extends ConsumerWidget {
     final retrying = ref.watch(authSessionProvider).isLoading;
     final signingOut = ref.watch(signOutControllerProvider).isLoading;
     final busy = retrying || signingOut;
+    final l = context.l10n;
     final title = switch (session.failure) {
       SessionFailure.unrecognizedRole ||
       SessionFailure.accountDisabled =>
-        AccountCopy.unavailableTitle,
+        l.accountUnavailableTitle,
       SessionFailure.timeout ||
       SessionFailure.setupFailed ||
       SessionFailure.loadFailed =>
-        "We couldn't load your account",
+        l.splashLoadError,
     };
 
     return Scaffold(
@@ -1038,7 +1060,7 @@ class _SessionErrorView extends ConsumerWidget {
           onRetry: session.failure.canRetry && !busy
               ? () => ref.invalidate(authSessionProvider)
               : null,
-          secondaryActionLabel: 'Sign out',
+          secondaryActionLabel: l.signOut,
           onSecondaryAction: busy
               ? null
               : () => ref.read(signOutControllerProvider.notifier).signOut(),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_depth.dart';
 import '../theme/app_sizes.dart';
 import '../theme/app_spacing.dart';
 import '../theme/theme_context_ext.dart';
@@ -146,22 +145,12 @@ class IconCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Raised neumorphic disc with a tinted inner well carrying the tone.
-    final depth = context.depth;
+    // Flat tinted circle carrying the tone.
     return Container(
       width: AppSizes.emptyStateCircle,
       height: AppSizes.emptyStateCircle,
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: depth.base,
-        shape: BoxShape.circle,
-        border: Border.all(color: depth.edge),
-        boxShadow: depth.raised(DepthLevel.high),
-      ),
-      child: DecoratedBox(
-        decoration: BoxDecoration(color: background, shape: BoxShape.circle),
-        child: Icon(icon, size: AppSizes.iconXl, color: foreground),
-      ),
+      decoration: BoxDecoration(color: background, shape: BoxShape.circle),
+      child: Icon(icon, size: AppSizes.iconXl, color: foreground),
     );
   }
 }

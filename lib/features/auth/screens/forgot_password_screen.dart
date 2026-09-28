@@ -7,6 +7,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../../core/helpers/form_submit.dart';
+import '../../../core/l10n/l10n.dart';
+import '../../../core/l10n/l10n_labels.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/theme_context_ext.dart';
@@ -35,12 +37,6 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   final _email = TextEditingController();
   final _emailFocus = FocusNode();
   bool _submitted = false;
-
-  static const String _sentHeadline = 'Check your email';
-  static const String _resentMessage = 'Reset link sent again';
-
-  static String _sentSubtitle(String email) =>
-      'If an account exists for $email, a reset link is on its way.';
 
   @override
   void dispose() {
@@ -74,12 +70,17 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
         next.error == null;
     if (!wasSent && next.isSent) {
       // Form replaced by the success view: tell screen-reader users.
+      final l = context.l10n;
       SemanticsService.announce(
-        '$_sentHeadline. ${_sentSubtitle(next.sentTo!)}',
+        '${l.resetSentHeadline}. ${l.resetSentMessage(next.sentTo!)}',
         Directionality.of(context),
       );
     } else if (wasSent && next.isSent && finishedSending) {
-      showAppSnackBar(context, _resentMessage, tone: SnackTone.success);
+      showAppSnackBar(
+        context,
+        context.l10n.resetResent,
+        tone: SnackTone.success,
+      );
     }
   }
 
@@ -87,10 +88,11 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     ref.listen(passwordResetControllerProvider, _onStateChanged);
     final state = ref.watch(passwordResetControllerProvider);
+    final l = context.l10n;
     if (state.isSent) {
       return AuthLayout(
-        headline: _sentHeadline,
-        subtitle: _sentSubtitle(state.sentTo!),
+        headline: l.resetSentHeadline,
+        subtitle: l.resetSentMessage(state.sentTo!),
         children: [
           _ResetSentView(
             state: state,
@@ -104,14 +106,14 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     }
 
     return AuthLayout(
-      headline: 'Reset your password',
-      subtitle: "Enter your email and we'll send you a reset link.",
+      headline: l.forgotHeadline,
+      subtitle: l.forgotSubtitle,
       children: [
         Form(
           key: _formKey,
           child: AutofillGroup(
             child: AppTextField(
-              label: 'Email',
+              label: l.emailLabel,
               controller: _email,
               focusNode: _emailFocus,
               prefixIcon: Icons.mail_outline,
@@ -129,11 +131,11 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
         ),
         const SizedBox(height: AppSpacing.xl),
         if (state.error != null) ...[
-          InlineBanner(message: state.error!.message),
+          InlineBanner(message: state.error!.messageIn(l)),
           const SizedBox(height: AppSpacing.lg),
         ],
         PrimaryButton(
-          label: 'Send reset link',
+          label: l.sendResetLink,
           onPressed: _submit,
           isLoading: state.isSending,
           size: AppButtonSize.large,
@@ -142,7 +144,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
         const SizedBox(height: AppSpacing.lg),
         Center(
           child: AppTextButton(
-            label: 'Back to log in',
+            label: l.backToLogin,
             onPressed: state.isSending ? null : _backToLogin,
           ),
         ),
@@ -165,6 +167,7 @@ class _ResetSentView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final l = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -177,11 +180,11 @@ class _ResetSentView extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.xl),
         if (state.error != null) ...[
-          InlineBanner(message: state.error!.message),
+          InlineBanner(message: state.error!.messageIn(l)),
           const SizedBox(height: AppSpacing.lg),
         ],
         PrimaryButton(
-          label: 'Back to log in',
+          label: l.backToLogin,
           onPressed: onBackToLogin,
           size: AppButtonSize.large,
           expand: true,
@@ -264,7 +267,9 @@ class _ResendButtonState extends State<_ResendButton> {
   Widget build(BuildContext context) {
     final coolingDown = _secondsLeft > 0;
     return AppTextButton(
-      label: coolingDown ? 'Resend in ${_secondsLeft}s' : 'Resend',
+      label: coolingDown
+          ? context.l10n.resendIn(_secondsLeft)
+          : context.l10n.resend,
       isLoading: widget.isSending,
       onPressed: coolingDown || widget.isSending ? null : widget.onResend,
     );

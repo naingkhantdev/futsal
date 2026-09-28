@@ -68,6 +68,7 @@ abstract final class AppRoutes {
   static const String shopAdminBlockedSlots = '/shop-admin/blocked-slots';
   static const String shopAdminBlockedSlotNew = '/shop-admin/blocked-slots/new';
   static const String shopAdminShopProfile = '/shop-admin/settings/shop-profile';
+  static const String shopAdminBlacklist = '/shop-admin/settings/blacklist';
 
   static String shopAdminBooking(String bookingId) =>
       '/shop-admin/bookings/$bookingId';

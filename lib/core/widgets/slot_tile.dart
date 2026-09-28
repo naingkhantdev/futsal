@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/domain_enums.dart';
+import '../l10n/l10n.dart';
 import '../theme/app_depth.dart';
 import '../theme/app_motion.dart';
 import '../theme/app_radius.dart';
@@ -45,9 +46,11 @@ class SlotTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.colors;
     final depth = context.depth;
+    final l = context.l10n;
     final well = depth.wellDecoration();
-    // Available = raised key, selected = solid ink, booked = pressed-in well,
-    // blocked = flat, unavailable = hairline outline. Icon + label always.
+    // Available = white tile + hairline, selected = solid navy, booked = gray
+    // fill, blocked = darker gray, unavailable = outline only. Icon + label
+    // always.
     final (BoxDecoration deco, Color fg, IconData icon, String label) =
         switch (state) {
       SlotState.available => (
@@ -58,7 +61,7 @@ class SlotTile extends StatelessWidget {
           ),
           c.onSurface,
           Icons.add_circle_outline,
-          'Available',
+          l.slotAvailable,
         ),
       SlotState.selected => (
           BoxDecoration(
@@ -68,13 +71,13 @@ class SlotTile extends StatelessWidget {
           ),
           c.onPrimary,
           Icons.check_circle,
-          'Selected',
+          l.slotSelected,
         ),
       SlotState.booked => (
           well,
           c.onSurfaceVariant,
           Icons.event_busy,
-          'Booked',
+          l.slotBooked,
         ),
       SlotState.blocked => (
           BoxDecoration(
@@ -83,7 +86,7 @@ class SlotTile extends StatelessWidget {
           ),
           c.onSurfaceVariant,
           Icons.block,
-          isAdmin ? 'Blocked' : 'Closed',
+          isAdmin ? l.slotBlocked : l.slotClosed,
         ),
       SlotState.unavailable => (
           BoxDecoration(
@@ -92,7 +95,7 @@ class SlotTile extends StatelessWidget {
           ),
           c.onSurfaceVariant,
           Icons.do_not_disturb_on_outlined,
-          'Unavailable',
+          l.slotUnavailable,
         ),
     };
     final labelColor = state == SlotState.available ? c.onSurfaceVariant : fg;

@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Native launch screen: brand navy + emblem, handed off to the animated
-     Flutter splash (lib/features/auth/screens/splash_screen.dart). -->
+<!-- Native launch screen: plain brand navy, no logo. The logo only appears
+     in the animated Flutter splash (lib/features/auth/screens/splash_screen.dart),
+     so the app shows one splash, not a static logo followed by the animated one. -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/splash_background" />
-    <item>
-        <bitmap
-            android:gravity="center"
-            android:src="@drawable/launch_logo" />
-    </item>
 </layer-list>

@@ -5,6 +5,7 @@ import '../../core/constants/domain_enums.dart';
 import '../../core/errors/app_exception.dart';
 import '../../core/errors/error_guard.dart';
 import '../data_agents/auth_data_agent.dart';
+import '../data_agents/blacklist_data_agent.dart';
 import '../data_agents/booking_data_agent.dart';
 import '../data_agents/user_data_agent.dart';
 import '../requests/booking_request_builder.dart';
@@ -22,15 +23,18 @@ class BookingRepositoryImpl implements BookingRepository {
     required BookingDataAgent bookingDataAgent,
     required AuthDataAgent authDataAgent,
     required UserDataAgent userDataAgent,
+    required BlacklistDataAgent blacklistDataAgent,
     DateTime Function()? clock,
   })  : _bookings = bookingDataAgent,
         _auth = authDataAgent,
         _users = userDataAgent,
+        _blacklist = blacklistDataAgent,
         _clock = clock ?? DateTime.now;
 
   final BookingDataAgent _bookings;
   final AuthDataAgent _auth;
   final UserDataAgent _users;
+  final BlacklistDataAgent _blacklist;
   final DateTime Function() _clock;
 
   @override
@@ -66,6 +70,10 @@ class BookingRepositoryImpl implements BookingRepository {
       final profile = await _users.getUser(uid);
       if (profile == null) throw const ProfileIncompleteException();
       if (!profile.isActive) throw const AccountDisabledException();
+      // Friendly message up front; firestore.rules refuse it regardless.
+      if (await _blacklist.isBlacklisted(draft.stadium.shopId, uid)) {
+        throw const CustomerBlacklistedException();
+      }
 
       final bookingId = _bookings.newBookingId();
       final request = BookingRequestBuilder.booking(
