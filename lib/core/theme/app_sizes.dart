@@ -11,8 +11,17 @@ abstract final class AppSizes {
   /// Circle behind the empty/error-state icon.
   static const double emptyStateCircle = 96;
 
-  /// Circle behind a stat-card icon.
-  static const double statIconCircle = 40;
+  /// Gold "needs attention" dot on a stat card.
+  static const double statDot = 8;
+
+  /// Leading circle of a list row (and its skeleton).
+  static const double listLeading = 40;
+
+  /// Static venue map on details screens.
+  static const double mapPreviewHeight = 180;
+
+  /// Centre pin on the location picker.
+  static const double mapPin = 44;
 
   // Controls
   static const double minTouchTarget = 48;

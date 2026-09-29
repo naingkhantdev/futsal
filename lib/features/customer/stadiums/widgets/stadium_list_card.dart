@@ -10,9 +10,16 @@ import '../../../../data/vos/stadium_vo.dart';
 
 /// [StadiumCard] filled from a [StadiumVO]; opens the stadium page.
 class StadiumListCard extends StatelessWidget {
-  const StadiumListCard({super.key, required this.stadium});
+  const StadiumListCard({
+    super.key,
+    required this.stadium,
+    this.aspectRatio = 3 / 2,
+  });
 
   final StadiumVO stadium;
+
+  /// 3:2 in vertical lists, 4:3 in horizontal carousels.
+  final double aspectRatio;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +34,7 @@ class StadiumListCard extends StatelessWidget {
       location: location,
       priceLabel: price,
       imageUrl: s.coverImage,
+      aspectRatio: aspectRatio,
       facilities: [for (final f in s.facilities) f.labelIn(l)],
       semanticLabel: '${s.name}, $location, $price',
       onTap: () => context.push(AppRoutes.customerStadium(s.id)),

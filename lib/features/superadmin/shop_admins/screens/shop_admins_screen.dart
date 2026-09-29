@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/extensions/async_value_ext.dart';
+import '../../../../core/l10n/l10n.dart';
+import '../../../../core/l10n/l10n_labels.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/status_tone.dart';
@@ -12,6 +14,7 @@ import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/content_constraint.dart';
 import '../../../../core/widgets/empty_view.dart';
+import '../../../../core/widgets/motion.dart';
 import '../../../../core/widgets/status_badge.dart';
 import '../../../../data/vos/user_vo.dart';
 import '../../shops/providers/shops_providers.dart';
@@ -32,20 +35,27 @@ class ShopAdminsScreen extends ConsumerWidget {
     ref.listen(shopAdminAssignmentControllerProvider, (_, next) {
       final error = next.appError;
       if (error != null) {
-        showAppSnackBar(context, error.message, tone: SnackTone.error);
+        showAppSnackBar(
+          context,
+          error.messageIn(context.l10n),
+          tone: SnackTone.error,
+        );
       }
     });
+    final l = context.l10n;
     void addAdmin() =>
         context.push(AppRoutes.superadminShopAdminInvite(shopId));
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(shopName == null ? 'Shop admins' : '$shopName admins'),
+        title: Text(
+          shopName == null ? l.audienceShopAdmins : l.shopAdminsOf(shopName),
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: addAdmin,
         icon: const Icon(Icons.person_add_alt_outlined),
-        label: const Text('Add admin'),
+        label: Text(l.addAdmin),
       ),
       body: AsyncValueView<List<UserVO>>(
         value: admins,
@@ -53,10 +63,9 @@ class ShopAdminsScreen extends ConsumerWidget {
         isEmpty: (list) => list.isEmpty,
         empty: EmptyView(
           icon: Icons.admin_panel_settings_outlined,
-          title: 'No admins yet',
-          message: 'Add the person who runs this shop. They need a customer '
-              'account first.',
-          actionLabel: 'Add admin',
+          title: l.noAdminsYet,
+          message: l.noAdminsMessage,
+          actionLabel: l.addAdmin,
           onAction: addAdmin,
         ),
         data: (list) => ListView.separated(
@@ -68,8 +77,9 @@ class ShopAdminsScreen extends ConsumerWidget {
           ),
           itemCount: list.length,
           separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.md),
-          itemBuilder: (context, i) => ContentConstraint(
-            child: _AdminCard(admin: list[i]),
+          itemBuilder: (context, i) => FadeSlideIn(
+            index: i,
+            child: ContentConstraint(child: _AdminCard(admin: list[i])),
           ),
         ),
       ),
@@ -85,6 +95,7 @@ class _AdminCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final busy = ref.watch(shopAdminAssignmentControllerProvider).isLoading;
+    final l = context.l10n;
     return AppCard(
       padding: EdgeInsets.zero,
       child: ListTile(
@@ -99,29 +110,29 @@ class _AdminCard extends ConsumerWidget {
             if (admin.hasName) Text(admin.email),
             if (!admin.isActive) ...[
               const SizedBox(height: AppSpacing.xs),
-              const StatusBadge(
+              StatusBadge(
                 tone: StatusTone.danger,
                 icon: Icons.block,
-                label: 'Account disabled',
-                semanticsPrefix: 'Account',
+                label: l.accountDisabledBadge,
+                semanticsPrefix: l.accountPrefix,
               ),
             ],
           ],
         ),
         trailing: IconButton(
-          tooltip: 'Remove admin',
+          tooltip: l.removeAdmin,
           icon: const Icon(Icons.person_remove_outlined),
           onPressed: busy
               ? null
               : () async {
                   final ok = await showConfirmDialog(
                     context,
-                    title: 'Remove this admin?',
-                    message: '${admin.hasName ? admin.name : admin.email} '
-                        'loses access to the shop right away and becomes a '
-                        'customer.',
-                    confirmLabel: 'Remove',
-                    dismissLabel: 'Cancel',
+                    title: l.removeAdminTitle,
+                    message: l.removeAdminMessage(
+                      admin.hasName ? admin.name : admin.email,
+                    ),
+                    confirmLabel: l.commonRemove,
+                    dismissLabel: l.commonCancel,
                     destructive: true,
                   );
                   if (!ok) return;
@@ -129,7 +140,7 @@ class _AdminCard extends ConsumerWidget {
                       .read(shopAdminAssignmentControllerProvider.notifier)
                       .remove(admin.id);
                   if (removed && context.mounted) {
-                    showAppSnackBar(context, 'Admin removed',
+                    showAppSnackBar(context, l.adminRemoved,
                         tone: SnackTone.success);
                   }
                 },

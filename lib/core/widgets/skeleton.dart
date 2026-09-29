@@ -95,8 +95,8 @@ class SkeletonListTile extends StatelessWidget {
       child: Row(
         children: [
           SkeletonBox(
-            width: AppSizes.statIconCircle,
-            height: AppSizes.statIconCircle,
+            width: AppSizes.listLeading,
+            height: AppSizes.listLeading,
             borderRadius: AppRadius.fullAll,
           ),
           SizedBox(width: AppSpacing.lg),
@@ -124,35 +124,10 @@ class SkeletonStadiumCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const AppCard(
-      padding: EdgeInsets.all(AppSpacing.sm),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AspectRatio(
-            aspectRatio: 16 / 9,
-            child: SkeletonBox(borderRadius: AppRadius.mdAll),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(
-              AppSpacing.sm,
-              AppSpacing.md,
-              AppSpacing.sm,
-              AppSpacing.sm,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                FractionallySizedBox(widthFactor: 0.7, child: SkeletonBox()),
-                SizedBox(height: AppSpacing.sm),
-                FractionallySizedBox(widthFactor: 0.5, child: SkeletonBox()),
-                SizedBox(height: AppSpacing.sm),
-                FractionallySizedBox(widthFactor: 0.3, child: SkeletonBox()),
-              ],
-            ),
-          ),
-        ],
-      ),
+    // Same shape as the image-led StadiumCard: one photo-sized block.
+    return const AspectRatio(
+      aspectRatio: 3 / 2,
+      child: SkeletonBox(borderRadius: AppRadius.lgAll),
     );
   }
 }
@@ -162,24 +137,14 @@ class SkeletonStatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Same layout as StatCard: label line, then the large value.
     return const AppCard(
-      padding: EdgeInsets.all(AppSpacing.lg + AppSpacing.xxs),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              SkeletonBox(
-                width: AppSizes.skeletonLabelWidth,
-                height: AppSpacing.md,
-              ),
-              Spacer(),
-              SkeletonBox(
-                width: AppSizes.statIconCircle,
-                height: AppSizes.statIconCircle,
-                borderRadius: AppRadius.fullAll,
-              ),
-            ],
+          SkeletonBox(
+            width: AppSizes.skeletonLabelWidth,
+            height: AppSpacing.md,
           ),
           SizedBox(height: AppSpacing.md),
           SkeletonBox(

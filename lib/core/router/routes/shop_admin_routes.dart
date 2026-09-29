@@ -12,10 +12,12 @@ import '../../../features/shop_admin/customers/screens/shop_admin_customers_scre
 import '../../../features/shop_admin/dashboard/screens/shop_admin_dashboard_screen.dart';
 import '../../../features/shop_admin/settings/screens/shop_admin_settings_screen.dart';
 import '../../../features/shop_admin/shop_profile/screens/shop_profile_screen.dart';
+import '../../../features/shop_admin/stadiums/screens/location_picker_screen.dart';
 import '../../../features/shop_admin/stadiums/screens/shop_admin_stadium_detail_screen.dart';
 import '../../../features/shop_admin/stadiums/screens/shop_admin_stadiums_screen.dart';
 import '../../../features/shop_admin/stadiums/screens/stadium_form_screen.dart';
 import '../../constants/domain_enums.dart';
+import '../../utils/geo_location.dart';
 import '../app_routes.dart';
 import '../navigator_keys.dart';
 import '../role_nav_shell.dart';
@@ -57,11 +59,17 @@ final List<RouteBase> shopAdminRoutes = [
                 AppRoutes.viewCourts,
           ),
           routes: [
-            // 'new' must precede ':stadiumId'.
+            // 'new' and 'pick-location' must precede ':stadiumId'.
             GoRoute(
               path: 'new',
               parentNavigatorKey: rootNavigatorKey,
               builder: (_, __) => const StadiumFormScreen(),
+            ),
+            GoRoute(
+              path: 'pick-location',
+              parentNavigatorKey: rootNavigatorKey,
+              builder: (_, s) =>
+                  LocationPickerScreen(initial: s.extra as MapPoint?),
             ),
             GoRoute(
               path: ':${AppRoutes.stadiumIdParam}',

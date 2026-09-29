@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../errors/app_exception.dart';
+import '../theme/app_motion.dart';
 import '../theme/app_sizes.dart';
 import 'error_view.dart';
 import 'loading_view.dart';
+import 'motion.dart';
 
 /// Maps a Riverpod [AsyncValue] to loading / empty / error / data views so a
 /// screen is never blank (design_system.md §7).
@@ -15,6 +17,9 @@ import 'loading_view.dart';
 ///   as [UnknownException]; repositories should already have mapped them).
 /// - Error with stale data → data stays visible; surface a snackbar from the
 ///   screen via `ref.listen` if needed.
+///
+/// Switching between those states crossfades (skeleton → content); updates
+/// within the same state don't re-animate.
 class AsyncValueView<T> extends StatelessWidget {
   const AsyncValueView({
     super.key,
@@ -39,12 +44,35 @@ class AsyncValueView<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final (String phase, Widget child) = _resolve();
+    return AnimatedSwitcher(
+      duration: MediaQuery.disableAnimationsOf(context)
+          ? Duration.zero
+          : AppMotion.enterExit,
+      switchInCurve: AppMotion.curve,
+      switchOutCurve: AppMotion.curve,
+      // Top-aligned so lists don't jump to the middle while fading.
+      layoutBuilder: (current, previous) => Stack(
+        alignment: Alignment.topCenter,
+        children: [...previous, if (current != null) current],
+      ),
+      // Each state gets its own entrance window for staggered lists.
+      child: KeyedSubtree(
+        key: ValueKey(phase),
+        child: EntranceScope(child: child),
+      ),
+    );
+  }
+
+  /// The state's name (switch key) and its view.
+  (String, Widget) _resolve() {
     if (value.hasValue) {
       final current = value.requireValue;
       final showEmpty = empty != null && (isEmpty?.call(current) ?? false);
       final content = showEmpty ? empty! : data(current);
-      if (!value.isRefreshing && !value.isReloading) return content;
-      return Stack(
+      final phase = showEmpty ? 'empty' : 'data';
+      if (!value.isRefreshing && !value.isReloading) return (phase, content);
+      final refreshing = Stack(
         children: [
           content,
           const Positioned(
@@ -57,16 +85,18 @@ class AsyncValueView<T> extends StatelessWidget {
           ),
         ],
       );
+      return (phase, refreshing);
     }
     if (value.hasError) {
       final error = value.error;
-      return ErrorView(
+      final view = ErrorView(
         error: error is AppException
             ? error
             : UnknownException(cause: error, stackTrace: value.stackTrace),
         onRetry: onRetry,
       );
+      return ('error', view);
     }
-    return loading ?? const LoadingView();
+    return ('loading', loading ?? const LoadingView());
   }
 }

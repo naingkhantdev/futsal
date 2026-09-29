@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/domain_enums.dart';
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/theme/status_tone.dart';
-import '../../../../core/theme/theme_context_ext.dart';
 import '../../../../core/utils/date_key.dart';
+import '../../../../core/utils/display_format.dart';
 import '../../../../core/widgets/content_constraint.dart';
 import '../../../../core/widgets/empty_view.dart';
+import '../../../../core/widgets/hero_header.dart';
 import '../../../../core/widgets/stat_card.dart';
 import '../../../../data/demo/demo_data.dart';
 import '../../../shared/widgets/booking_list_tile.dart';
@@ -33,92 +34,88 @@ class ShopAdminDashboardScreen extends StatelessWidget {
     final revenue = all
         .where((b) => b.paymentStatus == PaymentStatus.paid)
         .fold<int>(0, (sum, b) => sum + b.totalPrice);
-    final styles = context.textStyles;
+    final courtCount =
+        DemoData.courts.where((c) => c.shopId == shop.id).length;
+    final l = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Dashboard')),
+      appBar: AppBar(title: Text(l.navDashboard)),
       body: PreviewBody(
         width: ContentWidth.dashboard,
         children: [
-          Text(shop.name, style: styles.headlineSmall),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            '${DemoData.stadiumsOf(shop.id).length} stadiums · '
-            '${DemoData.courts.where((c) => c.shopId == shop.id).length} courts',
-            style: styles.bodyMedium
-                ?.copyWith(color: context.colors.onSurfaceVariant),
+          HeroHeader(
+            eyebrow: DisplayFormat.fullDate(today),
+            title: shop.name,
+            subtitle: l.venueCounts(
+              DemoData.stadiumsOf(shop.id).length,
+              courtCount,
+            ),
           ),
           const SizedBox(height: AppSpacing.xl),
           StatGrid(
             children: [
               StatCard(
                 icon: Icons.today_outlined,
-                label: 'Today',
+                label: l.dayToday,
                 value: '${todays.length}',
-                footer: 'bookings',
+                footer: l.statBookingsFooter,
                 onTap: () => context.go(AppRoutes.shopAdminBookings),
               ),
               StatCard(
                 icon: Icons.hourglass_top,
-                label: 'Pending',
+                label: l.bookingPending,
                 value: '${pending.length}',
-                footer: 'need a reply',
-                tone: pending.isEmpty ? StatusTone.brand : StatusTone.warning,
+                footer: l.statNeedReply,
+                highlight: pending.isNotEmpty,
                 onTap: () => context.go(AppRoutes.shopAdminBookings),
               ),
               StatCard(
                 icon: Icons.payments_outlined,
-                label: 'Collected',
+                label: l.statCollected,
                 // Compact so it fits a half-width card.
                 value: '${revenue ~/ 1000}K',
-                footer: 'MMK from paid bookings',
+                footer: l.statMmkFromPaid,
               ),
               StatCard(
                 icon: Icons.people_outline,
-                label: 'Customers',
+                label: l.navCustomers,
                 value: '${DemoData.customersOf(shop.id).length}',
-                footer: 'booked with you',
+                footer: l.statBookedWithYou,
                 onTap: () => context.go(AppRoutes.shopAdminCustomers),
               ),
             ],
           ),
           PreviewSectionTitle(
-            'Needs your reply',
+            l.needsYourReply,
             action: TextButton(
               onPressed: () => context.go(AppRoutes.shopAdminBookings),
-              child: const Text('All bookings'),
+              child: Text(l.homeAllBookings),
             ),
           ),
           if (pending.isEmpty)
-            const EmptyView.inline(
+            EmptyView.inline(
               icon: Icons.inbox_outlined,
-              title: 'All caught up',
-              message: 'New booking requests show up here.',
+              title: l.allCaughtUp,
+              message: l.allCaughtUpMessage,
             )
           else
-            for (final b in pending) ...[
-              BookingListTile(
-                booking: b,
-                showCustomer: true,
-                onTap: () => context.push(AppRoutes.shopAdminBooking(b.id)),
-              ),
-              const SizedBox(height: AppSpacing.md),
-            ],
-          const PreviewSectionTitle("Today's schedule"),
+            BookingGroup(
+              bookings: pending,
+              showCustomer: true,
+              onOpen: (b) => context.push(AppRoutes.shopAdminBooking(b.id)),
+            ),
+          PreviewSectionTitle(l.todaysSchedule),
           if (todays.isEmpty)
-            const EmptyView.inline(
+            EmptyView.inline(
               icon: Icons.event_available_outlined,
-              title: 'No games today',
+              title: l.noGamesToday,
             )
           else
-            for (final b in todays) ...[
-              BookingListTile(
-                booking: b,
-                showCustomer: true,
-                onTap: () => context.push(AppRoutes.shopAdminBooking(b.id)),
-              ),
-              const SizedBox(height: AppSpacing.md),
-            ],
+            BookingGroup(
+              bookings: todays,
+              showCustomer: true,
+              onOpen: (b) => context.push(AppRoutes.shopAdminBooking(b.id)),
+            ),
         ],
       ),
     );

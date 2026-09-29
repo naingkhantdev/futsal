@@ -65,8 +65,8 @@ class EmptyView extends StatelessWidget {
             children: [
               IconCircle(
                 icon: icon,
-                background: colors.surfaceContainerHigh,
-                foreground: colors.onSurfaceVariant,
+                background: colors.primaryContainer,
+                foreground: colors.primary,
               ),
               const SizedBox(height: AppSpacing.xl),
               Text(title, style: styles.titleLarge, textAlign: TextAlign.center),
@@ -108,7 +108,7 @@ class EmptyView extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.lg),
       child: Row(
         children: [
-          Icon(icon, size: AppSizes.iconXl, color: colors.onSurfaceVariant),
+          Icon(icon, size: AppSizes.iconXl, color: colors.primary),
           const SizedBox(width: AppSpacing.lg),
           Expanded(
             child: Column(

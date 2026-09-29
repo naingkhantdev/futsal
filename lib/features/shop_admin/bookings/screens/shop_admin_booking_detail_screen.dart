@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/domain_enums.dart';
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../data/demo/demo_data.dart';
 import '../../../shared/widgets/staff_booking_views.dart';
@@ -23,7 +24,7 @@ class ShopAdminBookingDetailScreen extends StatelessWidget {
         b.status != BookingStatus.cancelled &&
         b.status != BookingStatus.rejected;
     return Scaffold(
-      appBar: AppBar(title: const Text('Booking')),
+      appBar: AppBar(title: Text(context.l10n.bookingTitle)),
       body: StaffBookingDetail(
         booking: b,
         onCustomerTap: () =>

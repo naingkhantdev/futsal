@@ -12,31 +12,32 @@ class ShopAdminSettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(l.navSettings)),
       body: SettingsList(
         items: [
           SettingsItem(
             icon: Icons.storefront_outlined,
-            title: 'Shop profile',
-            subtitle: 'Name, contact and address',
+            title: l.settingsShopProfile,
+            subtitle: l.settingsShopProfileSub,
             onTap: () => context.push(AppRoutes.shopAdminShopProfile),
           ),
           SettingsItem(
             icon: Icons.block,
-            title: 'Blocked times',
-            subtitle: 'Maintenance, events, closures',
+            title: l.blockedTimesTitle,
+            subtitle: l.blockedTimesSub,
             onTap: () => context.push(AppRoutes.shopAdminBlockedSlots),
           ),
           SettingsItem(
             icon: Icons.person_off_outlined,
-            title: context.l10n.blacklistTitle,
-            subtitle: context.l10n.blacklistSubtitle,
+            title: l.blacklistTitle,
+            subtitle: l.blacklistSubtitle,
             onTap: () => context.push(AppRoutes.shopAdminBlacklist),
           ),
           SettingsItem(
             icon: Icons.stadium_outlined,
-            title: 'Stadiums & courts',
+            title: l.stadiumsAndCourts,
             onTap: () => context.go(AppRoutes.shopAdminStadiums),
           ),
         ],

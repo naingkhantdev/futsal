@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/domain_labels.dart';
+import '../../../../core/l10n/l10n.dart';
+import '../../../../core/l10n/l10n_labels.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_sizes.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -23,18 +25,19 @@ class BlockedSlotsScreen extends StatelessWidget {
         .where((k) => k.shopId == DemoData.myShopId)
         .toList()
       ..sort((a, b) => a.startAt!.compareTo(b.startAt!));
+    final l = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: const Text('Blocked times')),
+      appBar: AppBar(title: Text(l.blockedTimesTitle)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push(AppRoutes.shopAdminBlockedSlotNew),
         icon: const Icon(Icons.add),
-        label: const Text('Block time'),
+        label: Text(l.blockTimeTitle),
       ),
       body: PreviewBody(
         bottomPadding: 96,
         children: [
           Text(
-            'Blocked times cannot be booked by customers.',
+            l.blockedTimesNote,
             style: context.textStyles.bodyMedium
                 ?.copyWith(color: context.colors.onSurfaceVariant),
           ),
@@ -60,6 +63,7 @@ class _BlockedTile extends StatelessWidget {
     final stadium = DemoData.stadium(item.stadiumId);
     final styles = context.textStyles;
     final muted = context.colors.onSurfaceVariant;
+    final l = context.l10n;
     return AppCard(
       padding: const EdgeInsets.all(AppSpacing.md),
       child: Row(
@@ -75,7 +79,7 @@ class _BlockedTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${DisplayFormat.dayLabel(item.date)} · '
+                  '${DisplayFormat.dayLabel(item.date, l)} · '
                   '${DisplayFormat.timeRange(item.startMinute, item.endMinute)}',
                   style: styles.titleSmall,
                 ),
@@ -85,7 +89,7 @@ class _BlockedTile extends StatelessWidget {
                   style: styles.bodySmall?.copyWith(color: muted),
                 ),
                 Text(
-                  [item.reason.label, if (item.note != null) item.note!]
+                  [item.reason.labelIn(l), if (item.note != null) item.note!]
                       .join(' — '),
                   style: styles.bodySmall?.copyWith(color: muted),
                 ),
@@ -93,9 +97,9 @@ class _BlockedTile extends StatelessWidget {
             ),
           ),
           IconButton(
-            tooltip: 'Remove block',
+            tooltip: l.removeBlock,
             icon: const Icon(Icons.delete_outline),
-            onPressed: () => showPreviewOnly(context, 'Remove block'),
+            onPressed: () => showPreviewOnly(context, l.removeBlock),
           ),
         ],
       ),

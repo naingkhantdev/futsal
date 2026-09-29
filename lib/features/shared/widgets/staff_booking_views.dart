@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/constants/booking_policy.dart';
 import '../../../core/constants/domain_enums.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_dialogs.dart';
@@ -13,13 +14,17 @@ import 'preview_body.dart';
 import 'stadium_filter_bar.dart';
 
 enum StaffBookingFilter {
-  pending('Pending'),
-  upcoming('Upcoming'),
-  past('Past'),
-  all('All');
+  pending,
+  upcoming,
+  past,
+  all;
 
-  const StaffBookingFilter(this.label);
-  final String label;
+  String labelIn(AppLocalizations l) => switch (this) {
+        StaffBookingFilter.pending => l.bookingPending,
+        StaffBookingFilter.upcoming => l.staffFilterUpcoming,
+        StaffBookingFilter.past => l.staffFilterPast,
+        StaffBookingFilter.all => l.staffFilterAll,
+      };
 }
 
 /// Bookings list for shop admins and the superadmin, with status filters.
@@ -68,6 +73,7 @@ class _StaffBookingListState extends State<StaffBookingList> {
   @override
   Widget build(BuildContext context) {
     final shown = _apply(_filter);
+    final l = context.l10n;
     return PreviewBody(
       children: [
         StadiumFilterBar(
@@ -81,7 +87,7 @@ class _StaffBookingListState extends State<StaffBookingList> {
           children: [
             for (final f in StaffBookingFilter.values)
               ChoiceChip(
-                label: Text('${f.label} (${_apply(f).length})'),
+                label: Text('${f.labelIn(l)} (${_apply(f).length})'),
                 selected: f == _filter,
                 onSelected: (_) => setState(() => _filter = f),
               ),
@@ -89,20 +95,17 @@ class _StaffBookingListState extends State<StaffBookingList> {
         ),
         const SizedBox(height: AppSpacing.lg),
         if (shown.isEmpty)
-          const EmptyView.inline(
+          EmptyView.inline(
             icon: Icons.inbox_outlined,
-            title: 'No bookings here',
-            message: 'Try another filter.',
+            title: l.staffNoBookingsTitle,
+            message: l.staffTryAnotherFilter,
           )
         else
-          for (final b in shown) ...[
-            BookingListTile(
-              booking: b,
-              showCustomer: true,
-              onTap: () => widget.onOpen(b),
-            ),
-            const SizedBox(height: AppSpacing.md),
-          ],
+          BookingGroup(
+            bookings: shown,
+            showCustomer: true,
+            onOpen: widget.onOpen,
+          ),
       ],
     );
   }
@@ -131,6 +134,7 @@ class StaffBookingDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final b = booking;
+    final l = context.l10n;
     final canConfirm =
         BookingPolicy.canStaffChangeStatus(b.status, BookingStatus.confirmed);
     final canReject =
@@ -139,9 +143,9 @@ class StaffBookingDetail extends StatelessWidget {
         BookingPolicy.canStaffChangeStatus(b.status, BookingStatus.completed) &&
             !b.isUpcoming(DateTime.now());
     final nextPayment = switch (b.paymentStatus) {
-      PaymentStatus.unpaid => (PaymentStatus.pending, 'Mark payment pending'),
-      PaymentStatus.pending => (PaymentStatus.paid, 'Mark as paid'),
-      PaymentStatus.paid => (PaymentStatus.refunded, 'Mark as refunded'),
+      PaymentStatus.unpaid => (PaymentStatus.pending, l.markPaymentPending),
+      PaymentStatus.pending => (PaymentStatus.paid, l.markAsPaid),
+      PaymentStatus.paid => (PaymentStatus.refunded, l.markAsRefunded),
       PaymentStatus.refunded => null,
     };
     final paymentOpen = b.status != BookingStatus.rejected &&
@@ -158,19 +162,19 @@ class StaffBookingDetail extends StatelessWidget {
         const SizedBox(height: AppSpacing.xl),
         if (canConfirm) ...[
           PrimaryButton(
-            label: 'Confirm booking',
+            label: l.confirmBooking,
             icon: Icons.check,
             expand: true,
-            onPressed: () => showPreviewOnly(context, 'Confirm booking'),
+            onPressed: () => showPreviewOnly(context, l.confirmBooking),
           ),
           const SizedBox(height: AppSpacing.md),
         ],
         if (canComplete) ...[
           PrimaryButton(
-            label: 'Mark as completed',
+            label: l.markAsCompleted,
             icon: Icons.task_alt,
             expand: true,
-            onPressed: () => showPreviewOnly(context, 'Mark as completed'),
+            onPressed: () => showPreviewOnly(context, l.markAsCompleted),
           ),
           const SizedBox(height: AppSpacing.md),
         ],
@@ -185,19 +189,18 @@ class StaffBookingDetail extends StatelessWidget {
         ],
         if (canReject)
           AppTextButton(
-            label: 'Reject booking',
+            label: l.rejectBooking,
             onPressed: () async {
               final ok = await showConfirmDialog(
                 context,
-                title: 'Reject this booking?',
-                message: 'The customer is notified and the slots are '
-                    'released.',
-                confirmLabel: 'Reject',
-                dismissLabel: 'Keep booking',
+                title: l.rejectBookingTitle,
+                message: l.rejectBookingMessage,
+                confirmLabel: l.rejectAction,
+                dismissLabel: l.keepBooking,
                 destructive: true,
               );
               if (ok && context.mounted) {
-                showPreviewOnly(context, 'Reject booking');
+                showPreviewOnly(context, l.rejectBooking);
               }
             },
           ),

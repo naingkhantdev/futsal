@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/domain_enums.dart';
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/status_visuals.dart';
@@ -11,6 +12,7 @@ import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/content_constraint.dart';
 import '../../../../core/widgets/empty_view.dart';
+import '../../../../core/widgets/motion.dart';
 import '../../../../core/widgets/skeleton.dart';
 import '../../../../core/widgets/status_badge.dart';
 import '../../../../data/vos/shop_vo.dart';
@@ -26,12 +28,13 @@ class ShopsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final shops = ref.watch(allShopsProvider);
+    final l = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: const Text('Shops')),
+      appBar: AppBar(title: Text(l.navShops)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push(AppRoutes.superadminShopNew),
         icon: const Icon(Icons.add_business_outlined),
-        label: const Text('New shop'),
+        label: Text(l.shopNew),
       ),
       body: Column(
         children: [
@@ -41,9 +44,12 @@ class ShopsScreen extends ConsumerWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: SegmentedButton<bool>(
-                  segments: const [
-                    ButtonSegment(value: false, label: Text('All')),
-                    ButtonSegment(value: true, label: Text('Pending review')),
+                  segments: [
+                    ButtonSegment(value: false, label: Text(l.staffFilterAll)),
+                    ButtonSegment(
+                      value: true,
+                      label: Text(l.shopPendingReview),
+                    ),
                   ],
                   selected: {showOnboarding},
                   onSelectionChanged: (s) => context.go(
@@ -71,17 +77,16 @@ class ShopsScreen extends ConsumerWidget {
               loading: const _ShopsSkeleton(),
               isEmpty: (list) => list.isEmpty,
               empty: showOnboarding
-                  ? const EmptyView(
+                  ? EmptyView(
                       icon: Icons.inbox_outlined,
-                      title: 'Nothing to review',
-                      message: 'New shops appear here until you approve '
-                          'or reject them.',
+                      title: l.nothingToReview,
+                      message: l.nothingToReviewMessage,
                     )
                   : EmptyView(
                       icon: Icons.storefront_outlined,
-                      title: 'No shops yet',
-                      message: 'Create the first shop, then assign its admin.',
-                      actionLabel: 'New shop',
+                      title: l.noShopsYet,
+                      message: l.noShopsMessage,
+                      actionLabel: l.shopNew,
                       onAction: () => context.push(AppRoutes.superadminShopNew),
                     ),
               data: (list) => ListView.separated(
@@ -95,8 +100,9 @@ class ShopsScreen extends ConsumerWidget {
                 itemCount: list.length,
                 separatorBuilder: (_, __) =>
                     const SizedBox(height: AppSpacing.md),
-                itemBuilder: (context, i) => ContentConstraint(
-                  child: _ShopCard(shop: list[i]),
+                itemBuilder: (context, i) => FadeSlideIn(
+                  index: i,
+                  child: ContentConstraint(child: _ShopCard(shop: list[i])),
                 ),
               ),
             ),
@@ -118,6 +124,7 @@ class _ShopCard extends StatelessWidget {
         .whereType<String>()
         .where((s) => s.trim().isNotEmpty)
         .join(', ');
+    final l = context.l10n;
     return AppCard(
       onTap: () => context.push(AppRoutes.superadminShop(shop.id)),
       child: Column(
@@ -139,11 +146,11 @@ class _ShopCard extends StatelessWidget {
             children: [
               StatusBadge.fromVisual(
                 shop.status.visual,
-                semanticsPrefix: 'Shop status',
+                semanticsPrefix: l.shopStatusPrefix,
               ),
               StatusBadge.fromVisual(
                 shopListingVisual(isListed: shop.isListed),
-                semanticsPrefix: 'Listing',
+                semanticsPrefix: l.listingPrefix,
               ),
             ],
           ),

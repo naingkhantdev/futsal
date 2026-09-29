@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/content_constraint.dart';
 import '../../../../core/widgets/empty_view.dart';
+import '../../../../core/widgets/motion.dart';
 import '../../../../core/widgets/skeleton.dart';
 import '../../../../data/vos/stadium_vo.dart';
 import '../providers/shop_venue_providers.dart';
@@ -25,13 +27,14 @@ class ShopAdminStadiumsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final stadiums = ref.watch(myStadiumsProvider);
     void addStadium() => context.push(AppRoutes.shopAdminStadiumNew);
+    final l = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Stadiums')),
+      appBar: AppBar(title: Text(l.navStadiums)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: addStadium,
         icon: const Icon(Icons.add),
-        label: const Text('New stadium'),
+        label: Text(l.stadiumNew),
       ),
       body: AsyncValueView<List<StadiumVO>>(
         value: stadiums,
@@ -44,10 +47,9 @@ class ShopAdminStadiumsScreen extends ConsumerWidget {
             Expanded(
               child: EmptyView(
                 icon: Icons.stadium_outlined,
-                title: 'Add your first stadium',
-                message: 'Set its opening hours, then add the courts '
-                    'customers can book.',
-                actionLabel: 'New stadium',
+                title: l.stadiumsEmptyTitle,
+                message: l.stadiumsEmptyMessage,
+                actionLabel: l.stadiumNew,
                 onAction: addStadium,
               ),
             ),
@@ -61,14 +63,17 @@ class ShopAdminStadiumsScreen extends ConsumerWidget {
           ),
           children: [
             const ShopVisibilityBanner(),
-            for (final stadium in list)
-              Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                child: ContentConstraint(
-                  child: StadiumAdminCard(
-                    stadium: stadium,
-                    onTap: () =>
-                        context.push(AppRoutes.shopAdminStadium(stadium.id)),
+            for (final (i, stadium) in list.indexed)
+              FadeSlideIn(
+                index: i,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                  child: ContentConstraint(
+                    child: StadiumAdminCard(
+                      stadium: stadium,
+                      onTap: () =>
+                          context.push(AppRoutes.shopAdminStadium(stadium.id)),
+                    ),
                   ),
                 ),
               ),

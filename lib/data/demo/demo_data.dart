@@ -80,6 +80,20 @@ abstract final class DemoData {
 
   // ------------------------------------------------------------- stadiums
 
+  // Venue photos: Unsplash (free to use under the Unsplash License, no
+  // attribution required). Sample data only; real venues upload their own
+  // photos to Storage.
+  static const String _unsplash = 'https://images.unsplash.com';
+  static const String _photoQuery = '?w=1200&q=75&auto=format&fit=crop';
+  static const String _photoFloodlit =
+      '$_unsplash/photo-1431324155629-1a6deb1dec8d$_photoQuery';
+  static const String _photoCage =
+      '$_unsplash/photo-1606925797300-0b35e9d1794e$_photoQuery';
+  static const String _photoTurf =
+      '$_unsplash/photo-1529900748604-07564a03e7a6$_photoQuery';
+  static const String _photoBall =
+      '$_unsplash/photo-1589487391730-58f20eb2c308$_photoQuery';
+
   static const List<StadiumVO> stadiums = [
     StadiumVO(
       id: 'demo-stadium-1',
@@ -90,6 +104,9 @@ abstract final class DemoData {
       address: 'No. 12, Parami Road',
       township: 'Hlaing',
       city: 'Yangon',
+      // Approximate township centre (sample data).
+      latitude: 16.853,
+      longitude: 96.1266,
       facilities: [
         Facility.floodLights,
         Facility.parking,
@@ -103,6 +120,7 @@ abstract final class DemoData {
       isActive: true,
       isPublished: true,
       minHourlyPrice: 30000,
+      images: [_photoFloodlit],
     ),
     StadiumVO(
       id: 'demo-stadium-2',
@@ -112,6 +130,9 @@ abstract final class DemoData {
       address: 'No. 8, Thanthumar Road',
       township: 'Thingangyun',
       city: 'Yangon',
+      // Approximate township centre (sample data).
+      latitude: 16.829,
+      longitude: 96.193,
       facilities: [
         Facility.floodLights,
         Facility.drinkingWater,
@@ -123,6 +144,7 @@ abstract final class DemoData {
       isActive: true,
       isPublished: true,
       minHourlyPrice: 25000,
+      images: [_photoCage],
     ),
     StadiumVO(
       id: 'demo-stadium-3',
@@ -132,6 +154,9 @@ abstract final class DemoData {
       address: 'No. 45, Bahan 3rd Street',
       township: 'Bahan',
       city: 'Yangon',
+      // Approximate township centre (sample data).
+      latitude: 16.801,
+      longitude: 96.158,
       facilities: [
         Facility.parking,
         Facility.shower,
@@ -144,6 +169,7 @@ abstract final class DemoData {
       isActive: true,
       isPublished: true,
       minHourlyPrice: 35000,
+      images: [_photoTurf],
     ),
     StadiumVO(
       id: 'demo-stadium-4',
@@ -160,6 +186,7 @@ abstract final class DemoData {
       isActive: true,
       isPublished: true,
       minHourlyPrice: 20000,
+      images: [_photoBall],
     ),
   ];
 
@@ -514,6 +541,39 @@ abstract final class DemoData {
           k.date == date &&
           k.startMinute < end &&
           k.endMinute > startMinute);
+
+  /// PREVIEW availability for quick booking: the earliest [limit] start
+  /// times on [date] with a free, bookable slot on some court of
+  /// [stadiumId] (slots that already started today are skipped). One entry
+  /// per start time, on the first court that is free then. Display only:
+  /// the booking itself is still validated by the rules.
+  static List<({CourtVO court, int startMinute})> openStarts(
+    String stadiumId,
+    String date, {
+    int limit = 3,
+  }) {
+    final s = stadium(stadiumId);
+    final now = DateTime.now();
+    final nowMinute =
+        date == DateKey.fromDate(now) ? now.hour * 60 + now.minute : -1;
+    final byStart = <int, CourtVO>{};
+    for (final c in courtsOf(stadiumId).where((c) => c.hasPrice)) {
+      final slots =
+          c.slots(openMinute: s.openMinute, closeMinute: s.closeMinute);
+      for (final slot in slots) {
+        if (slot.startMinute <= nowMinute) continue;
+        if (isBusy(c.id, date, slot.startMinute, slot.endMinute) ||
+            isBlocked(c.id, date, slot.startMinute, slot.endMinute)) {
+          continue;
+        }
+        byStart.putIfAbsent(slot.startMinute, () => c);
+      }
+    }
+    final starts = byStart.keys.toList()..sort();
+    return [
+      for (final m in starts.take(limit)) (court: byStart[m]!, startMinute: m),
+    ];
+  }
 
   // --------------------------------------------------------------- helpers
 

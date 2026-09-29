@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 /// The translations for Burmese (`my`).
@@ -538,9 +540,6 @@ class AppLocalizationsMy extends AppLocalizations {
   }
 
   @override
-  String get homeReady => 'ကစားဖို့ အဆင်သင့်လား?';
-
-  @override
   String get homeSearchHint => 'အားကစားကွင်း သို့မဟုတ် မြို့နယ် ရှာရန်';
 
   @override
@@ -548,12 +547,6 @@ class AppLocalizationsMy extends AppLocalizations {
 
   @override
   String get homeAllBookings => 'ဘိုကင်အားလုံး';
-
-  @override
-  String get homeNoGames => 'ဘိုကင် မရှိသေးပါ။ အောက်တွင် ကွင်းရွေးပါ။';
-
-  @override
-  String get homePopular => 'အနီးအနားရှိ လူကြိုက်များသော အားကစားကွင်းများ';
 
   @override
   String get exploreEmptyTitle => 'အားကစားကွင်း ရှာမတွေ့ပါ';
@@ -1037,4 +1030,587 @@ class AppLocalizationsMy extends AppLocalizations {
 
   @override
   String get audienceShopAdmins => 'ဆိုင်စီမံသူများ';
+
+  @override
+  String get errBlacklisted => 'ဤအားကစားကွင်းသည် သင့်အကောင့်မှ ဘိုကင်များကို လက်မခံပါ။ ကွင်းသို့ ဆက်သွယ်ပါ။';
+
+  @override
+  String get blacklistTitle => 'အမည်ပျက်စာရင်း';
+
+  @override
+  String get blacklistSubtitle => 'သင့်ဆိုင်တွင် ဘိုကင်မလုပ်နိုင်သော ဖောက်သည်များ';
+
+  @override
+  String get blacklistIntro => 'အမည်ပျက်စာရင်းရှိ ဖောက်သည်များသည် သင့်ဆိုင်တွင် ဘိုကင်အသစ် မလုပ်နိုင်ပါ။ ရှိပြီးသား ဘိုကင်များ ဆက်ရှိပြီး အခြားဆိုင်များတွင် ဘိုကင်လုပ်နိုင်ပါသည်။';
+
+  @override
+  String get blacklistEmptyTitle => 'အမည်ပျက်စာရင်းတွင် မည်သူမျှ မရှိပါ';
+
+  @override
+  String get blacklistEmptyMessage => 'ဖောက်သည်၏ ပရိုဖိုင် သို့မဟုတ် မလာခဲ့သော ဘိုကင်မှ အမည်ပျက်စာရင်း သွင်းနိုင်ပါသည်။';
+
+  @override
+  String get blacklistAdd => 'အမည်ပျက်စာရင်း သွင်းရန်';
+
+  @override
+  String get blacklistNoShowAction => 'မလာခဲ့ပါ · အမည်ပျက်စာရင်း သွင်းရန်';
+
+  @override
+  String get blacklistRemove => 'အမည်ပျက်စာရင်းမှ ဖယ်ရန်';
+
+  @override
+  String blacklistRemoveTitle(String name) {
+    return '$name ကို အမည်ပျက်စာရင်းမှ ဖယ်မလား?';
+  }
+
+  @override
+  String get blacklistRemoveMessage => 'သင့်ဆိုင်တွင် ပြန်လည် ဘိုကင်လုပ်နိုင်ပါမည်။';
+
+  @override
+  String get blacklistRemoveConfirm => 'ဖယ်ရန်';
+
+  @override
+  String get blacklistKeep => 'ဆက်ထားမည်';
+
+  @override
+  String blacklistSheetTitle(String name) {
+    return '$name ကို အမည်ပျက်စာရင်း သွင်းရန်';
+  }
+
+  @override
+  String get blacklistSheetMessage => 'သင့်ဆိုင်တွင် ဘိုကင်အသစ် မလုပ်နိုင်တော့ပါ။ ရှိပြီးသား ဘိုကင်များ ဆက်ရှိပါမည်။';
+
+  @override
+  String get blacklistReasonNoShow => 'ဘိုကင်လုပ်ပြီး မလာခဲ့';
+
+  @override
+  String get blacklistConfirm => 'အမည်ပျက်စာရင်း သွင်းမည်';
+
+  @override
+  String blacklistAdded(String name) {
+    return '$name ကို အမည်ပျက်စာရင်း သွင်းပြီးပါပြီ';
+  }
+
+  @override
+  String blacklistRemoved(String name) {
+    return '$name ပြန်လည် ဘိုကင်လုပ်နိုင်ပါပြီ';
+  }
+
+  @override
+  String get blacklistedBadge => 'အမည်ပျက်စာရင်းဝင်';
+
+  @override
+  String blacklistedOn(String date) {
+    return '$date တွင် စာရင်းသွင်းခဲ့';
+  }
+
+  @override
+  String get stadiumsEmptyTitle => 'ပထမဆုံး အားကစားကွင်းကို ထည့်ပါ';
+
+  @override
+  String get stadiumsEmptyMessage => 'ဖွင့်ချိန် သတ်မှတ်ပြီးနောက် ဖောက်သည်များ ဘိုကင်လုပ်နိုင်မည့် ကွင်းများကို ထည့်ပါ။';
+
+  @override
+  String get staffFilterUpcoming => 'လာမည့်';
+
+  @override
+  String get staffFilterPast => 'ပြီးခဲ့သော';
+
+  @override
+  String get staffFilterAll => 'အားလုံး';
+
+  @override
+  String get staffNoBookingsTitle => 'ဤနေရာတွင် ဘိုကင် မရှိပါ';
+
+  @override
+  String get staffTryAnotherFilter => 'အခြား စစ်ထုတ်မှုကို ရွေးကြည့်ပါ။';
+
+  @override
+  String get markPaymentPending => 'ငွေပေးချေမှု စောင့်ဆိုင်းဆဲ အဖြစ် မှတ်ရန်';
+
+  @override
+  String get markAsPaid => 'ပေးချေပြီး အဖြစ် မှတ်ရန်';
+
+  @override
+  String get markAsRefunded => 'ငွေပြန်အမ်းပြီး အဖြစ် မှတ်ရန်';
+
+  @override
+  String get confirmBooking => 'ဘိုကင် အတည်ပြုရန်';
+
+  @override
+  String get markAsCompleted => 'ပြီးဆုံးပြီး အဖြစ် မှတ်ရန်';
+
+  @override
+  String get rejectBooking => 'ဘိုကင် ငြင်းပယ်ရန်';
+
+  @override
+  String get rejectBookingTitle => 'ဤဘိုကင်ကို ငြင်းပယ်မလား?';
+
+  @override
+  String get rejectBookingMessage => 'ဖောက်သည်ထံ အကြောင်းကြားပြီး အချိန်အပိုင်းများကို ပြန်ဖွင့်ပေးပါမည်။';
+
+  @override
+  String get rejectAction => 'ငြင်းပယ်ရန်';
+
+  @override
+  String get keepBooking => 'ဘိုကင် ဆက်ထားမည်';
+
+  @override
+  String get searchNameOrPhone => 'အမည် သို့မဟုတ် ဖုန်းဖြင့် ရှာရန်';
+
+  @override
+  String get noCustomersFound => 'ဖောက်သည် ရှာမတွေ့ပါ';
+
+  @override
+  String bookingCount(int count) {
+    return 'ဘိုကင် $count ခု';
+  }
+
+  @override
+  String lastPlayedOn(String date) {
+    return 'နောက်ဆုံး $date တွင် ကစားခဲ့';
+  }
+
+  @override
+  String joinedOn(String date) {
+    return '$date တွင် စာရင်းသွင်းခဲ့';
+  }
+
+  @override
+  String get statusDisabled => 'ပိတ်ထား';
+
+  @override
+  String get accountPrefix => 'အကောင့်';
+
+  @override
+  String get mmkOnPlatform => 'ပလက်ဖောင်းတစ်ခုလုံးတွင် (ကျပ်)';
+
+  @override
+  String get mmkAtYourShop => 'သင့်ဆိုင်တွင် (ကျပ်)';
+
+  @override
+  String get bookingHistory => 'ဘိုကင် မှတ်တမ်း';
+
+  @override
+  String get noBookingsYet => 'ဘိုကင် မရှိသေးပါ';
+
+  @override
+  String totalPaidAmount(String amount) {
+    return 'စုစုပေါင်း ပေးချေပြီး: $amount';
+  }
+
+  @override
+  String get settingsShopProfile => 'ဆိုင် ပရိုဖိုင်';
+
+  @override
+  String get settingsShopProfileSub => 'အမည်၊ ဆက်သွယ်ရန်နှင့် လိပ်စာ';
+
+  @override
+  String get blockedTimesTitle => 'ပိတ်ထားသော အချိန်များ';
+
+  @override
+  String get blockedTimesSub => 'ပြုပြင်ထိန်းသိမ်းမှု၊ ပွဲများ၊ ပိတ်ရက်များ';
+
+  @override
+  String get stadiumsAndCourts => 'အားကစားကွင်းနှင့် ကွင်းများ';
+
+  @override
+  String get editShopProfile => 'ဆိုင် ပရိုဖိုင် ပြင်ရန်';
+
+  @override
+  String get commonEdit => 'ပြင်ရန်';
+
+  @override
+  String get shopStatusPrefix => 'ဆိုင် အခြေအနေ';
+
+  @override
+  String get listingPrefix => 'ပြသမှု';
+
+  @override
+  String get addressLabel => 'လိပ်စာ';
+
+  @override
+  String get statusManagedByPlatform => 'အခြေအနေနှင့် ပြသမှုကို ပလက်ဖောင်းအဖွဲ့က စီမံပါသည်။';
+
+  @override
+  String get visibilityUnlisted => 'သင့်ဆိုင်ကို မပြသထားသဖြင့် ဖောက်သည်များ မမြင်ရ၊ ဘိုကင် မလုပ်နိုင်ပါ။';
+
+  @override
+  String get visibilityPending => 'သင့်ဆိုင်သည် အတည်ပြုချက် စောင့်ဆိုင်းနေပါသည်။ အားကစားကွင်းနှင့် ကွင်းများကို ယခုပင် ပြင်ဆင်ထားနိုင်ပြီး အတည်ပြုပြီးနောက် ဖောက်သည်များ မြင်ရပါမည်။';
+
+  @override
+  String get visibilitySuspended => 'သင့်ဆိုင်ကို ဆိုင်းငံ့ထားပါသည်။ ဖောက်သည်များ မမြင်ရ၊ ဘိုကင် မလုပ်နိုင်ပါ။ ပလက်ဖောင်းအဖွဲ့ကို ဆက်သွယ်ပါ။';
+
+  @override
+  String get visibilityInactive => 'သင့်ဆိုင် အသုံးမပြုနိုင်သေးပါ။ ဖောက်သည်များ မမြင်ရ၊ ဘိုကင် မလုပ်နိုင်ပါ။';
+
+  @override
+  String get venueActive => 'ဖွင့်ထား';
+
+  @override
+  String get venueInactive => 'ရပ်နားထား';
+
+  @override
+  String get visibleToCustomers => 'ဖောက်သည်များ မြင်ရသည်';
+
+  @override
+  String get hiddenLabel => 'ဝှက်ထား';
+
+  @override
+  String get discoveryPrefix => 'ရှာဖွေမှု';
+
+  @override
+  String get bookableLabel => 'ဘိုကင်လုပ်နိုင်';
+
+  @override
+  String get noneListed => 'မရှိပါ';
+
+  @override
+  String get descriptionLabel => 'ဖော်ပြချက်';
+
+  @override
+  String get noCourtsYet => 'ကွင်း မရှိသေးပါ';
+
+  @override
+  String get noCourtsMessage => 'ဖောက်သည်များ ဘိုကင်လုပ်နိုင်ရန် ဈေးနှုန်းနှင့် အချိန်အပိုင်း ကြာချိန်ဖြင့် ကွင်းတစ်ခု ထည့်ပါ။';
+
+  @override
+  String get noPrice => 'ဈေးနှုန်း မရှိ';
+
+  @override
+  String get noPriceSet => 'ဈေးနှုန်း မသတ်မှတ်ရသေးပါ';
+
+  @override
+  String get pricePerHourTitle => 'တစ်နာရီ ဈေးနှုန်း';
+
+  @override
+  String slotMinutesValue(int minutes) {
+    return '$minutes မိနစ်';
+  }
+
+  @override
+  String get playersLabel => 'ကစားသမား ဦးရေ';
+
+  @override
+  String get surfaceLabel => 'ကွင်းမျက်နှာပြင်';
+
+  @override
+  String get blockCourtSub => 'ပြုပြင်ထိန်းသိမ်းမှု၊ ပွဲများ စသည်တို့အတွက် ဤကွင်းကို ပိတ်ရန်';
+
+  @override
+  String get blockedTimesNote => 'ပိတ်ထားသော အချိန်များကို ဖောက်သည်များ ဘိုကင် မလုပ်နိုင်ပါ။';
+
+  @override
+  String get removeBlock => 'ပိတ်ထားမှု ဖယ်ရန်';
+
+  @override
+  String venueCounts(int stadiums, int courts) {
+    return 'အားကစားကွင်း $stadiums ခု · ကွင်း $courts ခု';
+  }
+
+  @override
+  String get statBookingsFooter => 'ဘိုကင်';
+
+  @override
+  String get statNeedReply => 'အကြောင်းပြန်ရန်';
+
+  @override
+  String get statCollected => 'ရရှိငွေ';
+
+  @override
+  String get statMmkFromPaid => 'ပေးချေပြီး ဘိုကင်များမှ (ကျပ်)';
+
+  @override
+  String get statBookedWithYou => 'သင့်ထံ ဘိုကင်လုပ်ခဲ့သူ';
+
+  @override
+  String get needsYourReply => 'အကြောင်းပြန်ရန် လိုအပ်';
+
+  @override
+  String get allCaughtUp => 'အားလုံး ပြီးပါပြီ';
+
+  @override
+  String get allCaughtUpMessage => 'ဘိုကင် တောင်းဆိုမှု အသစ်များ ဤနေရာတွင် ပေါ်လာပါမည်။';
+
+  @override
+  String get todaysSchedule => 'ယနေ့ အစီအစဉ်';
+
+  @override
+  String get noGamesToday => 'ယနေ့ ပွဲ မရှိပါ';
+
+  @override
+  String get locationLabel => 'တည်နေရာ';
+
+  @override
+  String get shopAdminsSub => 'ဤဆိုင်ကို စီမံနိုင်သူများ';
+
+  @override
+  String get explainPending => 'စိစစ်ရန် စောင့်ဆိုင်းဆဲ။ ဖောက်သည်များကို မပြသေးပါ။ ဆိုင်စီမံသူများက အားကစားကွင်းနှင့် ကွင်းများကို ယခုပင် ပြင်ဆင်နိုင်ပါသည်။';
+
+  @override
+  String get explainLive => 'ဖွင့်ထား: ဖောက်သည်များ ရှာဖွေ၍ ဘိုကင်လုပ်နိုင်ပါသည်။';
+
+  @override
+  String get explainUnlisted => 'အတည်ပြုပြီးသော်လည်း မပြသထား: ဖောက်သည်များကို မပြ၊ ဘိုကင်အသစ် မလက်ခံပါ။';
+
+  @override
+  String get explainSuspended => 'ဆိုင်းငံ့ထား: ဖောက်သည်များကို မပြ၊ ဘိုကင်အသစ် မလက်ခံပါ။ ရှိပြီးသား ဘိုကင်များ မပြောင်းလဲပါ။';
+
+  @override
+  String get explainRejected => 'ငြင်းပယ်ထား: ဖောက်သည်များကို မပြပါ။';
+
+  @override
+  String get explainInactive => 'ရပ်နားထား: ဖောက်သည်များကို မပြ၊ ဘိုကင်အသစ် မလက်ခံပါ။';
+
+  @override
+  String get commonCancel => 'မလုပ်တော့ပါ';
+
+  @override
+  String get commonRemove => 'ဖယ်ရန်';
+
+  @override
+  String get approveAndList => 'အတည်ပြုပြီး ပြသရန်';
+
+  @override
+  String get shopApprovedListed => 'ဆိုင်ကို အတည်ပြုပြီး ပြသထားပါပြီ';
+
+  @override
+  String get reactivateAction => 'ပြန်ဖွင့်ရန်';
+
+  @override
+  String get shopReactivated => 'ဆိုင်ကို ပြန်ဖွင့်ပြီးပါပြီ';
+
+  @override
+  String get deactivateShop => 'ဆိုင် ရပ်နားရန်';
+
+  @override
+  String get shopDeactivated => 'ဆိုင်ကို ရပ်နားထားပါပြီ';
+
+  @override
+  String get deactivateShopTitle => 'ဤဆိုင်ကို ရပ်နားမလား?';
+
+  @override
+  String get deactivateShopMessage => 'ဖောက်သည်များကို မပြတော့ဘဲ ဘိုကင်အသစ် မလက်ခံတော့ပါ။ နောက်မှ ပြန်ဖွင့်နိုင်ပါသည်။';
+
+  @override
+  String get deactivateAction => 'ရပ်နားရန်';
+
+  @override
+  String get shopRejectedDone => 'ဆိုင်ကို ငြင်းပယ်ပြီးပါပြီ';
+
+  @override
+  String get rejectShopTitle => 'ဤဆိုင်ကို ငြင်းပယ်မလား?';
+
+  @override
+  String get rejectShopMessage => 'ဖောက်သည်များကို ဆက်၍ မပြပါ။ နောက်မှ အတည်ပြုနိုင်ပါသေးသည်။';
+
+  @override
+  String get listedForCustomers => 'ဖောက်သည်များအတွက် ပြသမည်';
+
+  @override
+  String get listedForCustomersSub => 'ပိတ်ထားပါက ဆိုင်ကို မပြဘဲ ဘိုကင်အသစ် မလက်ခံပါ။';
+
+  @override
+  String get shopListedDone => 'ဆိုင်ကို ပြသထားပါပြီ';
+
+  @override
+  String get shopUnlistedDone => 'ဆိုင်ကို မပြသတော့ပါ';
+
+  @override
+  String get suspendAction => 'ဆိုင်းငံ့ရန်';
+
+  @override
+  String get shopSuspendedDone => 'ဆိုင်ကို ဆိုင်းငံ့ထားပါပြီ';
+
+  @override
+  String get suspendShopTitle => 'ဤဆိုင်ကို ဆိုင်းငံ့မလား?';
+
+  @override
+  String get suspendShopMessage => 'ဖောက်သည်များ မမြင်ရတော့ဘဲ ဘိုကင်အသစ် မလက်ခံတော့ပါ။ ရှိပြီးသား ဘိုကင်များကို မပယ်ဖျက်ပါ။';
+
+  @override
+  String get ownerNameLabel => 'ပိုင်ရှင် အမည်';
+
+  @override
+  String get ownerPhoneLabel => 'ပိုင်ရှင် ဖုန်း';
+
+  @override
+  String get suspensionReason => 'ဆိုင်းငံ့ရသည့် အကြောင်းရင်း';
+
+  @override
+  String get nothingToReview => 'စိစစ်ရန် မရှိပါ';
+
+  @override
+  String get nothingToReviewMessage => 'ဆိုင်အသစ်များကို သင် အတည်ပြု သို့မဟုတ် ငြင်းပယ်သည်အထိ ဤနေရာတွင် ပြပါမည်။';
+
+  @override
+  String get noShopsYet => 'ဆိုင် မရှိသေးပါ';
+
+  @override
+  String get noShopsMessage => 'ပထမဆုံး ဆိုင်ကို ဖန်တီးပြီး ၎င်း၏ စီမံသူကို သတ်မှတ်ပါ။';
+
+  @override
+  String shopAdminsOf(String shop) {
+    return '$shop စီမံသူများ';
+  }
+
+  @override
+  String get addAdmin => 'စီမံသူ ထည့်ရန်';
+
+  @override
+  String get noAdminsYet => 'စီမံသူ မရှိသေးပါ';
+
+  @override
+  String get noAdminsMessage => 'ဤဆိုင်ကို လုပ်ကိုင်သူကို ထည့်ပါ။ ၎င်းတွင် ဖောက်သည်အကောင့် ရှိထားရပါမည်။';
+
+  @override
+  String get accountDisabledBadge => 'အကောင့် ပိတ်ထား';
+
+  @override
+  String get removeAdmin => 'စီမံသူ ဖယ်ရန်';
+
+  @override
+  String get removeAdminTitle => 'ဤစီမံသူကို ဖယ်မလား?';
+
+  @override
+  String removeAdminMessage(String name) {
+    return '$name သည် ဆိုင်ကို စီမံခွင့် ချက်ချင်း ဆုံးရှုံးပြီး ဖောက်သည် ဖြစ်သွားပါမည်။';
+  }
+
+  @override
+  String get adminRemoved => 'စီမံသူကို ဖယ်ပြီးပါပြီ';
+
+  @override
+  String shopCount(int count) {
+    return 'ဆိုင် $count ဆိုင်';
+  }
+
+  @override
+  String platformSummary(int active, int pending) {
+    return 'အသုံးပြုနေ $active · စိစစ်ရန် $pending';
+  }
+
+  @override
+  String get activeShops => 'အသုံးပြုနေသော ဆိုင်';
+
+  @override
+  String ofTotal(int total) {
+    return 'စုစုပေါင်း $total အနက်';
+  }
+
+  @override
+  String get toReview => 'စိစစ်ရန်';
+
+  @override
+  String get newShopsFooter => 'ဆိုင်အသစ်';
+
+  @override
+  String get lastTwoWeeks => 'ပြီးခဲ့သော ၂ ပတ်';
+
+  @override
+  String get waitingForReview => 'စိစစ်ရန် စောင့်ဆိုင်းဆဲ';
+
+  @override
+  String get reviewAction => 'စိစစ်ရန်';
+
+  @override
+  String get latestBookings => 'နောက်ဆုံး ဘိုကင်များ';
+
+  @override
+  String get disableAccount => 'အကောင့် ပိတ်ရန်';
+
+  @override
+  String disableUserTitle(String name) {
+    return '$name ကို ပိတ်မလား?';
+  }
+
+  @override
+  String get disableUserMessage => 'အကောင့်ကို ပြန်ဖွင့်သည်အထိ အကောင့်မှ ထွက်သွားပြီး ဘိုကင် မလုပ်နိုင်တော့ပါ။';
+
+  @override
+  String get disableAction => 'ပိတ်ရန်';
+
+  @override
+  String get keepActive => 'ဆက်ဖွင့်ထားမည်';
+
+  @override
+  String get enableAccount => 'အကောင့် ပြန်ဖွင့်ရန်';
+
+  @override
+  String get announcementsTitle => 'ကြေညာချက်များ';
+
+  @override
+  String get announcementsSub => 'ဖောက်သည်နှင့် ဆိုင်များထံ ပို့သော စာများ';
+
+  @override
+  String get shopsPendingReview => 'စိစစ်ရန် စောင့်ဆိုင်းနေသော ဆိုင်များ';
+
+  @override
+  String get newShort => 'အသစ်';
+
+  @override
+  String get sentToPrefix => 'ပို့သည့် လက်ခံသူ';
+
+  @override
+  String homeOpenSlots(String day) {
+    return '$day ကစားနိုင်သော အချိန်များ';
+  }
+
+  @override
+  String get homeNoOpenSlots => 'ဤနေ့အတွက် ဘိုကင် ပြည့်နေပါပြီ';
+
+  @override
+  String bookSlotAt(String court, String time) {
+    return '$time တွင် $court ဘိုကင်လုပ်ရန်';
+  }
+
+  @override
+  String get mapDirections => 'လမ်းညွှန်';
+
+  @override
+  String get mapOpenInGoogleMaps => 'Google Maps တွင် ဖွင့်ရန်';
+
+  @override
+  String get mapOpenFailed => 'Google Maps ကို ဖွင့်၍ မရပါ';
+
+  @override
+  String mapPinSemantics(String name) {
+    return '$name ကို ပြသော မြေပုံ။ Google Maps ကို ဖွင့်ပါမည်';
+  }
+
+  @override
+  String get locationNotSet => 'မြေပုံ တည်နေရာ မထည့်ရသေးပါ';
+
+  @override
+  String get locationNote => 'ဖောက်သည်များ မြေပုံပေါ်တွင် မြင်ရပြီး လမ်းညွှန် ရယူနိုင်ပါသည်။';
+
+  @override
+  String get locationPickOnMap => 'မြေပုံပေါ်တွင် ရွေးရန်';
+
+  @override
+  String get locationChangeOnMap => 'မြေပုံပေါ်တွင် ပြောင်းရန်';
+
+  @override
+  String get locationPasteLabel => 'ကိုဩဒိနိတ် သို့မဟုတ် Google Maps လင့်ခ်';
+
+  @override
+  String get locationPasteHelper => 'ဥပမာ 16.84090, 96.17350';
+
+  @override
+  String get locationInvalid => 'တည်နေရာကို ဖတ်၍ မရပါ။ 16.84090, 96.17350 ကဲ့သို့ ကိုဩဒိနိတ်ကို ထည့်ပါ။';
+
+  @override
+  String get locationShortLink => 'လင့်ခ်အတိုကို ဖတ်၍ မရပါ။ လင့်ခ်ကို ဖွင့်ပြီး လင့်ခ်အပြည့် သို့မဟုတ် ကိုဩဒိနိတ်ကို ကူးယူပါ။';
+
+  @override
+  String get locationClear => 'တည်နေရာ ဖယ်ရန်';
+
+  @override
+  String get pickLocationTitle => 'ကွင်းတည်နေရာ သတ်မှတ်ရန်';
+
+  @override
+  String get pickLocationHint => 'ပင်သည် သင့်ကွင်းပေါ် ကျရောက်သည်အထိ မြေပုံကို ရွှေ့ပါ။';
+
+  @override
+  String get useThisLocation => 'ဤတည်နေရာကို သုံးမည်';
 }

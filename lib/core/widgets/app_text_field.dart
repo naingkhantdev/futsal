@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../l10n/l10n.dart';
 import '../l10n/l10n_labels.dart';
+import '../theme/app_depth.dart';
 import '../theme/app_radius.dart';
 import '../theme/app_sizes.dart';
 import '../theme/app_spacing.dart';
@@ -211,7 +212,8 @@ class _PasswordFieldState extends State<PasswordField> {
   }
 }
 
-/// Pill search field: height 48, no border, flat light-gray fill.
+/// Pill search field: height 48, no border, flat light-gray fill (or a
+/// raised white pill when [raised], e.g. on the gradient hero header).
 class SearchField extends StatelessWidget {
   const SearchField({
     super.key,
@@ -220,6 +222,7 @@ class SearchField extends StatelessWidget {
     this.onChanged,
     this.onSubmitted,
     this.autofocus = false,
+    this.raised = false,
   });
 
   /// Defaults to "Search" in the app language.
@@ -229,6 +232,9 @@ class SearchField extends StatelessWidget {
   final ValueChanged<String>? onSubmitted;
   final bool autofocus;
 
+  /// White card fill + shadow instead of the flat well.
+  final bool raised;
+
   @override
   Widget build(BuildContext context) {
     const border = OutlineInputBorder(
@@ -237,8 +243,12 @@ class SearchField extends StatelessWidget {
     );
     return Container(
       height: AppSizes.searchFieldHeight,
-      decoration:
-          context.depth.wellDecoration(borderRadius: AppRadius.fullAll),
+      decoration: raised
+          ? context.depth.raisedDecoration(
+              level: DepthLevel.high,
+              borderRadius: AppRadius.fullAll,
+            )
+          : context.depth.wellDecoration(borderRadius: AppRadius.fullAll),
       child: TextField(
         controller: controller,
         onChanged: onChanged,

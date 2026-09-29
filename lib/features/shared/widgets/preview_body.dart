@@ -5,15 +5,22 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/widgets/app_snackbar.dart';
 import '../../../core/widgets/content_constraint.dart';
 import '../../../core/widgets/demo_data_banner.dart';
+import '../../../core/widgets/motion.dart';
+import '../../../core/widgets/section_header.dart';
 
-/// Scrollable body for screens that still show `DemoData`: the sample-data
-/// banner on top, then [children] in a centered column at [width].
+/// Scrollable body for screens that still show `DemoData`: an optional
+/// full-bleed [header] (e.g. a venue photo), then [children] in a centered
+/// column at [width] and a quiet sample-data note at the end.
+///
+/// Motion: the content column enters once as a whole (fade + short rise);
+/// the header shows at once. Sections are not staggered one by one.
 class PreviewBody extends StatelessWidget {
   const PreviewBody({
     super.key,
     required this.children,
     this.width = ContentWidth.list,
     this.bottomPadding = AppSpacing.xxxl,
+    this.header,
   });
 
   final List<Widget> children;
@@ -22,23 +29,37 @@ class PreviewBody extends StatelessWidget {
   /// Extra space under the content (room for a FAB).
   final double bottomPadding;
 
+  /// Edge-to-edge widget above the content (no gutter, no top padding).
+  final Widget? header;
+
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.only(top: AppSpacing.md, bottom: bottomPadding),
-      children: [
-        ContentConstraint(
-          width: width,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const DemoDataBanner(),
-              const SizedBox(height: AppSpacing.lg),
-              ...children,
-            ],
-          ),
+    return EntranceScope(
+      child: ListView(
+        padding: EdgeInsets.only(
+          top: header == null ? AppSpacing.md : 0,
+          bottom: bottomPadding,
         ),
-      ],
+        children: [
+          if (header != null) ...[
+            header!,
+            const SizedBox(height: AppSpacing.lg),
+          ],
+          FadeSlideIn(
+            child: ContentConstraint(
+              width: width,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ...children,
+                  const SizedBox(height: AppSpacing.xxl),
+                  const DemoDataBanner(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -58,20 +79,10 @@ class PreviewSectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
-        top: AppSpacing.xl,
+        top: AppSpacing.xxl,
         bottom: AppSpacing.md,
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Semantics(
-              header: true,
-              child: Text(title, style: Theme.of(context).textTheme.titleMedium),
-            ),
-          ),
-          if (action != null) action!,
-        ],
-      ),
+      child: SectionTitleRow(title: title, action: action),
     );
   }
 }

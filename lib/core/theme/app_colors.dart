@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 ///
 /// Badges and banners always use container + onContainer. The solid
 /// success / warning / info colors are for icons on neutral surfaces only.
+///
+/// Muted, premium tones in the navy + gold family (user's call, 2026-09-29):
+/// `success` is bronze-gold (no green anywhere), `warning` burnt orange,
+/// `info` slate blue. Status is never color alone (icon + label).
 @immutable
 class AppColors extends ThemeExtension<AppColors> {
   const AppColors({
@@ -39,37 +43,37 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color imagePlaceholder;
 
   static const AppColors light = AppColors(
-    success: Color(0xFF1F7A45),
+    success: Color(0xFF7A5A12),
     onSuccess: Color(0xFFFFFFFF),
-    successContainer: Color(0xFFDDF1E4),
-    onSuccessContainer: Color(0xFF0E4225),
-    warning: Color(0xFF8A5A00),
+    successContainer: Color(0xFFF4EBD3),
+    onSuccessContainer: Color(0xFF3A2A06),
+    warning: Color(0xFF9A4A12),
     onWarning: Color(0xFFFFFFFF),
-    warningContainer: Color(0xFFF8EACB),
-    onWarningContainer: Color(0xFF3F2A00),
-    info: Color(0xFF1F5F99),
+    warningContainer: Color(0xFFF7E5D6),
+    onWarningContainer: Color(0xFF45200A),
+    info: Color(0xFF34507A),
     onInfo: Color(0xFFFFFFFF),
-    infoContainer: Color(0xFFDDE9F6),
-    onInfoContainer: Color(0xFF0E2F52),
-    skeleton: Color(0xFFD9DFE7),
-    imagePlaceholder: Color(0xFFDFE4EA),
+    infoContainer: Color(0xFFE3E8F1),
+    onInfoContainer: Color(0xFF142640),
+    skeleton: Color(0xFFE7E4DC),
+    imagePlaceholder: Color(0xFFECE9E2),
   );
 
   static const AppColors dark = AppColors(
-    success: Color(0xFF7FD6A0),
-    onSuccess: Color(0xFF00391A),
-    successContainer: Color(0xFF173A26),
-    onSuccessContainer: Color(0xFFC9F0D6),
-    warning: Color(0xFFF2C06B),
-    onWarning: Color(0xFF452B00),
-    warningContainer: Color(0xFF3D2E10),
-    onWarningContainer: Color(0xFFFBE7BF),
-    info: Color(0xFF8EC2F2),
-    onInfo: Color(0xFF003549),
-    infoContainer: Color(0xFF15314D),
-    onInfoContainer: Color(0xFFD6E7F9),
-    skeleton: Color(0xFF2A2E35),
-    imagePlaceholder: Color(0xFF23272D),
+    success: Color(0xFFE3C77E),
+    onSuccess: Color(0xFF2A1E05),
+    successContainer: Color(0xFF3A2E12),
+    onSuccessContainer: Color(0xFFF4EBD3),
+    warning: Color(0xFFF0A870),
+    onWarning: Color(0xFF3F1F08),
+    warningContainer: Color(0xFF3F2410),
+    onWarningContainer: Color(0xFFF7E5D6),
+    info: Color(0xFF9FB6DA),
+    onInfo: Color(0xFF142640),
+    infoContainer: Color(0xFF1C2B45),
+    onInfoContainer: Color(0xFFE3E8F1),
+    skeleton: Color(0xFF1B2438),
+    imagePlaceholder: Color(0xFF172033),
   );
 
   @override

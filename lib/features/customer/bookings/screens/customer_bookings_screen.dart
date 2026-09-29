@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
-import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/empty_view.dart';
 import '../../../../data/demo/demo_data.dart';
 import '../../../../data/vos/booking_vo.dart';
@@ -91,13 +90,10 @@ class _BookingListState extends State<_BookingList> {
             message: widget.emptyMessage,
           )
         else
-          for (final b in bookings) ...[
-            BookingListTile(
-              booking: b,
-              onTap: () => context.push(AppRoutes.customerBooking(b.id)),
-            ),
-            const SizedBox(height: AppSpacing.md),
-          ],
+          BookingGroup(
+            bookings: bookings,
+            onOpen: (b) => context.push(AppRoutes.customerBooking(b.id)),
+          ),
       ],
     );
   }

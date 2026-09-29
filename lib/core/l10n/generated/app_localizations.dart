@@ -1119,12 +1119,6 @@ abstract class AppLocalizations {
   /// **'Hi, {name}'**
   String homeGreeting(String name);
 
-  /// No description provided for @homeReady.
-  ///
-  /// In en, this message translates to:
-  /// **'Ready to play?'**
-  String get homeReady;
-
   /// No description provided for @homeSearchHint.
   ///
   /// In en, this message translates to:
@@ -1142,18 +1136,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All bookings'**
   String get homeAllBookings;
-
-  /// No description provided for @homeNoGames.
-  ///
-  /// In en, this message translates to:
-  /// **'No games booked. Pick a court below.'**
-  String get homeNoGames;
-
-  /// No description provided for @homePopular.
-  ///
-  /// In en, this message translates to:
-  /// **'Popular near you'**
-  String get homePopular;
 
   /// No description provided for @exploreEmptyTitle.
   ///
@@ -2024,6 +2006,1092 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Shop admins'**
   String get audienceShopAdmins;
+
+  /// No description provided for @errBlacklisted.
+  ///
+  /// In en, this message translates to:
+  /// **'This venue isn\'t taking bookings from your account. Contact the venue.'**
+  String get errBlacklisted;
+
+  /// No description provided for @blacklistTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Blacklist'**
+  String get blacklistTitle;
+
+  /// No description provided for @blacklistSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Customers who can\'t book at your shop'**
+  String get blacklistSubtitle;
+
+  /// No description provided for @blacklistIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Blacklisted customers can\'t make new bookings at your shop. Their existing bookings stay, and they can still book at other shops.'**
+  String get blacklistIntro;
+
+  /// No description provided for @blacklistEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No one is blacklisted'**
+  String get blacklistEmptyTitle;
+
+  /// No description provided for @blacklistEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Blacklist a customer from their profile, or from a booking they didn\'t show up for.'**
+  String get blacklistEmptyMessage;
+
+  /// No description provided for @blacklistAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to blacklist'**
+  String get blacklistAdd;
+
+  /// No description provided for @blacklistNoShowAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Didn\'t show up · blacklist'**
+  String get blacklistNoShowAction;
+
+  /// No description provided for @blacklistRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from blacklist'**
+  String get blacklistRemove;
+
+  /// No description provided for @blacklistRemoveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {name} from the blacklist?'**
+  String blacklistRemoveTitle(String name);
+
+  /// No description provided for @blacklistRemoveMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'They\'ll be able to book at your shop again.'**
+  String get blacklistRemoveMessage;
+
+  /// No description provided for @blacklistRemoveConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get blacklistRemoveConfirm;
+
+  /// No description provided for @blacklistKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep'**
+  String get blacklistKeep;
+
+  /// No description provided for @blacklistSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Blacklist {name}'**
+  String blacklistSheetTitle(String name);
+
+  /// No description provided for @blacklistSheetMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'They won\'t be able to make new bookings at your shop. Existing bookings stay.'**
+  String get blacklistSheetMessage;
+
+  /// No description provided for @blacklistReasonNoShow.
+  ///
+  /// In en, this message translates to:
+  /// **'Didn\'t show up'**
+  String get blacklistReasonNoShow;
+
+  /// No description provided for @blacklistConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Blacklist'**
+  String get blacklistConfirm;
+
+  /// No description provided for @blacklistAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is blacklisted'**
+  String blacklistAdded(String name);
+
+  /// No description provided for @blacklistRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} can book again'**
+  String blacklistRemoved(String name);
+
+  /// No description provided for @blacklistedBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Blacklisted'**
+  String get blacklistedBadge;
+
+  /// No description provided for @blacklistedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Blacklisted {date}'**
+  String blacklistedOn(String date);
+
+  /// No description provided for @stadiumsEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first stadium'**
+  String get stadiumsEmptyTitle;
+
+  /// No description provided for @stadiumsEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Set its opening hours, then add the courts customers can book.'**
+  String get stadiumsEmptyMessage;
+
+  /// No description provided for @staffFilterUpcoming.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get staffFilterUpcoming;
+
+  /// No description provided for @staffFilterPast.
+  ///
+  /// In en, this message translates to:
+  /// **'Past'**
+  String get staffFilterPast;
+
+  /// No description provided for @staffFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get staffFilterAll;
+
+  /// No description provided for @staffNoBookingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No bookings here'**
+  String get staffNoBookingsTitle;
+
+  /// No description provided for @staffTryAnotherFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Try another filter.'**
+  String get staffTryAnotherFilter;
+
+  /// No description provided for @markPaymentPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark payment pending'**
+  String get markPaymentPending;
+
+  /// No description provided for @markAsPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as paid'**
+  String get markAsPaid;
+
+  /// No description provided for @markAsRefunded.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as refunded'**
+  String get markAsRefunded;
+
+  /// No description provided for @confirmBooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm booking'**
+  String get confirmBooking;
+
+  /// No description provided for @markAsCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as completed'**
+  String get markAsCompleted;
+
+  /// No description provided for @rejectBooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject booking'**
+  String get rejectBooking;
+
+  /// No description provided for @rejectBookingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject this booking?'**
+  String get rejectBookingTitle;
+
+  /// No description provided for @rejectBookingMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'The customer is notified and the slots are released.'**
+  String get rejectBookingMessage;
+
+  /// No description provided for @rejectAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get rejectAction;
+
+  /// No description provided for @keepBooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep booking'**
+  String get keepBooking;
+
+  /// No description provided for @searchNameOrPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name or phone'**
+  String get searchNameOrPhone;
+
+  /// No description provided for @noCustomersFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No customers found'**
+  String get noCustomersFound;
+
+  /// No description provided for @bookingCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 booking} other{{count} bookings}}'**
+  String bookingCount(int count);
+
+  /// No description provided for @lastPlayedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'last played {date}'**
+  String lastPlayedOn(String date);
+
+  /// No description provided for @joinedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Joined {date}'**
+  String joinedOn(String date);
+
+  /// No description provided for @statusDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get statusDisabled;
+
+  /// No description provided for @accountPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get accountPrefix;
+
+  /// No description provided for @mmkOnPlatform.
+  ///
+  /// In en, this message translates to:
+  /// **'MMK on the platform'**
+  String get mmkOnPlatform;
+
+  /// No description provided for @mmkAtYourShop.
+  ///
+  /// In en, this message translates to:
+  /// **'MMK at your shop'**
+  String get mmkAtYourShop;
+
+  /// No description provided for @bookingHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking history'**
+  String get bookingHistory;
+
+  /// No description provided for @noBookingsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No bookings yet'**
+  String get noBookingsYet;
+
+  /// No description provided for @totalPaidAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Total paid: {amount}'**
+  String totalPaidAmount(String amount);
+
+  /// No description provided for @settingsShopProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop profile'**
+  String get settingsShopProfile;
+
+  /// No description provided for @settingsShopProfileSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Name, contact and address'**
+  String get settingsShopProfileSub;
+
+  /// No description provided for @blockedTimesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocked times'**
+  String get blockedTimesTitle;
+
+  /// No description provided for @blockedTimesSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintenance, events, closures'**
+  String get blockedTimesSub;
+
+  /// No description provided for @stadiumsAndCourts.
+  ///
+  /// In en, this message translates to:
+  /// **'Stadiums & courts'**
+  String get stadiumsAndCourts;
+
+  /// No description provided for @editShopProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit shop profile'**
+  String get editShopProfile;
+
+  /// No description provided for @commonEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get commonEdit;
+
+  /// No description provided for @shopStatusPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop status'**
+  String get shopStatusPrefix;
+
+  /// No description provided for @listingPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Listing'**
+  String get listingPrefix;
+
+  /// No description provided for @addressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get addressLabel;
+
+  /// No description provided for @statusManagedByPlatform.
+  ///
+  /// In en, this message translates to:
+  /// **'Status and listing are managed by the platform team.'**
+  String get statusManagedByPlatform;
+
+  /// No description provided for @visibilityUnlisted.
+  ///
+  /// In en, this message translates to:
+  /// **'Your shop is unlisted, so customers can\'t see or book it.'**
+  String get visibilityUnlisted;
+
+  /// No description provided for @visibilityPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Your shop is waiting for approval. Set up stadiums and courts now; customers see them once it is approved.'**
+  String get visibilityPending;
+
+  /// No description provided for @visibilitySuspended.
+  ///
+  /// In en, this message translates to:
+  /// **'Your shop is suspended. Customers can\'t see or book it. Contact the platform team.'**
+  String get visibilitySuspended;
+
+  /// No description provided for @visibilityInactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Your shop isn\'t active. Customers can\'t see or book it.'**
+  String get visibilityInactive;
+
+  /// No description provided for @venueActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get venueActive;
+
+  /// No description provided for @venueInactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get venueInactive;
+
+  /// No description provided for @visibleToCustomers.
+  ///
+  /// In en, this message translates to:
+  /// **'Visible to customers'**
+  String get visibleToCustomers;
+
+  /// No description provided for @hiddenLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden'**
+  String get hiddenLabel;
+
+  /// No description provided for @discoveryPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Discovery'**
+  String get discoveryPrefix;
+
+  /// No description provided for @bookableLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookable'**
+  String get bookableLabel;
+
+  /// No description provided for @noneListed.
+  ///
+  /// In en, this message translates to:
+  /// **'None listed'**
+  String get noneListed;
+
+  /// No description provided for @descriptionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get descriptionLabel;
+
+  /// No description provided for @noCourtsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No courts yet'**
+  String get noCourtsYet;
+
+  /// No description provided for @noCourtsMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a court with its price and slot length so customers can book it.'**
+  String get noCourtsMessage;
+
+  /// No description provided for @noPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'No price'**
+  String get noPrice;
+
+  /// No description provided for @noPriceSet.
+  ///
+  /// In en, this message translates to:
+  /// **'No price set'**
+  String get noPriceSet;
+
+  /// No description provided for @pricePerHourTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Price per hour'**
+  String get pricePerHourTitle;
+
+  /// No description provided for @slotMinutesValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} minutes'**
+  String slotMinutesValue(int minutes);
+
+  /// No description provided for @playersLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Players'**
+  String get playersLabel;
+
+  /// No description provided for @surfaceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Surface'**
+  String get surfaceLabel;
+
+  /// No description provided for @blockCourtSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Close this court for maintenance, events and more'**
+  String get blockCourtSub;
+
+  /// No description provided for @blockedTimesNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocked times cannot be booked by customers.'**
+  String get blockedTimesNote;
+
+  /// No description provided for @removeBlock.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove block'**
+  String get removeBlock;
+
+  /// No description provided for @venueCounts.
+  ///
+  /// In en, this message translates to:
+  /// **'{stadiums} stadiums · {courts} courts'**
+  String venueCounts(int stadiums, int courts);
+
+  /// No description provided for @statBookingsFooter.
+  ///
+  /// In en, this message translates to:
+  /// **'bookings'**
+  String get statBookingsFooter;
+
+  /// No description provided for @statNeedReply.
+  ///
+  /// In en, this message translates to:
+  /// **'need a reply'**
+  String get statNeedReply;
+
+  /// No description provided for @statCollected.
+  ///
+  /// In en, this message translates to:
+  /// **'Collected'**
+  String get statCollected;
+
+  /// No description provided for @statMmkFromPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'MMK from paid bookings'**
+  String get statMmkFromPaid;
+
+  /// No description provided for @statBookedWithYou.
+  ///
+  /// In en, this message translates to:
+  /// **'booked with you'**
+  String get statBookedWithYou;
+
+  /// No description provided for @needsYourReply.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs your reply'**
+  String get needsYourReply;
+
+  /// No description provided for @allCaughtUp.
+  ///
+  /// In en, this message translates to:
+  /// **'All caught up'**
+  String get allCaughtUp;
+
+  /// No description provided for @allCaughtUpMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'New booking requests show up here.'**
+  String get allCaughtUpMessage;
+
+  /// No description provided for @todaysSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s schedule'**
+  String get todaysSchedule;
+
+  /// No description provided for @noGamesToday.
+  ///
+  /// In en, this message translates to:
+  /// **'No games today'**
+  String get noGamesToday;
+
+  /// No description provided for @locationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get locationLabel;
+
+  /// No description provided for @shopAdminsSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Who can manage this shop'**
+  String get shopAdminsSub;
+
+  /// No description provided for @explainPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for review. Hidden from customers; its admins can already set up stadiums and courts.'**
+  String get explainPending;
+
+  /// No description provided for @explainLive.
+  ///
+  /// In en, this message translates to:
+  /// **'Live: customers can find and book it.'**
+  String get explainLive;
+
+  /// No description provided for @explainUnlisted.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved but unlisted: hidden from customers, no new bookings.'**
+  String get explainUnlisted;
+
+  /// No description provided for @explainSuspended.
+  ///
+  /// In en, this message translates to:
+  /// **'Suspended: hidden from customers, no new bookings. Existing bookings stay as they are.'**
+  String get explainSuspended;
+
+  /// No description provided for @explainRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected: hidden from customers.'**
+  String get explainRejected;
+
+  /// No description provided for @explainInactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive: hidden from customers, no new bookings.'**
+  String get explainInactive;
+
+  /// No description provided for @commonCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get commonCancel;
+
+  /// No description provided for @commonRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get commonRemove;
+
+  /// No description provided for @approveAndList.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve and list'**
+  String get approveAndList;
+
+  /// No description provided for @shopApprovedListed.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop approved and listed'**
+  String get shopApprovedListed;
+
+  /// No description provided for @reactivateAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Reactivate'**
+  String get reactivateAction;
+
+  /// No description provided for @shopReactivated.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop reactivated'**
+  String get shopReactivated;
+
+  /// No description provided for @deactivateShop.
+  ///
+  /// In en, this message translates to:
+  /// **'Deactivate shop'**
+  String get deactivateShop;
+
+  /// No description provided for @shopDeactivated.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop deactivated'**
+  String get shopDeactivated;
+
+  /// No description provided for @deactivateShopTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Deactivate this shop?'**
+  String get deactivateShopTitle;
+
+  /// No description provided for @deactivateShopMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'It will be hidden from customers and take no new bookings. You can reactivate it later.'**
+  String get deactivateShopMessage;
+
+  /// No description provided for @deactivateAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Deactivate'**
+  String get deactivateAction;
+
+  /// No description provided for @shopRejectedDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop rejected'**
+  String get shopRejectedDone;
+
+  /// No description provided for @rejectShopTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject this shop?'**
+  String get rejectShopTitle;
+
+  /// No description provided for @rejectShopMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'It stays hidden from customers. You can still approve it later.'**
+  String get rejectShopMessage;
+
+  /// No description provided for @listedForCustomers.
+  ///
+  /// In en, this message translates to:
+  /// **'Listed for customers'**
+  String get listedForCustomers;
+
+  /// No description provided for @listedForCustomersSub.
+  ///
+  /// In en, this message translates to:
+  /// **'When off, the shop is hidden and takes no new bookings.'**
+  String get listedForCustomersSub;
+
+  /// No description provided for @shopListedDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop listed'**
+  String get shopListedDone;
+
+  /// No description provided for @shopUnlistedDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop unlisted'**
+  String get shopUnlistedDone;
+
+  /// No description provided for @suspendAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Suspend'**
+  String get suspendAction;
+
+  /// No description provided for @shopSuspendedDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop suspended'**
+  String get shopSuspendedDone;
+
+  /// No description provided for @suspendShopTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Suspend this shop?'**
+  String get suspendShopTitle;
+
+  /// No description provided for @suspendShopMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Customers stop seeing it and it takes no new bookings. Existing bookings are not cancelled.'**
+  String get suspendShopMessage;
+
+  /// No description provided for @ownerNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner name'**
+  String get ownerNameLabel;
+
+  /// No description provided for @ownerPhoneLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner phone'**
+  String get ownerPhoneLabel;
+
+  /// No description provided for @suspensionReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Suspension reason'**
+  String get suspensionReason;
+
+  /// No description provided for @nothingToReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to review'**
+  String get nothingToReview;
+
+  /// No description provided for @nothingToReviewMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'New shops appear here until you approve or reject them.'**
+  String get nothingToReviewMessage;
+
+  /// No description provided for @noShopsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No shops yet'**
+  String get noShopsYet;
+
+  /// No description provided for @noShopsMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Create the first shop, then assign its admin.'**
+  String get noShopsMessage;
+
+  /// No description provided for @shopAdminsOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{shop} admins'**
+  String shopAdminsOf(String shop);
+
+  /// No description provided for @addAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Add admin'**
+  String get addAdmin;
+
+  /// No description provided for @noAdminsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No admins yet'**
+  String get noAdminsYet;
+
+  /// No description provided for @noAdminsMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the person who runs this shop. They need a customer account first.'**
+  String get noAdminsMessage;
+
+  /// No description provided for @accountDisabledBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Account disabled'**
+  String get accountDisabledBadge;
+
+  /// No description provided for @removeAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove admin'**
+  String get removeAdmin;
+
+  /// No description provided for @removeAdminTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this admin?'**
+  String get removeAdminTitle;
+
+  /// No description provided for @removeAdminMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} loses access to the shop right away and becomes a customer.'**
+  String removeAdminMessage(String name);
+
+  /// No description provided for @adminRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin removed'**
+  String get adminRemoved;
+
+  /// No description provided for @shopCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 shop} other{{count} shops}}'**
+  String shopCount(int count);
+
+  /// No description provided for @platformSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{active} active · {pending} waiting for review'**
+  String platformSummary(int active, int pending);
+
+  /// No description provided for @activeShops.
+  ///
+  /// In en, this message translates to:
+  /// **'Active shops'**
+  String get activeShops;
+
+  /// No description provided for @ofTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'of {total}'**
+  String ofTotal(int total);
+
+  /// No description provided for @toReview.
+  ///
+  /// In en, this message translates to:
+  /// **'To review'**
+  String get toReview;
+
+  /// No description provided for @newShopsFooter.
+  ///
+  /// In en, this message translates to:
+  /// **'new shops'**
+  String get newShopsFooter;
+
+  /// No description provided for @lastTwoWeeks.
+  ///
+  /// In en, this message translates to:
+  /// **'last 2 weeks'**
+  String get lastTwoWeeks;
+
+  /// No description provided for @waitingForReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for review'**
+  String get waitingForReview;
+
+  /// No description provided for @reviewAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get reviewAction;
+
+  /// No description provided for @latestBookings.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest bookings'**
+  String get latestBookings;
+
+  /// No description provided for @disableAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable account'**
+  String get disableAccount;
+
+  /// No description provided for @disableUserTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable {name}?'**
+  String disableUserTitle(String name);
+
+  /// No description provided for @disableUserMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'They are signed out and cannot book until you enable the account again.'**
+  String get disableUserMessage;
+
+  /// No description provided for @disableAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable'**
+  String get disableAction;
+
+  /// No description provided for @keepActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep active'**
+  String get keepActive;
+
+  /// No description provided for @enableAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable account'**
+  String get enableAccount;
+
+  /// No description provided for @announcementsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Announcements'**
+  String get announcementsTitle;
+
+  /// No description provided for @announcementsSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Messages to customers and shops'**
+  String get announcementsSub;
+
+  /// No description provided for @shopsPendingReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Shops pending review'**
+  String get shopsPendingReview;
+
+  /// No description provided for @newShort.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get newShort;
+
+  /// No description provided for @sentToPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to'**
+  String get sentToPrefix;
+
+  /// No description provided for @homeOpenSlots.
+  ///
+  /// In en, this message translates to:
+  /// **'Open times · {day}'**
+  String homeOpenSlots(String day);
+
+  /// No description provided for @homeNoOpenSlots.
+  ///
+  /// In en, this message translates to:
+  /// **'Fully booked this day'**
+  String get homeNoOpenSlots;
+
+  /// No description provided for @bookSlotAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Book {court} at {time}'**
+  String bookSlotAt(String court, String time);
+
+  /// No description provided for @mapDirections.
+  ///
+  /// In en, this message translates to:
+  /// **'Directions'**
+  String get mapDirections;
+
+  /// No description provided for @mapOpenInGoogleMaps.
+  ///
+  /// In en, this message translates to:
+  /// **'Open in Google Maps'**
+  String get mapOpenInGoogleMaps;
+
+  /// No description provided for @mapOpenFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open Google Maps'**
+  String get mapOpenFailed;
+
+  /// No description provided for @mapPinSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Map showing {name}. Opens Google Maps'**
+  String mapPinSemantics(String name);
+
+  /// No description provided for @locationNotSet.
+  ///
+  /// In en, this message translates to:
+  /// **'No map location yet'**
+  String get locationNotSet;
+
+  /// No description provided for @locationNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Customers see this on a map and can get directions.'**
+  String get locationNote;
+
+  /// No description provided for @locationPickOnMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick on map'**
+  String get locationPickOnMap;
+
+  /// No description provided for @locationChangeOnMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Change on map'**
+  String get locationChangeOnMap;
+
+  /// No description provided for @locationPasteLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Coordinates or Google Maps link'**
+  String get locationPasteLabel;
+
+  /// No description provided for @locationPasteHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 16.84090, 96.17350'**
+  String get locationPasteHelper;
+
+  /// No description provided for @locationInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t read a location. Paste coordinates like 16.84090, 96.17350.'**
+  String get locationInvalid;
+
+  /// No description provided for @locationShortLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Short links can\'t be read. Open the link, then copy the full link or the coordinates.'**
+  String get locationShortLink;
+
+  /// No description provided for @locationClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove location'**
+  String get locationClear;
+
+  /// No description provided for @pickLocationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin your venue'**
+  String get pickLocationTitle;
+
+  /// No description provided for @pickLocationHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Move the map until the pin sits on your venue.'**
+  String get pickLocationHint;
+
+  /// No description provided for @useThisLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this location'**
+  String get useThisLocation;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

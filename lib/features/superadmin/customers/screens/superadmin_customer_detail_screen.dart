@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_dialogs.dart';
@@ -19,8 +20,9 @@ class SuperadminCustomerDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = DemoData.customer(customerId);
+    final l = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: const Text('Customer')),
+      appBar: AppBar(title: Text(l.roleCustomer)),
       body: StaffCustomerDetail(
         customer: c,
         shopId: null,
@@ -28,30 +30,29 @@ class SuperadminCustomerDetailScreen extends StatelessWidget {
         actions: [
           if (c.isActive)
             SecondaryButton(
-              label: 'Disable account',
+              label: l.disableAccount,
               icon: Icons.block,
               expand: true,
               onPressed: () async {
                 final ok = await showConfirmDialog(
                   context,
-                  title: 'Disable ${c.name}?',
-                  message: 'They are signed out and cannot book until you '
-                      'enable the account again.',
-                  confirmLabel: 'Disable',
-                  dismissLabel: 'Keep active',
+                  title: l.disableUserTitle(c.name),
+                  message: l.disableUserMessage,
+                  confirmLabel: l.disableAction,
+                  dismissLabel: l.keepActive,
                   destructive: true,
                 );
                 if (ok && context.mounted) {
-                  showPreviewOnly(context, 'Disable account');
+                  showPreviewOnly(context, l.disableAccount);
                 }
               },
             )
           else
             PrimaryButton(
-              label: 'Enable account',
+              label: l.enableAccount,
               icon: Icons.check_circle_outline,
               expand: true,
-              onPressed: () => showPreviewOnly(context, 'Enable account'),
+              onPressed: () => showPreviewOnly(context, l.enableAccount),
             ),
         ],
       ),

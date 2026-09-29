@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_radius.dart';
 import '../theme/app_sizes.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_typography.dart';
@@ -91,6 +92,10 @@ abstract class _AppButton extends StatelessWidget {
     final style = _style(context);
     final child = _ButtonContent(label: label, icon: icon, isLoading: isLoading);
 
+    // Enabled primary: navy (dark: gold) sheen + soft glow. Disabled stays flat so
+    // it reads as disabled.
+    final gradient = variant == _Variant.primary && onPressed != null;
+
     Widget button = switch (variant) {
       _Variant.primary ||
       _Variant.destructive =>
@@ -101,6 +106,23 @@ abstract class _AppButton extends StatelessWidget {
         TextButton(onPressed: onPressed, style: style, child: child),
     };
 
+    if (gradient) {
+      final g = context.gradients;
+      button = DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: g.primary,
+          borderRadius: AppRadius.mdAll,
+          boxShadow: [
+            BoxShadow(
+              color: g.primaryGlow,
+              offset: const Offset(0, 6),
+              blurRadius: 16,
+            ),
+          ],
+        ),
+        child: button,
+      );
+    }
     if (expand) button = SizedBox(width: double.infinity, child: button);
     if (!isLoading) return button;
 
@@ -123,6 +145,12 @@ abstract class _AppButton extends StatelessWidget {
       // Plain outline (theme side color) on a transparent fill.
       _Variant.secondary => OutlinedButton.styleFrom(
           backgroundColor: Colors.transparent,
+        ),
+      // Transparent so the gradient behind it shows; disabled keeps the
+      // theme's flat disabled fill.
+      _Variant.primary when onPressed != null => FilledButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
         ),
       _ => null,
     };

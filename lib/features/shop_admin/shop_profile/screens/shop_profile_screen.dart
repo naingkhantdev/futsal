@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_sizes.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -23,13 +24,14 @@ class ShopProfileScreen extends StatelessWidget {
     final shop = DemoData.shop(DemoData.myShopId);
     final styles = context.textStyles;
     final muted = context.colors.onSurfaceVariant;
+    final l = context.l10n;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Shop profile'),
+        title: Text(l.settingsShopProfile),
         actions: [
           TextButton(
-            onPressed: () => showPreviewOnly(context, 'Edit shop profile'),
-            child: const Text('Edit'),
+            onPressed: () => showPreviewOnly(context, l.editShopProfile),
+            child: Text(l.commonEdit),
           ),
           const SizedBox(width: AppSpacing.sm),
         ],
@@ -65,11 +67,11 @@ class ShopProfileScreen extends StatelessWidget {
                       children: [
                         StatusBadge.fromVisual(
                           shop.status.visual,
-                          semanticsPrefix: 'Shop status',
+                          semanticsPrefix: l.shopStatusPrefix,
                         ),
                         StatusBadge.fromVisual(
                           shopListingVisual(isListed: shop.isListed),
-                          semanticsPrefix: 'Listing',
+                          semanticsPrefix: l.listingPrefix,
                         ),
                       ],
                     ),
@@ -89,17 +91,17 @@ class ShopProfileScreen extends StatelessWidget {
               children: [
                 DetailRow(
                   icon: Icons.phone_outlined,
-                  label: 'Phone',
+                  label: l.profilePhone,
                   value: shop.phone,
                 ),
                 DetailRow(
                   icon: Icons.mail_outline,
-                  label: 'Email',
+                  label: l.emailLabel,
                   value: shop.email,
                 ),
                 DetailRow(
                   icon: Icons.place_outlined,
-                  label: 'Address',
+                  label: l.addressLabel,
                   value: [shop.address, shop.township, shop.city]
                       .whereType<String>()
                       .join(', '),
@@ -109,7 +111,7 @@ class ShopProfileScreen extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
           Text(
-            'Status and listing are managed by the platform team.',
+            l.statusManagedByPlatform,
             style: styles.bodySmall?.copyWith(color: muted),
           ),
         ],

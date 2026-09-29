@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
 import 'app_depth.dart';
+import 'app_gradients.dart';
 import 'app_sizes.dart';
 
 /// Shorthand access to theme tokens and window-size classes.
@@ -13,6 +14,10 @@ extension ThemeContextX on BuildContext {
 
   /// Card / hairline / well surface tokens.
   AppDepth get depth => Theme.of(this).extension<AppDepth>() ?? AppDepth.light;
+
+  /// Hero / primary / accent gradients.
+  AppGradients get gradients =>
+      Theme.of(this).extension<AppGradients>() ?? AppGradients.light;
 
   TextTheme get textStyles => Theme.of(this).textTheme;
 

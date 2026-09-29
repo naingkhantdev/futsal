@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../core/l10n/l10n_labels.dart';
 import '../../../core/theme/app_radius.dart';
-import '../../../core/theme/app_sizes.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/theme/status_visuals.dart';
 import '../../../core/theme/theme_context_ext.dart';
 import '../../../core/utils/display_format.dart';
 import '../../../core/utils/money.dart';
-import '../../../core/widgets/app_card.dart';
+import '../../../core/widgets/grouped_list.dart';
 import '../../../core/widgets/status_badge.dart';
 import '../../../data/vos/booking_vo.dart';
 
-/// One booking in a list: date block, time + venue (and customer for staff),
-/// status badge and total. Same card for all three roles.
+/// One booking row: date block, time + venue (and customer for staff),
+/// status badge and total. Flat (no card of its own): place rows in a
+/// [BookingGroup] / `GroupedList`. Same row for all three roles.
 class BookingListTile extends StatelessWidget {
   const BookingListTile({
     super.key,
@@ -49,104 +49,137 @@ class BookingListTile extends StatelessWidget {
           '$time, ${b.status.labelIn(l)}',
       onTap: onTap,
       excludeSemantics: true,
-      child: AppCard(
+      child: InkWell(
         onTap: onTap,
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Row(
-          children: [
-            _DateBlock(dateKey: b.bookingDate),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.md,
+          ),
+          child: Row(
+            children: [
+              _DateBlock(dateKey: b.bookingDate),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: styles.titleSmall,
+                    ),
+                    const SizedBox(height: AppSpacing.xxs),
+                    Text(
+                      time,
+                      style: AppTypography.tabular(styles.bodyMedium!)
+                          .copyWith(color: context.colors.onSurface),
+                    ),
+                    Text(
+                      venue,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: styles.bodySmall?.copyWith(color: muted),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    time,
-                    style: AppTypography.tabular(styles.titleSmall!),
+                  StatusBadge.fromVisual(
+                    b.status.visual,
+                    semanticsPrefix: l.bookingStatusPrefix,
                   ),
-                  const SizedBox(height: AppSpacing.xxs),
+                  const SizedBox(height: AppSpacing.sm),
                   Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: styles.bodyMedium
-                        ?.copyWith(fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: AppSpacing.xxs),
-                  Row(
-                    children: [
-                      Icon(
-                        showCustomer
-                            ? Icons.stadium_outlined
-                            : Icons.sports_soccer_outlined,
-                        size: AppSizes.iconXs,
-                        color: muted,
-                      ),
-                      const SizedBox(width: AppSpacing.xs),
-                      Expanded(
-                        child: Text(
-                          venue,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: styles.bodySmall?.copyWith(color: muted),
-                        ),
-                      ),
-                    ],
+                    Money.formatMmk(b.totalPrice),
+                    style: AppTypography.tabular(styles.labelMedium!).copyWith(
+                      color: context.colors.onSurface,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                StatusBadge.fromVisual(
-                  b.status.visual,
-                  semanticsPrefix: l.bookingStatusPrefix,
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                Text(
-                  Money.formatMmk(b.totalPrice),
-                  style: AppTypography.tabular(styles.labelMedium!)
-                      .copyWith(color: muted),
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-/// "SEP / 29 / Mon" block.
+/// [BookingListTile]s for [bookings] on one grouped surface.
+class BookingGroup extends StatelessWidget {
+  const BookingGroup({
+    super.key,
+    required this.bookings,
+    required this.onOpen,
+    this.showCustomer = false,
+  });
+
+  final List<BookingVO> bookings;
+  final ValueChanged<BookingVO> onOpen;
+  final bool showCustomer;
+
+  /// Row padding + date block + gap: dividers start under the text.
+  static const double _textInset =
+      AppSpacing.lg + _DateBlock.width + AppSpacing.md;
+
+  @override
+  Widget build(BuildContext context) {
+    return GroupedList(
+      dividerIndent: _textInset,
+      children: [
+        for (final b in bookings)
+          BookingListTile(
+            booking: b,
+            showCustomer: showCustomer,
+            onTap: () => onOpen(b),
+          ),
+      ],
+    );
+  }
+}
+
+/// "Sep / 29 / Mon" calendar block.
 class _DateBlock extends StatelessWidget {
   const _DateBlock({required this.dateKey});
+
+  static const double width = 52;
 
   final String dateKey;
 
   @override
   Widget build(BuildContext context) {
     final styles = context.textStyles;
-    final muted = context.colors.onSurfaceVariant;
+    final c = context.colors;
+    // Tinted calendar block: month + weekday muted, day large.
     return Container(
-      width: 52,
+      width: width,
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-      decoration: context.depth.wellDecoration(borderRadius: AppRadius.smAll),
+      decoration: BoxDecoration(
+        color: c.primaryContainer,
+        borderRadius: AppRadius.smAll,
+      ),
       child: Column(
         children: [
           Text(
-            DisplayFormat.month(dateKey).toUpperCase(),
-            style: AppTypography.overline(styles.labelSmall!)
-                .copyWith(color: muted),
+            DisplayFormat.month(dateKey),
+            maxLines: 1,
+            style: styles.labelSmall?.copyWith(color: c.onSurfaceVariant),
           ),
           Text(
             DisplayFormat.dayOfMonth(dateKey),
-            style: AppTypography.tabular(styles.titleLarge!),
+            style: AppTypography.tabular(styles.titleLarge!)
+                .copyWith(color: c.onPrimaryContainer),
           ),
           Text(
             DisplayFormat.weekday(dateKey),
-            style: styles.labelSmall?.copyWith(color: muted),
+            maxLines: 1,
+            style: styles.labelSmall?.copyWith(color: c.onSurfaceVariant),
           ),
         ],
       ),

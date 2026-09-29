@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../shared/widgets/settings_list.dart';
 
@@ -11,19 +12,20 @@ class SuperadminSettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(l.navSettings)),
       body: SettingsList(
         items: [
           SettingsItem(
             icon: Icons.campaign_outlined,
-            title: 'Announcements',
-            subtitle: 'Messages to customers and shops',
+            title: l.announcementsTitle,
+            subtitle: l.announcementsSub,
             onTap: () => context.push(AppRoutes.superadminAnnouncements),
           ),
           SettingsItem(
             icon: Icons.pending_actions_outlined,
-            title: 'Shops pending review',
+            title: l.shopsPendingReview,
             onTap: () => context.go(
               Uri(
                 path: AppRoutes.superadminShops,

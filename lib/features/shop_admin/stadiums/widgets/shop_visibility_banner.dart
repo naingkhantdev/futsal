@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/domain_enums.dart';
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/status_tone.dart';
 import '../../../../core/widgets/content_constraint.dart';
@@ -18,7 +19,7 @@ class ShopVisibilityBanner extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final shop = ref.watch(myShopProvider).valueOrNull;
-    final message = shop == null ? null : _message(shop);
+    final message = shop == null ? null : _message(shop, context.l10n);
     if (message == null) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.lg),
@@ -34,16 +35,12 @@ class ShopVisibilityBanner extends ConsumerWidget {
     );
   }
 
-  static String? _message(ShopVO shop) => switch (shop.status) {
+  static String? _message(ShopVO shop, AppLocalizations l) =>
+      switch (shop.status) {
         ShopStatus.active when shop.isListed => null,
-        ShopStatus.active =>
-          "Your shop is unlisted, so customers can't see or book it.",
-        ShopStatus.pending => 'Your shop is waiting for approval. Set up '
-            'stadiums and courts now; customers see them once it is approved.',
-        ShopStatus.suspended =>
-          "Your shop is suspended. Customers can't see or book it. Contact "
-              'the platform team.',
-        ShopStatus.rejected || ShopStatus.inactive =>
-          "Your shop isn't active. Customers can't see or book it.",
+        ShopStatus.active => l.visibilityUnlisted,
+        ShopStatus.pending => l.visibilityPending,
+        ShopStatus.suspended => l.visibilitySuspended,
+        ShopStatus.rejected || ShopStatus.inactive => l.visibilityInactive,
       };
 }

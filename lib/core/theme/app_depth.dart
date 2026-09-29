@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 
 import 'app_radius.dart';
 
-/// How far an element is lifted off the page. In the flat "Clean" look only
-/// [high] casts a (single, faint) shadow; [low] and [medium] are separated
-/// from the page by fill + hairline alone.
+/// How far an element is lifted off the page. In the "Premium" look
+/// [medium] and [high] cast one soft, wide navy-tinted shadow; [low] is
+/// separated from the page by fill + hairline alone.
 enum DepthLevel {
   /// Slot tiles, chips, icon wells, small buttons.
   low(distance: 1, blur: 2),
 
   /// Cards and secondary buttons.
-  medium(distance: 2, blur: 8),
+  medium(distance: 6, blur: 24),
 
   /// Floating bars, dialogs, menus.
-  high(distance: 4, blur: 20);
+  high(distance: 12, blur: 36);
 
   const DepthLevel({required this.distance, required this.blur});
 
@@ -21,12 +21,11 @@ enum DepthLevel {
   final double blur;
 }
 
-/// Surface tokens for the flat "Clean" look (design_system.md §0).
+/// Surface tokens for the "Premium" look (design_system.md §0).
 ///
-/// Cards are white ([base]) on an off-white page with a hairline [edge];
-/// no light/shade shadow pairs, no gradient wells. A "well" (search field,
-/// icon circle, booked slot) is a flat [well] fill. The only shadow is a
-/// single faint one for [DepthLevel.high] floating elements.
+/// Cards are white ([base]) on a warm ivory page with a hairline [edge] and
+/// one soft [shade] shadow. A "well" (search field, icon circle, booked slot)
+/// is a flat [well] fill.
 @immutable
 class AppDepth extends ThemeExtension<AppDepth> {
   const AppDepth({
@@ -50,21 +49,21 @@ class AppDepth extends ThemeExtension<AppDepth> {
 
   static const AppDepth light = AppDepth(
     base: Color(0xFFFFFFFF),
-    edge: Color(0xFFE5E8EE),
-    shade: Color(0x140E1A33),
-    well: Color(0xFFF0F2F5),
+    edge: Color(0xFFECE8DF),
+    shade: Color(0x120F1B33),
+    well: Color(0xFFF1EFE9),
   );
 
   static const AppDepth dark = AppDepth(
-    base: Color(0xFF131A2A),
-    edge: Color(0xFF222B3D),
+    base: Color(0xFF111A2E),
+    edge: Color(0xFF222C44),
     shade: Color(0x66000000),
-    well: Color(0xFF1A2234),
+    well: Color(0xFF19233B),
   );
 
-  /// Shadows for a raised element: none below [DepthLevel.high].
+  /// Shadows for a raised element: none for [DepthLevel.low].
   List<BoxShadow> raised([DepthLevel level = DepthLevel.medium]) =>
-      level == DepthLevel.high
+      level != DepthLevel.low
           ? [
               BoxShadow(
                 color: shade,

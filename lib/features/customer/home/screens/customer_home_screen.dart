@@ -3,78 +3,263 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
+import '../../../../core/theme/app_radius.dart';
+import '../../../../core/theme/app_sizes.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/theme_context_ext.dart';
+import '../../../../core/utils/date_key.dart';
+import '../../../../core/utils/display_format.dart';
+import '../../../../core/utils/time_range.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import '../../../../core/widgets/day_strip.dart';
+import '../../../../core/widgets/hero_header.dart';
 import '../../../../data/demo/demo_data.dart';
-import '../../../shared/widgets/booking_list_tile.dart';
+import '../../../../data/vos/court_vo.dart';
+import '../../../../data/vos/stadium_vo.dart';
+import '../../../shared/widgets/booking_ticket.dart';
+import '../../../shared/widgets/person_tile.dart';
 import '../../../shared/widgets/preview_body.dart';
 import '../../stadiums/widgets/stadium_list_card.dart';
 
-/// `/customer/home` — CUSTOMER scope. Greeting, search, next game and
-/// popular venues. PREVIEW: sample data (`DemoData`) until Phase 6.
-class CustomerHomeScreen extends StatelessWidget {
+/// `/customer/home` — CUSTOMER scope. Built around the booking: search,
+/// the next game as a ticket, then a day picker and venues with their next
+/// open start times (one tap into the slot grid with court + day set).
+/// PREVIEW: sample data (`DemoData`) until Phase 6.
+class CustomerHomeScreen extends StatefulWidget {
   const CustomerHomeScreen({super.key});
+
+  @override
+  State<CustomerHomeScreen> createState() => _CustomerHomeScreenState();
+}
+
+class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
+  String _date = DateKey.fromDate(DateTime.now());
 
   @override
   Widget build(BuildContext context) {
     final me = DemoData.customer(DemoData.meId);
     final next = DemoData.upcoming(DemoData.bookingsOfCustomer(me.id));
-    final styles = context.textStyles;
     final l = context.l10n;
+
     return Scaffold(
       body: SafeArea(
         bottom: false,
         child: PreviewBody(
           children: [
-            Text(
-              l.homeGreeting(me.name.split(' ').first),
-              style: styles.bodyLarge
-                  ?.copyWith(color: context.colors.onSurfaceVariant),
-            ),
-            const SizedBox(height: AppSpacing.xxs),
-            Text(l.homeReady, style: styles.headlineMedium),
-            const SizedBox(height: AppSpacing.lg),
-            // Tapping the search opens Explore, where filtering happens.
-            GestureDetector(
-              onTap: () => context.go(AppRoutes.customerExplore),
-              child: AbsorbPointer(
-                child: SearchField(hintText: l.homeSearchHint),
+            HeroHeader(
+              eyebrow: l.homeGreeting(me.name.split(' ').first),
+              title: l.bookACourt,
+              trailing: _ProfileButton(name: me.name),
+              // Tapping the search opens Explore, where filtering happens.
+              bottom: Semantics(
+                button: true,
+                label: l.homeSearchHint,
+                excludeSemantics: true,
+                onTap: () => context.go(AppRoutes.customerExplore),
+                child: GestureDetector(
+                  onTap: () => context.go(AppRoutes.customerExplore),
+                  child: AbsorbPointer(
+                    child: SearchField(hintText: l.homeSearchHint),
+                  ),
+                ),
               ),
             ),
-            PreviewSectionTitle(
-              l.homeNextGame,
-              action: next.length > 1
-                  ? TextButton(
-                      onPressed: () => context.go(AppRoutes.customerBookings),
-                      child: Text(l.homeAllBookings),
-                    )
-                  : null,
-            ),
-            if (next.isEmpty)
-              Text(
-                l.homeNoGames,
-                style: styles.bodyMedium
-                    ?.copyWith(color: context.colors.onSurfaceVariant),
-              )
-            else
-              BookingListTile(
+            if (next.isNotEmpty) ...[
+              PreviewSectionTitle(
+                l.homeNextGame,
+                action: next.length > 1
+                    ? TextButton(
+                        onPressed: () => context.go(AppRoutes.customerBookings),
+                        child: Text(l.homeAllBookings),
+                      )
+                    : null,
+              ),
+              BookingTicket(
                 booking: next.first,
                 onTap: () =>
                     context.push(AppRoutes.customerBooking(next.first.id)),
               ),
+            ],
             PreviewSectionTitle(
-              l.homePopular,
+              l.homeOpenSlots(DisplayFormat.dayLabel(_date, l)),
               action: TextButton(
                 onPressed: () => context.go(AppRoutes.customerExplore),
                 child: Text(l.commonSeeAll),
               ),
             ),
-            for (final stadium in DemoData.stadiums.take(3)) ...[
-              StadiumListCard(stadium: stadium),
-              const SizedBox(height: AppSpacing.md),
-            ],
+            DayStrip(
+              selected: _date,
+              onSelected: (d) => setState(() => _date = d),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            _VenueCarousel(stadiums: DemoData.stadiums, date: _date),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Horizontally scrolling venues, each with its next open times on [date].
+class _VenueCarousel extends StatelessWidget {
+  const _VenueCarousel({required this.stadiums, required this.date});
+
+  final List<StadiumVO> stadiums;
+  final String date;
+
+  static const double _itemWidth = 280;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (final (i, s) in stadiums.indexed) ...[
+            if (i > 0) const SizedBox(width: AppSpacing.md),
+            SizedBox(
+              width: _itemWidth,
+              child: _OpenVenue(stadium: s, date: date),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _OpenVenue extends StatelessWidget {
+  const _OpenVenue({required this.stadium, required this.date});
+
+  final StadiumVO stadium;
+  final String date;
+
+  void _book(BuildContext context, CourtVO court) {
+    context.push(
+      Uri(
+        path: AppRoutes.customerBookStadium(stadium.id),
+        queryParameters: {
+          AppRoutes.courtIdQuery: court.id,
+          AppRoutes.dateQuery: date,
+        },
+      ).toString(),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final open = DemoData.openStarts(stadium.id, date);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        StadiumListCard(stadium: stadium, aspectRatio: 4 / 3),
+        const SizedBox(height: AppSpacing.xs),
+        if (open.isEmpty)
+          SizedBox(
+            height: AppSizes.minTouchTarget,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                l.homeNoOpenSlots,
+                style: context.textStyles.bodyMedium
+                    ?.copyWith(color: context.colors.onSurfaceVariant),
+              ),
+            ),
+          )
+        else
+          Wrap(
+            spacing: AppSpacing.sm,
+            children: [
+              for (final o in open)
+                _TimeChip(
+                  time: formatMinuteOfDay(o.startMinute),
+                  semanticLabel:
+                      l.bookSlotAt(o.court.name, formatMinuteOfDay(o.startMinute)),
+                  onTap: () => _book(context, o.court),
+                ),
+            ],
+          ),
+      ],
+    );
+  }
+}
+
+/// An open start time: outlined pill inside a 48dp tap target.
+class _TimeChip extends StatelessWidget {
+  const _TimeChip({
+    required this.time,
+    required this.semanticLabel,
+    required this.onTap,
+  });
+
+  final String time;
+  final String semanticLabel;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    return Semantics(
+      button: true,
+      label: semanticLabel,
+      excludeSemantics: true,
+      onTap: onTap,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: AppRadius.fullAll,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            minHeight: AppSizes.minTouchTarget,
+            minWidth: AppSizes.minTouchTarget,
+          ),
+          child: Center(
+            widthFactor: 1,
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.xs + AppSpacing.xxs,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: AppRadius.fullAll,
+                border: Border.all(color: c.outline),
+              ),
+              child: Text(
+                time,
+                style: AppTypography.tabular(context.textStyles.labelLarge!)
+                    .copyWith(color: c.primary),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Initials avatar that opens the profile (48dp target).
+class _ProfileButton extends StatelessWidget {
+  const _ProfileButton({required this.name});
+
+  final String name;
+
+  @override
+  Widget build(BuildContext context) {
+    void open() => context.go(AppRoutes.customerProfile);
+    return Semantics(
+      button: true,
+      label: context.l10n.navProfile,
+      // excludeSemantics drops the InkWell's action; re-expose it here.
+      onTap: open,
+      excludeSemantics: true,
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: open,
+        child: SizedBox.square(
+          dimension: AppSizes.minTouchTarget,
+          child: Center(child: InitialsAvatar(name: name, size: 44)),
         ),
       ),
     );

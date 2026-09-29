@@ -109,6 +109,8 @@ class StadiumWriteRequest {
     this.address,
     this.township,
     this.city,
+    this.latitude,
+    this.longitude,
     this.facilities = const [],
   });
 
@@ -117,6 +119,11 @@ class StadiumWriteRequest {
   final String? address;
   final String? township;
   final String? city;
+
+  /// Map pin (both or neither, see `VenuePolicy.isValidLocation`). `null`
+  /// clears a saved location.
+  final double? latitude;
+  final double? longitude;
   final List<Facility> facilities;
 
   /// Minutes from local midnight; `openMinute` on a whole hour
@@ -131,6 +138,8 @@ class StadiumWriteRequest {
         StadiumFields.address: _text(address),
         StadiumFields.township: _text(township),
         StadiumFields.city: _text(city),
+        StadiumFields.latitude: latitude,
+        StadiumFields.longitude: longitude,
         StadiumFields.facilities: [for (final f in facilities) f.name],
         StadiumFields.openMinute: openMinute,
         StadiumFields.closeMinute: closeMinute,

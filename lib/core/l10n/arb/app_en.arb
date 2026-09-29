@@ -244,12 +244,9 @@
       }
     }
   },
-  "homeReady": "Ready to play?",
   "homeSearchHint": "Search stadiums or townships",
   "homeNextGame": "Your next game",
   "homeAllBookings": "All bookings",
-  "homeNoGames": "No games booked. Pick a court below.",
-  "homePopular": "Popular near you",
   "exploreEmptyTitle": "No stadiums found",
   "exploreEmptyMessage": "Try another name or remove a filter.",
   "priceFromPerHour": "From {price}/hr",
@@ -624,5 +621,279 @@
         "type": "String"
       }
     }
-  }
+  },
+  "stadiumsEmptyTitle": "Add your first stadium",
+  "stadiumsEmptyMessage": "Set its opening hours, then add the courts customers can book.",
+  "staffFilterUpcoming": "Upcoming",
+  "staffFilterPast": "Past",
+  "staffFilterAll": "All",
+  "staffNoBookingsTitle": "No bookings here",
+  "staffTryAnotherFilter": "Try another filter.",
+  "markPaymentPending": "Mark payment pending",
+  "markAsPaid": "Mark as paid",
+  "markAsRefunded": "Mark as refunded",
+  "confirmBooking": "Confirm booking",
+  "markAsCompleted": "Mark as completed",
+  "rejectBooking": "Reject booking",
+  "rejectBookingTitle": "Reject this booking?",
+  "rejectBookingMessage": "The customer is notified and the slots are released.",
+  "rejectAction": "Reject",
+  "keepBooking": "Keep booking",
+  "searchNameOrPhone": "Search by name or phone",
+  "noCustomersFound": "No customers found",
+  "bookingCount": "{count, plural, =1{1 booking} other{{count} bookings}}",
+  "@bookingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lastPlayedOn": "last played {date}",
+  "@lastPlayedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "joinedOn": "Joined {date}",
+  "@joinedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "statusDisabled": "Disabled",
+  "accountPrefix": "Account",
+  "mmkOnPlatform": "MMK on the platform",
+  "mmkAtYourShop": "MMK at your shop",
+  "bookingHistory": "Booking history",
+  "noBookingsYet": "No bookings yet",
+  "totalPaidAmount": "Total paid: {amount}",
+  "@totalPaidAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsShopProfile": "Shop profile",
+  "settingsShopProfileSub": "Name, contact and address",
+  "blockedTimesTitle": "Blocked times",
+  "blockedTimesSub": "Maintenance, events, closures",
+  "stadiumsAndCourts": "Stadiums & courts",
+  "editShopProfile": "Edit shop profile",
+  "commonEdit": "Edit",
+  "shopStatusPrefix": "Shop status",
+  "listingPrefix": "Listing",
+  "addressLabel": "Address",
+  "statusManagedByPlatform": "Status and listing are managed by the platform team.",
+  "visibilityUnlisted": "Your shop is unlisted, so customers can't see or book it.",
+  "visibilityPending": "Your shop is waiting for approval. Set up stadiums and courts now; customers see them once it is approved.",
+  "visibilitySuspended": "Your shop is suspended. Customers can't see or book it. Contact the platform team.",
+  "visibilityInactive": "Your shop isn't active. Customers can't see or book it.",
+  "venueActive": "Active",
+  "venueInactive": "Inactive",
+  "visibleToCustomers": "Visible to customers",
+  "hiddenLabel": "Hidden",
+  "discoveryPrefix": "Discovery",
+  "bookableLabel": "Bookable",
+  "noneListed": "None listed",
+  "descriptionLabel": "Description",
+  "noCourtsYet": "No courts yet",
+  "noCourtsMessage": "Add a court with its price and slot length so customers can book it.",
+  "noPrice": "No price",
+  "noPriceSet": "No price set",
+  "pricePerHourTitle": "Price per hour",
+  "slotMinutesValue": "{minutes} minutes",
+  "@slotMinutesValue": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "playersLabel": "Players",
+  "surfaceLabel": "Surface",
+  "blockCourtSub": "Close this court for maintenance, events and more",
+  "blockedTimesNote": "Blocked times cannot be booked by customers.",
+  "removeBlock": "Remove block",
+  "venueCounts": "{stadiums} stadiums · {courts} courts",
+  "@venueCounts": {
+    "placeholders": {
+      "stadiums": {
+        "type": "int"
+      },
+      "courts": {
+        "type": "int"
+      }
+    }
+  },
+  "statBookingsFooter": "bookings",
+  "statNeedReply": "need a reply",
+  "statCollected": "Collected",
+  "statMmkFromPaid": "MMK from paid bookings",
+  "statBookedWithYou": "booked with you",
+  "needsYourReply": "Needs your reply",
+  "allCaughtUp": "All caught up",
+  "allCaughtUpMessage": "New booking requests show up here.",
+  "todaysSchedule": "Today's schedule",
+  "noGamesToday": "No games today",
+  "locationLabel": "Location",
+  "shopAdminsSub": "Who can manage this shop",
+  "explainPending": "Waiting for review. Hidden from customers; its admins can already set up stadiums and courts.",
+  "explainLive": "Live: customers can find and book it.",
+  "explainUnlisted": "Approved but unlisted: hidden from customers, no new bookings.",
+  "explainSuspended": "Suspended: hidden from customers, no new bookings. Existing bookings stay as they are.",
+  "explainRejected": "Rejected: hidden from customers.",
+  "explainInactive": "Inactive: hidden from customers, no new bookings.",
+  "commonCancel": "Cancel",
+  "commonRemove": "Remove",
+  "approveAndList": "Approve and list",
+  "shopApprovedListed": "Shop approved and listed",
+  "reactivateAction": "Reactivate",
+  "shopReactivated": "Shop reactivated",
+  "deactivateShop": "Deactivate shop",
+  "shopDeactivated": "Shop deactivated",
+  "deactivateShopTitle": "Deactivate this shop?",
+  "deactivateShopMessage": "It will be hidden from customers and take no new bookings. You can reactivate it later.",
+  "deactivateAction": "Deactivate",
+  "shopRejectedDone": "Shop rejected",
+  "rejectShopTitle": "Reject this shop?",
+  "rejectShopMessage": "It stays hidden from customers. You can still approve it later.",
+  "listedForCustomers": "Listed for customers",
+  "listedForCustomersSub": "When off, the shop is hidden and takes no new bookings.",
+  "shopListedDone": "Shop listed",
+  "shopUnlistedDone": "Shop unlisted",
+  "suspendAction": "Suspend",
+  "shopSuspendedDone": "Shop suspended",
+  "suspendShopTitle": "Suspend this shop?",
+  "suspendShopMessage": "Customers stop seeing it and it takes no new bookings. Existing bookings are not cancelled.",
+  "ownerNameLabel": "Owner name",
+  "ownerPhoneLabel": "Owner phone",
+  "suspensionReason": "Suspension reason",
+  "nothingToReview": "Nothing to review",
+  "nothingToReviewMessage": "New shops appear here until you approve or reject them.",
+  "noShopsYet": "No shops yet",
+  "noShopsMessage": "Create the first shop, then assign its admin.",
+  "shopAdminsOf": "{shop} admins",
+  "@shopAdminsOf": {
+    "placeholders": {
+      "shop": {
+        "type": "String"
+      }
+    }
+  },
+  "addAdmin": "Add admin",
+  "noAdminsYet": "No admins yet",
+  "noAdminsMessage": "Add the person who runs this shop. They need a customer account first.",
+  "accountDisabledBadge": "Account disabled",
+  "removeAdmin": "Remove admin",
+  "removeAdminTitle": "Remove this admin?",
+  "removeAdminMessage": "{name} loses access to the shop right away and becomes a customer.",
+  "@removeAdminMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "adminRemoved": "Admin removed",
+  "shopCount": "{count, plural, =1{1 shop} other{{count} shops}}",
+  "@shopCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "platformSummary": "{active} active · {pending} waiting for review",
+  "@platformSummary": {
+    "placeholders": {
+      "active": {
+        "type": "int"
+      },
+      "pending": {
+        "type": "int"
+      }
+    }
+  },
+  "activeShops": "Active shops",
+  "ofTotal": "of {total}",
+  "@ofTotal": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "toReview": "To review",
+  "newShopsFooter": "new shops",
+  "lastTwoWeeks": "last 2 weeks",
+  "waitingForReview": "Waiting for review",
+  "reviewAction": "Review",
+  "latestBookings": "Latest bookings",
+  "disableAccount": "Disable account",
+  "disableUserTitle": "Disable {name}?",
+  "@disableUserTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "disableUserMessage": "They are signed out and cannot book until you enable the account again.",
+  "disableAction": "Disable",
+  "keepActive": "Keep active",
+  "enableAccount": "Enable account",
+  "announcementsTitle": "Announcements",
+  "announcementsSub": "Messages to customers and shops",
+  "shopsPendingReview": "Shops pending review",
+  "newShort": "New",
+  "sentToPrefix": "Sent to",
+  "homeOpenSlots": "Open times · {day}",
+  "@homeOpenSlots": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "homeNoOpenSlots": "Fully booked this day",
+  "bookSlotAt": "Book {court} at {time}",
+  "@bookSlotAt": {
+    "placeholders": {
+      "court": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "mapDirections": "Directions",
+  "mapOpenInGoogleMaps": "Open in Google Maps",
+  "mapOpenFailed": "Couldn't open Google Maps",
+  "mapPinSemantics": "Map showing {name}. Opens Google Maps",
+  "@mapPinSemantics": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "locationNotSet": "No map location yet",
+  "locationNote": "Customers see this on a map and can get directions.",
+  "locationPickOnMap": "Pick on map",
+  "locationChangeOnMap": "Change on map",
+  "locationPasteLabel": "Coordinates or Google Maps link",
+  "locationPasteHelper": "e.g. 16.84090, 96.17350",
+  "locationInvalid": "Couldn't read a location. Paste coordinates like 16.84090, 96.17350.",
+  "locationShortLink": "Short links can't be read. Open the link, then copy the full link or the coordinates.",
+  "locationClear": "Remove location",
+  "pickLocationTitle": "Pin your venue",
+  "pickLocationHint": "Move the map until the pin sits on your venue.",
+  "useThisLocation": "Use this location"
 }

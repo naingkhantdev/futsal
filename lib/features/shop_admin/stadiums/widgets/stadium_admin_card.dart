@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/app_sizes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/status_tone.dart';
@@ -26,6 +27,7 @@ class StadiumAdminCard extends StatelessWidget {
         .where((s) => s.trim().isNotEmpty)
         .join(', ');
     final minPrice = stadium.minHourlyPrice;
+    final l = context.l10n;
     return AppCard(
       onTap: onTap,
       child: Column(
@@ -56,7 +58,7 @@ class StadiumAdminCard extends StatelessWidget {
                 const SizedBox(width: AppSpacing.xs),
                 Flexible(
                   child: Text(
-                    'from ${Money.formatMmk(minPrice)}/h',
+                    l.priceFromPerHour(Money.formatMmk(minPrice)),
                     overflow: TextOverflow.ellipsis,
                     style:
                         context.textStyles.bodyMedium?.copyWith(color: muted),
@@ -71,30 +73,30 @@ class StadiumAdminCard extends StatelessWidget {
             runSpacing: AppSpacing.sm,
             children: [
               stadium.isActive
-                  ? const StatusBadge(
+                  ? StatusBadge(
                       tone: StatusTone.success,
                       icon: Icons.check_circle,
-                      label: 'Active',
-                      semanticsPrefix: 'Stadium',
+                      label: l.venueActive,
+                      semanticsPrefix: l.stadiumLabel,
                     )
-                  : const StatusBadge(
+                  : StatusBadge(
                       tone: StatusTone.neutral,
                       icon: Icons.pause_circle_outline,
-                      label: 'Inactive',
-                      semanticsPrefix: 'Stadium',
+                      label: l.venueInactive,
+                      semanticsPrefix: l.stadiumLabel,
                     ),
               stadium.isPublished
-                  ? const StatusBadge(
+                  ? StatusBadge(
                       tone: StatusTone.brand,
                       icon: Icons.visibility,
-                      label: 'Visible to customers',
-                      semanticsPrefix: 'Discovery',
+                      label: l.visibleToCustomers,
+                      semanticsPrefix: l.discoveryPrefix,
                     )
-                  : const StatusBadge(
+                  : StatusBadge(
                       tone: StatusTone.neutral,
                       icon: Icons.visibility_off,
-                      label: 'Hidden',
-                      semanticsPrefix: 'Discovery',
+                      label: l.hiddenLabel,
+                      semanticsPrefix: l.discoveryPrefix,
                     ),
             ],
           ),

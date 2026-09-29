@@ -8,17 +8,26 @@ import 'time_range.dart';
 ///
 /// Date names follow `Intl.defaultLocale` (set from the app language in
 /// `main.dart`), so formats are created per call. Pass [AppLocalizations]
-/// to get "Today", "2 hours", "5 min ago" in the app language; without it
-/// they stay English (screens not translated yet).
+/// to get "Today", "2 hours", "5 min ago" in the app language.
+///
+/// English keeps fixed day-first patterns ("Tue, 29 Sep"); Myanmar uses the
+/// CLDR skeletons so order and separators are native
+/// ("စက် 29၊ အင်္ဂါ", "2026၊ စက်တင်ဘာ 29၊ အင်္ဂါ").
 abstract final class DisplayFormat {
-  static DateFormat get _weekdayDate => DateFormat('EEE, d MMM');
-  static DateFormat get _fullDate => DateFormat('EEEE, d MMMM y');
+  static bool get _myanmar => Intl.getCurrentLocale().startsWith('my');
+
+  static DateFormat get _weekdayDate =>
+      _myanmar ? DateFormat.MMMEd() : DateFormat('EEE, d MMM');
+  static DateFormat get _fullDate =>
+      _myanmar ? DateFormat.yMMMMEEEEd() : DateFormat('EEEE, d MMMM y');
+  static DateFormat get _shortDate =>
+      _myanmar ? DateFormat.yMMMd() : DateFormat('d MMM y');
   static DateFormat get _weekdayShort => DateFormat('EEE');
   static DateFormat get _monthShort => DateFormat('MMM');
 
   static DateTime? _date(String dateKey) => DateKey.tryParse(dateKey);
 
-  /// "Today", "Tomorrow", "Yesterday" or "Mon, 29 Sep".
+  /// "Today", "Tomorrow", "Yesterday" or "Mon, 29 Sep" / "စက် 29၊ တနင်္လာ".
   static String dayLabel(String dateKey, [AppLocalizations? l]) {
     final date = _date(dateKey);
     if (date == null) return dateKey;
@@ -32,7 +41,7 @@ abstract final class DisplayFormat {
     };
   }
 
-  /// "Monday, 29 September 2026".
+  /// "Monday, 29 September 2026" / "2026၊ စက်တင်ဘာ 29၊ တနင်္လာ".
   static String fullDate(String dateKey) {
     final date = _date(dateKey);
     return date == null ? dateKey : _fullDate.format(date);
@@ -84,8 +93,8 @@ abstract final class DisplayFormat {
     return DateFormat('d MMM').format(at);
   }
 
-  /// "29 Sep 2026".
-  static String shortDate(DateTime at) => DateFormat('d MMM y').format(at);
+  /// "29 Sep 2026" / "2026၊ စက် 29".
+  static String shortDate(DateTime at) => _shortDate.format(at);
 
   /// Initials for avatars: "Aung Kyaw" → "AK".
   static String initials(String name) {

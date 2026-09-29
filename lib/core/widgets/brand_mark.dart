@@ -7,8 +7,8 @@ import '../theme/app_spacing.dart';
 import '../theme/app_typography.dart';
 import '../theme/theme_context_ext.dart';
 
-/// App logo: a flat navy tile with the ball icon, optionally followed by the
-/// uppercase wordmark. Used on auth screens.
+/// App logo: a deep navy tile with a gold ball icon, optionally followed
+/// by the uppercase wordmark. Used on auth screens.
 class BrandMark extends StatelessWidget {
   const BrandMark({super.key, this.showWordmark = false});
 
@@ -21,13 +21,14 @@ class BrandMark extends StatelessWidget {
       width: AppSizes.logoFrame,
       height: AppSizes.logoFrame,
       decoration: BoxDecoration(
-        color: colors.primary,
+        gradient: context.gradients.hero,
         borderRadius: AppRadius.lgAll,
+        boxShadow: context.depth.raised(),
       ),
       child: Icon(
         Icons.sports_soccer,
         size: AppSizes.iconXl,
-        color: colors.onPrimary,
+        color: context.gradients.gold,
       ),
     );
 

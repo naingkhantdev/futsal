@@ -48,9 +48,9 @@ class SlotTile extends StatelessWidget {
     final depth = context.depth;
     final l = context.l10n;
     final well = depth.wellDecoration();
-    // Available = white tile + hairline, selected = solid navy, booked = gray
-    // fill, blocked = darker gray, unavailable = outline only. Icon + label
-    // always.
+    // Available = white tile + navy icon, selected = navy with a gold ring
+    // and soft glow, booked = gray fill, blocked = darker gray, unavailable
+    // = outline only. Icon + label always.
     final (BoxDecoration deco, Color fg, IconData icon, String label) =
         switch (state) {
       SlotState.available => (
@@ -65,9 +65,19 @@ class SlotTile extends StatelessWidget {
         ),
       SlotState.selected => (
           BoxDecoration(
-            color: c.primary,
+            gradient: context.gradients.primary,
             borderRadius: AppRadius.mdAll,
-            boxShadow: depth.ink(DepthLevel.low),
+            border: Border.all(
+              color: context.gradients.gold,
+              width: AppSizes.borderFocus,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: context.gradients.primaryGlow,
+                offset: const Offset(0, 4),
+                blurRadius: 12,
+              ),
+            ],
           ),
           c.onPrimary,
           Icons.check_circle,
@@ -98,7 +108,7 @@ class SlotTile extends StatelessWidget {
           l.slotUnavailable,
         ),
     };
-    final labelColor = state == SlotState.available ? c.onSurfaceVariant : fg;
+    final labelColor = state == SlotState.available ? c.primary : fg;
     final animate = !MediaQuery.disableAnimationsOf(context);
     final scaler = MediaQuery.textScalerOf(context)
         .clamp(maxScaleFactor: AppSizes.compactTextScaleCap);

@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_depth.dart';
 import '../theme/app_radius.dart';
 import '../theme/app_sizes.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_typography.dart';
-import '../theme/status_tone.dart';
 import '../theme/theme_context_ext.dart';
-import 'app_card.dart';
+import 'motion.dart';
 
-/// Dashboard KPI card (design_system.md §5.3). Visual shell only.
+/// Dashboard KPI (design_system.md §0): a flat tile (fill + hairline, no
+/// shadow) where the number leads. A small muted [icon] + [label] on top,
+/// the large tabular [value], an optional [footer]. [highlight] marks a
+/// number that needs attention (pending requests) with a gold border and a
+/// dot, never color alone: the [footer] says why. Visual shell only.
 class StatCard extends StatelessWidget {
   const StatCard({
     super.key,
@@ -16,7 +20,7 @@ class StatCard extends StatelessWidget {
     required this.value,
     required this.label,
     this.footer,
-    this.tone = StatusTone.brand,
+    this.highlight = false,
     this.onTap,
   });
 
@@ -26,66 +30,87 @@ class StatCard extends StatelessWidget {
   final String value;
   final String label;
 
-  /// e.g. "+3 today".
+  /// e.g. "+3 today", "need a reply".
   final String? footer;
-
-  /// Icon circle colors; use `warning` for attention counts (pending, etc.).
-  final StatusTone tone;
+  final bool highlight;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final toneColors = tone.colorsFor(context);
     final styles = context.textStyles;
     final colors = context.colors;
-    // Brand / neutral stay monochrome; attention tones keep their hue.
-    final iconColor = tone == StatusTone.brand || tone == StatusTone.neutral
-        ? colors.onSurface
-        : toneColors.foreground;
-    return AppCard(
-      onTap: onTap,
-      padding: const EdgeInsets.all(AppSpacing.lg + AppSpacing.xxs),
+    final g = context.gradients;
+    final depth = context.depth;
+    final muted = colors.onSurfaceVariant;
+
+    final content = Padding(
+      padding: const EdgeInsets.all(AppSpacing.lg),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
+              Icon(icon, size: AppSizes.iconSm, color: muted),
+              const SizedBox(width: AppSpacing.xs),
               Expanded(
                 child: Text(
-                  label.toUpperCase(),
-                  semanticsLabel: label,
+                  label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: AppTypography.overline(styles.labelSmall!)
-                      .copyWith(color: colors.onSurfaceVariant),
+                  style: styles.labelLarge?.copyWith(color: muted),
                 ),
               ),
-              const SizedBox(width: AppSpacing.sm),
-              Container(
-                width: AppSizes.statIconCircle,
-                height: AppSizes.statIconCircle,
-                decoration:
-                    context.depth.wellDecoration(borderRadius: AppRadius.fullAll),
-                child: Icon(icon, size: AppSizes.iconMd, color: iconColor),
-              ),
+              if (highlight) ...[
+                const SizedBox(width: AppSpacing.xs),
+                Container(
+                  width: AppSizes.statDot,
+                  height: AppSizes.statDot,
+                  decoration:
+                      BoxDecoration(color: g.gold, shape: BoxShape.circle),
+                ),
+              ],
             ],
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.sm),
           Text(
             value,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: AppTypography.tabular(styles.headlineLarge!),
+            style: AppTypography.tabular(styles.displaySmall!)
+                .copyWith(color: colors.onSurface),
           ),
           if (footer != null) ...[
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.xxs),
             Text(
               footer!,
-              style: styles.labelMedium?.copyWith(color: colors.onSurfaceVariant),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: styles.bodySmall?.copyWith(
+                color: highlight ? colors.secondary : muted,
+              ),
             ),
           ],
         ],
       ),
     );
+
+    final card = DecoratedBox(
+      decoration: depth.raisedDecoration(level: DepthLevel.low).copyWith(
+            border: Border.all(
+              color: highlight ? g.gold : depth.edge,
+              width: highlight ? AppSizes.borderFocus : AppSizes.borderThin,
+            ),
+          ),
+      child: ClipRRect(
+        borderRadius: AppRadius.lgAll,
+        child: Material(
+          type: MaterialType.transparency,
+          child: onTap == null
+              ? content
+              : InkWell(onTap: onTap, child: content),
+        ),
+      ),
+    );
+    return Pressable(enabled: onTap != null, child: card);
   }
 }

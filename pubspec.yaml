@@ -52,6 +52,11 @@ dependencies:
   shared_preferences: ^2.2.3
   image_picker: ^1.1.2
   flutter_image_compress: ^2.5.1
+  # Stadium location map. 2.10.x is the newest line that supports
+  # Flutter 3.22 (2.11+ needs Flutter >= 3.27; pub picks 2.10.x here).
+  google_maps_flutter: ^2.10.1
+  # "Directions" hands off to the Google Maps app / website.
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:
@@ -90,18 +95,30 @@ flutter:
   # Static weights, not the variable font: Flutter 3.22 does not map
   # fontWeight onto a variable font's wght axis.
   fonts:
-    - family: Manrope
+    # Latin UI font (OFL, assets/fonts/OFL-PlusJakartaSans.txt).
+    - family: PlusJakartaSans
       fonts:
-        - asset: assets/fonts/Manrope-Regular.ttf
+        - asset: assets/fonts/PlusJakartaSans-Regular.ttf
           weight: 400
-        - asset: assets/fonts/Manrope-Medium.ttf
+        - asset: assets/fonts/PlusJakartaSans-Medium.ttf
           weight: 500
-        - asset: assets/fonts/Manrope-SemiBold.ttf
+        - asset: assets/fonts/PlusJakartaSans-SemiBold.ttf
           weight: 600
-        - asset: assets/fonts/Manrope-Bold.ttf
+        - asset: assets/fonts/PlusJakartaSans-Bold.ttf
           weight: 700
-        - asset: assets/fonts/Manrope-ExtraBold.ttf
+        - asset: assets/fonts/PlusJakartaSans-ExtraBold.ttf
           weight: 800
+    # Myanmar script fallback (OFL, assets/fonts/OFL-NotoSansMyanmar.txt).
+    - family: NotoSansMyanmar
+      fonts:
+        - asset: assets/fonts/NotoSansMyanmar-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/NotoSansMyanmar-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/NotoSansMyanmar-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/NotoSansMyanmar-Bold.ttf
+          weight: 700
   # ---------------------------------------------------------------------------
 
   # To add custom fonts to your application, add a fonts section here,

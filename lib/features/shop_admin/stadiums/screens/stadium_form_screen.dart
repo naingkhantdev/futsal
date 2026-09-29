@@ -15,6 +15,7 @@ import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_sizes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/theme_context_ext.dart';
+import '../../../../core/utils/geo_location.dart';
 import '../../../../core/utils/time_range.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/app_button.dart';
@@ -28,6 +29,7 @@ import '../../../../core/widgets/inline_banner.dart';
 import '../../../../data/requests/venue_write_requests.dart';
 import '../../../../data/vos/stadium_vo.dart';
 import '../providers/shop_venue_providers.dart';
+import '../widgets/stadium_location_field.dart';
 
 /// `/shop-admin/stadiums/new` and `/shop-admin/stadiums/:stadiumId/edit`.
 /// SHOP scope: the stadium always belongs to the admin's own shop
@@ -99,10 +101,17 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
   late int _close = _initialClose;
   late Set<Facility> _facilities = {...?widget.stadium?.facilities};
   late bool _isActive = widget.stadium?.isActive ?? true;
+  late MapPoint? _location = _initialLocation;
   late final Map<TextEditingController, String> _initialText;
   bool _submitted = false;
 
   bool get _isCreate => widget.stadium == null;
+
+  MapPoint? get _initialLocation {
+    final s = widget.stadium;
+    if (s == null || !s.hasLocation) return null;
+    return (latitude: s.latitude!, longitude: s.longitude!);
+  }
 
   /// Hours saved before this rule existed may not be on the hour: round
   /// down so the form always proposes a value the rules accept.
@@ -151,6 +160,7 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
         _open != _initialOpen ||
         _close != _initialClose ||
         _isActive != (s?.isActive ?? true) ||
+        _location != _initialLocation ||
         !_sameFacilities(_facilities, s?.facilities ?? const []);
   }
 
@@ -217,6 +227,8 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
             address: _address.text,
             township: _township.text,
             city: _city.text,
+            latitude: _location?.latitude,
+            longitude: _location?.longitude,
             facilities: Facility.values.where(_facilities.contains).toList(),
             openMinute: _open,
             closeMinute: _close,
@@ -306,6 +318,12 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
                 text(l.cityOptional, _city,
                     icon: Icons.location_city_outlined,
                     validator: _placeError),
+                StadiumLocationField(
+                  value: _location,
+                  enabled: !isLoading,
+                  onChanged: (p) => setState(() => _location = p),
+                ),
+                const SizedBox(height: AppSpacing.xl),
                 text(l.descriptionOptional, _description,
                     icon: Icons.notes,
                     multiline: true,

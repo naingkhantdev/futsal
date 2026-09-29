@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/l10n/l10n.dart';
 import '../../../core/theme/app_sizes.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/status_tone.dart';
@@ -45,17 +46,18 @@ class _StaffCustomerListState extends State<StaffCustomerList> {
             c.name.toLowerCase().contains(q) ||
             (c.phone ?? '').replaceAll(' ', '').contains(q.replaceAll(' ', '')))
         .toList();
+    final l = context.l10n;
     return PreviewBody(
       children: [
         SearchField(
-          hintText: 'Search by name or phone',
+          hintText: l.searchNameOrPhone,
           onChanged: (v) => setState(() => _query = v),
         ),
         const SizedBox(height: AppSpacing.lg),
         if (people.isEmpty)
-          const EmptyView.inline(
+          EmptyView.inline(
             icon: Icons.person_search_outlined,
-            title: 'No customers found',
+            title: l.noCustomersFound,
           )
         else
           AppCard(
@@ -66,7 +68,7 @@ class _StaffCustomerListState extends State<StaffCustomerList> {
                   if (i > 0) const Divider(indent: 72),
                   PersonTile(
                     name: c.name,
-                    detail: _detail(c),
+                    detail: _detail(c, l),
                     onTap: () => widget.onOpen(c),
                   ),
                 ],
@@ -77,14 +79,13 @@ class _StaffCustomerListState extends State<StaffCustomerList> {
     );
   }
 
-  String _detail(UserVO c) {
+  String _detail(UserVO c, AppLocalizations l) {
     final stats = DemoData.customerStats(c.id, shopId: widget.shopId);
-    final count = '${stats.bookings} booking${stats.bookings == 1 ? '' : 's'}';
     return [
-      count,
+      l.bookingCount(stats.bookings),
       if (stats.lastPlayed != null)
-        'last played ${DisplayFormat.shortDate(stats.lastPlayed!)}',
-      if (!c.isActive) 'disabled',
+        l.lastPlayedOn(DisplayFormat.shortDate(stats.lastPlayed!)),
+      if (!c.isActive) l.accountDisabledTag,
     ].join(' · ');
   }
 }
@@ -114,6 +115,7 @@ class StaffCustomerDetail extends StatelessWidget {
         .where((b) => shopId == null || b.shopId == shopId)
         .toList();
     final styles = context.textStyles;
+    final l = context.l10n;
     return PreviewBody(
       children: [
         Row(
@@ -128,8 +130,8 @@ class StaffCustomerDetail extends StatelessWidget {
                   const SizedBox(height: AppSpacing.xs),
                   Text(
                     c.createdAt == null
-                        ? 'Customer'
-                        : 'Joined ${DisplayFormat.shortDate(c.createdAt!)}',
+                        ? l.roleCustomer
+                        : l.joinedOn(DisplayFormat.shortDate(c.createdAt!)),
                     style: styles.bodyMedium
                         ?.copyWith(color: context.colors.onSurfaceVariant),
                   ),
@@ -137,11 +139,11 @@ class StaffCustomerDetail extends StatelessWidget {
               ),
             ),
             if (!c.isActive)
-              const StatusBadge(
+              StatusBadge(
                 tone: StatusTone.danger,
                 icon: Icons.block,
-                label: 'Disabled',
-                semanticsPrefix: 'Account',
+                label: l.statusDisabled,
+                semanticsPrefix: l.accountPrefix,
               ),
           ],
         ),
@@ -150,8 +152,16 @@ class StaffCustomerDetail extends StatelessWidget {
           padding: EdgeInsets.zero,
           child: Column(
             children: [
-              DetailRow(icon: Icons.phone_outlined, label: 'Phone', value: c.phone),
-              DetailRow(icon: Icons.mail_outline, label: 'Email', value: c.email),
+              DetailRow(
+                icon: Icons.phone_outlined,
+                label: l.profilePhone,
+                value: c.phone,
+              ),
+              DetailRow(
+                icon: Icons.mail_outline,
+                label: l.emailLabel,
+                value: c.email,
+              ),
             ],
           ),
         ),
@@ -160,14 +170,14 @@ class StaffCustomerDetail extends StatelessWidget {
           children: [
             StatCard(
               icon: Icons.event_note_outlined,
-              label: 'Bookings',
+              label: l.navBookings,
               value: '${stats.bookings}',
             ),
             StatCard(
               icon: Icons.payments_outlined,
-              label: 'Paid',
+              label: l.paymentPaid,
               value: '${stats.spent ~/ 1000}K',
-              footer: 'MMK ${shopId == null ? 'on the platform' : 'at your shop'}',
+              footer: shopId == null ? l.mmkOnPlatform : l.mmkAtYourShop,
             ),
           ],
         ),
@@ -175,21 +185,18 @@ class StaffCustomerDetail extends StatelessWidget {
           const SizedBox(height: AppSpacing.lg),
           ...actions,
         ],
-        const PreviewSectionTitle('Booking history'),
+        PreviewSectionTitle(l.bookingHistory),
         if (history.isEmpty)
-          const EmptyView.inline(
+          EmptyView.inline(
             icon: Icons.event_busy,
-            title: 'No bookings yet',
+            title: l.noBookingsYet,
           )
         else
-          for (final b in history) ...[
-            BookingListTile(booking: b, onTap: () => onOpenBooking(b)),
-            const SizedBox(height: AppSpacing.md),
-          ],
+          BookingGroup(bookings: history, onOpen: onOpenBooking),
         if (stats.spent > 0) ...[
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'Total paid: ${Money.formatMmk(stats.spent)}',
+            l.totalPaidAmount(Money.formatMmk(stats.spent)),
             style: styles.bodySmall
                 ?.copyWith(color: context.colors.onSurfaceVariant),
           ),

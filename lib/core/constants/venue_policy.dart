@@ -34,6 +34,21 @@ abstract final class VenuePolicy {
   /// Int MMK per hour.
   static const int maxHourlyPrice = 10000000;
 
+  /// Map location (`latitude` / `longitude`, WGS84 degrees). Optional, but
+  /// both or neither, and within range. MIRRORED in firestore.rules
+  /// (`validLocation`).
+  static const double maxLatitude = 90;
+  static const double maxLongitude = 180;
+
+  static bool isValidLocation(double? latitude, double? longitude) {
+    if (latitude == null && longitude == null) return true;
+    if (latitude == null || longitude == null) return false;
+    return latitude.isFinite &&
+        longitude.isFinite &&
+        latitude.abs() <= maxLatitude &&
+        longitude.abs() <= maxLongitude;
+  }
+
   /// The `stadiums.isPublished` invariant (Spark: client-maintained):
   /// visible in discovery only while the shop is active and listed and the
   /// stadium itself is active. MIRRORED in firestore.rules

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../data/demo/demo_data.dart';
 import '../../../shared/widgets/staff_customer_views.dart';
@@ -17,7 +18,7 @@ class ShopAdminCustomerDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final customer = DemoData.customer(customerId);
     return Scaffold(
-      appBar: AppBar(title: const Text('Customer')),
+      appBar: AppBar(title: Text(context.l10n.roleCustomer)),
       body: StaffCustomerDetail(
         customer: customer,
         shopId: DemoData.myShopId,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
 import '../theme/app_sizes.dart';
 import '../theme/theme_context_ext.dart';
 
@@ -12,13 +13,14 @@ class DetailRow extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.value,
-    this.emptyText = 'Not added',
+    this.emptyText,
   });
 
   final IconData icon;
   final String label;
   final String? value;
-  final String emptyText;
+  /// Defaults to "Not added" in the app language.
+  final String? emptyText;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class DetailRow extends StatelessWidget {
             ?.copyWith(color: colors.onSurfaceVariant),
       ),
       subtitle: Text(
-        missing ? emptyText : v,
+        missing ? emptyText ?? context.l10n.commonNotAdded : v,
         style: context.textStyles.bodyLarge?.copyWith(
           color: missing ? colors.onSurfaceVariant : colors.onSurface,
         ),

@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 import 'app_color_schemes.dart';
 import 'app_colors.dart';
 import 'app_depth.dart';
+import 'app_gradients.dart';
 import 'app_radius.dart';
 import 'app_sizes.dart';
 import 'app_spacing.dart';
 import 'app_typography.dart';
 
-/// Light and dark "Clean" [ThemeData] built from the design tokens
-/// (design_system.md §0, §2–5): navy on off-white, white cards with hairline
-/// borders, flat Material components, no decorative shadows. Flutter 3.22 API:
+/// Light and dark "Premium" [ThemeData] built from the design tokens
+/// (design_system.md §0, §2–5): navy CTAs with a single gold accent, white
+/// cards with a soft shadow on warm ivory, Plus Jakarta Sans, iOS-style
+/// page transitions on every platform. Flutter 3.22 API:
 /// `CardTheme`, `DialogTheme`, `TabBarTheme` (not `*ThemeData`).
 abstract final class AppTheme {
   /// [myanmar] loosens line heights for Myanmar script
@@ -19,6 +21,7 @@ abstract final class AppTheme {
         AppColorSchemes.light,
         AppColors.light,
         AppDepth.light,
+        AppGradients.light,
         myanmar: myanmar,
       );
 
@@ -26,6 +29,7 @@ abstract final class AppTheme {
         AppColorSchemes.dark,
         AppColors.dark,
         AppDepth.dark,
+        AppGradients.dark,
         myanmar: myanmar,
       );
 
@@ -37,7 +41,8 @@ abstract final class AppTheme {
   static ThemeData _build(
     ColorScheme scheme,
     AppColors appColors,
-    AppDepth depth, {
+    AppDepth depth,
+    AppGradients gradients, {
     required bool myanmar,
   }) {
     final base = myanmar
@@ -45,6 +50,7 @@ abstract final class AppTheme {
         : AppTypography.textTheme;
     final text = base.apply(
       fontFamily: AppTypography.fontFamily,
+      fontFamilyFallback: AppTypography.fontFamilyFallback,
       bodyColor: scheme.onSurface,
       displayColor: scheme.onSurface,
     );
@@ -61,11 +67,22 @@ abstract final class AppTheme {
       useMaterial3: true,
       colorScheme: scheme,
       fontFamily: AppTypography.fontFamily,
+      fontFamilyFallback: AppTypography.fontFamilyFallback,
       textTheme: text,
       scaffoldBackgroundColor: scheme.surface,
       canvasColor: scheme.surface,
       materialTapTargetSize: MaterialTapTargetSize.padded,
-      extensions: <ThemeExtension<dynamic>>[appColors, depth],
+      // Smooth horizontal slide (and swipe-back on iOS) on every platform.
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.windows: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.linux: CupertinoPageTransitionsBuilder(),
+        },
+      ),
+      extensions: <ThemeExtension<dynamic>>[appColors, depth, gradients],
       appBarTheme: AppBarTheme(
         centerTitle: false,
         backgroundColor: scheme.surface,
@@ -98,13 +115,14 @@ abstract final class AppTheme {
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
           shape: buttonShape,
           textStyle: text.labelLarge,
-          foregroundColor: scheme.onSurface,
+          foregroundColor: scheme.primary,
         ).copyWith(
           iconSize: iconSize,
           side: WidgetStateProperty.resolveWith((states) => BorderSide(
                 color: states.contains(WidgetState.disabled)
                     ? scheme.onSurface.withOpacity(0.12)
-                    : scheme.outline,
+                    : scheme.primary,
+                width: AppSizes.borderFocus,
               )),
         ),
       ),
@@ -114,7 +132,7 @@ abstract final class AppTheme {
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
           shape: buttonShape,
           textStyle: text.labelLarge,
-          foregroundColor: scheme.onSurface,
+          foregroundColor: scheme.primary,
         ).copyWith(iconSize: iconSize),
       ),
       iconButtonTheme: IconButtonThemeData(
@@ -123,11 +141,11 @@ abstract final class AppTheme {
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: scheme.primary,
         foregroundColor: scheme.onPrimary,
-        elevation: 0,
-        focusElevation: 0,
-        hoverElevation: 1,
-        highlightElevation: 0,
-        shape: const RoundedRectangleBorder(borderRadius: AppRadius.lgAll),
+        elevation: 4,
+        focusElevation: 4,
+        hoverElevation: 6,
+        highlightElevation: 2,
+        shape: const StadiumBorder(),
         extendedTextStyle: text.labelLarge,
       ),
       // Flat light-gray fill, no border until focus / error.
@@ -175,13 +193,14 @@ abstract final class AppTheme {
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
           borderRadius: AppRadius.lgAll,
-          side: BorderSide(color: scheme.outlineVariant),
+          side: BorderSide(color: depth.edge),
         ),
       ),
       chipTheme: ChipThemeData(
         backgroundColor: scheme.surfaceContainerLowest,
         selectedColor: scheme.primary,
         disabledColor: disabledBg,
+        secondarySelectedColor: scheme.primary,
         checkmarkColor: scheme.onPrimary,
         showCheckmark: true,
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
@@ -205,8 +224,8 @@ abstract final class AppTheme {
         surfaceTintColor: Colors.transparent,
         shadowColor: Colors.transparent,
         elevation: 0,
-        // Soft tint pill + navy icon: selection without a heavy block.
-        indicatorColor: scheme.secondaryContainer,
+        // Soft navy (dark: gold) tint pill + primary icon.
+        indicatorColor: scheme.primaryContainer,
         indicatorShape: const StadiumBorder(),
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         labelTextStyle: WidgetStateProperty.resolveWith(
@@ -230,7 +249,7 @@ abstract final class AppTheme {
         backgroundColor: scheme.surfaceContainerLowest,
         elevation: 0,
         useIndicator: true,
-        indicatorColor: scheme.secondaryContainer,
+        indicatorColor: scheme.primaryContainer,
         indicatorShape: const StadiumBorder(),
         labelType: NavigationRailLabelType.all,
         selectedIconTheme: IconThemeData(
@@ -341,7 +360,7 @@ abstract final class AppTheme {
         ),
       ),
       tabBarTheme: TabBarTheme(
-        labelColor: scheme.onSurface,
+        labelColor: scheme.primary,
         unselectedLabelColor: scheme.onSurfaceVariant,
         labelStyle: text.titleSmall,
         unselectedLabelStyle:

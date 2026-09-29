@@ -6,23 +6,43 @@ Scope: PLATFORM-wide UI foundation (no data, no `shopId` impact). Everything her
 
 ---
 
-## 0. v3 visual language: "Clean" (supersedes §1–5 and the v2 "Soft Swiss" neumorphism where they conflict)
+## 0. v5 visual language: "Premium" (supersedes §1–5 and all earlier versions where they conflict)
 
-Minimal · premium · flat. Replaced v2 neumorphism (2026-09-28): the double light/shade shadows, gradient wells and
-black nav pills read as busy. The code in `lib/core/theme` is the source of truth for exact values.
+Restrained · premium · smooth. Replaced the colorful v4 "Floodlight" (2026-09-29): the user rejected colorful
+and green designs and asked for a premium look with smooth motion and a premium font. The code in
+`lib/core/theme` is the source of truth for exact values.
 
-- **Type: Manrope** (unchanged): heavy tight headings, w500 body, `AppTypography.overline` for KPI labels / wordmark.
-- **Color: navy on off-white.** `primary` = brand navy `#0E1A33` (light) / `#E6EBF5` (dark) for CTAs and selection.
-  Page `surface` `#F6F7F9`; cards, bars, sheets, dialogs are white (`surfaceContainerLowest` = `AppDepth.base`).
-  Separation by hairline (`outlineVariant` / `AppDepth.edge` `#E5E8EE`), not shadow. Color otherwise means status only.
-- **Depth: `AppDepth`** (`context.depth`): `base`, `edge`, `well`, `shade`. `raisedDecoration` = white + hairline, no
-  shadow; `wellDecoration` = flat gray fill; `ink()` = none; only `DepthLevel.high` (dialogs, menus) casts one faint
-  shadow.
-- **Components:** `AppCard` white + hairline (r16) · `PrimaryButton` flat navy · `SecondaryButton` plain outline ·
-  inputs flat gray fill, no border until focus / error · `SearchField` gray pill · nav bar / rail white with a
-  hairline, soft tinted indicator + navy icon · `StickyBottomBar` white with a top hairline · `SlotTile`: available
-  = white + hairline, selected = navy, booked = gray, blocked = darker gray, unavailable = outline (icon + label on
-  all) · empty/error icon = flat tinted circle · `BrandMark` flat navy tile.
+- **Type: Plus Jakarta Sans** (bundled, static 400–800, OFL) + **Noto Sans Myanmar** (bundled, 400–700, OFL) as
+  `fontFamilyFallback`, so Burmese looks the same on every phone. Headings Bold with tight negative tracking;
+  body Regular, line height 1.5–1.55, +0.1 tracking; labels SemiBold, gently tracked. Myanmar keeps its own
+  taller line heights and zero tracking (`AppTypography.forMyanmar`).
+- **Color: the logo's navy + gold only.** Light: navy `primary` `#0F1B33`, gold `secondary` `#8C6A2A` (text-safe)
+  / `AppGradients.gold` `#C9A355` (accents), warm ivory page `#F7F6F2`, white cards. Dark: gold `primary` on a
+  deep navy page. Gold is an accent (eyebrows, prices on photos, rings, icons), never a large fill. Status tones are
+  muted: success bronze-gold, warning burnt orange, info slate, danger red. No green, no multi-color accents.
+- **Gradients: `AppGradients`** tonal navy only: `hero` (the one navy fill: BrandMark, `BookingTicket`), `primary`
+  (buttons, selected slot), `pitch` (photo placeholder), `scrim` (navy veil so text reads on venue photos);
+  `gold` accent color.
+- **Imagery first (2026-09-29 "not AI-generated" pass):** venue photos carry the customer screens. `StadiumCard`
+  is the photo itself (name / place / facilities on the `scrim`, price in gold, no white frame or chips);
+  stadium details opens on a full-bleed `StadiumPhoto` header. No photo -> `PitchPlaceholder` (drawn court
+  lines), never a clip-art ball icon.
+- **Depth:** flat by default. `AppCard`, `StatCard`, `GroupedList` = white + hairline, no shadow; shadows only
+  on things that float (bars, sheets, dialogs, `SearchField(raised)`).
+- **Components:** `HeroHeader` is an editorial intro (gold eyebrow such as today's date, large title, muted
+  subtitle), not a box: no gradient, watermark or rule · section titles are plain `titleLarge` with space above
+  (no accent bars) · `StatCard` flat, small muted icon + label, big `displaySmall` number, `highlight` = gold
+  border + dot · repeated rows (bookings, customers, courts) are flat rows in one `GroupedList` with inset
+  hairlines, not a card per row (`BookingGroup`) · `BookingTicket` navy match ticket for "next game" and the
+  confirmation · `DayStrip` weekday-over-number day picker (home, slot grid) · `PrimaryButton` navy sheen ·
+  `SlotTile` selected = navy with a gold ring · `BrandMark` navy tile, gold ball.
+- **Copy:** task-first, no filler greetings ("Ready to play?", "Welcome back"). The sample-data note is one
+  muted line at the end of preview content, not a colored banner on top.
+- **Motion (`AppMotion`, `core/widgets/motion.dart`):** `AppScrollBehavior` = bouncing momentum scroll everywhere
+  (set on `MaterialApp.router`); Cupertino slide page transitions on all platforms; `FadeSlideIn` staggered
+  fade + 16dp rise, used once per page (`PreviewBody` enters as one block; photo headers show at once),
+  limited to the first 700 ms of an `EntranceScope` so lazy lists don't re-animate on scroll back; `AsyncValueView` crossfades skeleton → content; `Pressable` scales tappable
+  cards to 0.975. Everything respects the OS reduce-motion setting.
 
 ## 1. Design direction (v1 — see §0 for the current look)
 

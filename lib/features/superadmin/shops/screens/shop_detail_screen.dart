@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/domain_enums.dart';
 import '../../../../core/extensions/async_value_ext.dart';
+import '../../../../core/l10n/l10n.dart';
+import '../../../../core/l10n/l10n_labels.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_sizes.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -39,16 +41,21 @@ class ShopDetailScreen extends ConsumerWidget {
     ref.listen(shopStatusControllerProvider, (_, next) {
       final error = next.appError;
       if (error != null) {
-        showAppSnackBar(context, error.message, tone: SnackTone.error);
+        showAppSnackBar(
+          context,
+          error.messageIn(context.l10n),
+          tone: SnackTone.error,
+        );
       }
     });
+    final l = context.l10n;
     return Scaffold(
       appBar: AppBar(
-        title: Text(shop.valueOrNull?.name ?? 'Shop'),
+        title: Text(shop.valueOrNull?.name ?? l.shopLabel),
         actions: [
           if (shop.valueOrNull != null)
             IconButton(
-              tooltip: 'Edit shop',
+              tooltip: l.shopEdit,
               icon: const Icon(Icons.edit_outlined),
               onPressed: () =>
                   context.push(AppRoutes.superadminShopEdit(shopId)),
@@ -59,10 +66,10 @@ class ShopDetailScreen extends ConsumerWidget {
         value: shop,
         onRetry: () => ref.invalidate(shopProvider(shopId)),
         isEmpty: (s) => s == null,
-        empty: const EmptyView(
+        empty: EmptyView(
           icon: Icons.storefront_outlined,
-          title: 'Shop not found',
-          message: 'It may have been removed.',
+          title: l.shopNotFound,
+          message: l.notFoundRemoved,
         ),
         data: (s) => _ShopDetailBody(shop: s!),
       ),
@@ -83,6 +90,7 @@ class _ShopDetailBody extends ConsumerWidget {
         .whereType<String>()
         .where((s) => s.trim().isNotEmpty)
         .join(', ');
+    final l = context.l10n;
 
     return ListView(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
@@ -98,19 +106,19 @@ class _ShopDetailBody extends ConsumerWidget {
                 children: [
                   StatusBadge.fromVisual(
                     shop.status.visual,
-                    semanticsPrefix: 'Shop status',
+                    semanticsPrefix: l.shopStatusPrefix,
                     size: StatusBadgeSize.medium,
                   ),
                   StatusBadge.fromVisual(
                     shopListingVisual(isListed: shop.isListed),
-                    semanticsPrefix: 'Listing',
+                    semanticsPrefix: l.listingPrefix,
                     size: StatusBadgeSize.medium,
                   ),
                 ],
               ),
               const SizedBox(height: AppSpacing.sm),
               Text(
-                _statusExplainer(shop),
+                _statusExplainer(shop, l),
                 style: context.textStyles.bodyMedium?.copyWith(color: muted),
               ),
               const SizedBox(height: AppSpacing.lg),
@@ -122,23 +130,23 @@ class _ShopDetailBody extends ConsumerWidget {
                   children: [
                     DetailRow(
                       icon: Icons.phone_outlined,
-                      label: 'Phone',
+                      label: l.profilePhone,
                       value: shop.phone,
                     ),
                     DetailRow(
                       icon: Icons.mail_outline,
-                      label: 'Email',
+                      label: l.emailLabel,
                       value: shop.email,
                     ),
                     DetailRow(
                       icon: Icons.place_outlined,
-                      label: 'Location',
+                      label: l.locationLabel,
                       value: location,
                     ),
                     if ((shop.description ?? '').trim().isNotEmpty)
                       DetailRow(
                         icon: Icons.notes,
-                        label: 'Description',
+                        label: l.descriptionLabel,
                         value: shop.description,
                       ),
                   ],
@@ -154,8 +162,8 @@ class _ShopDetailBody extends ConsumerWidget {
                     Icons.admin_panel_settings_outlined,
                     size: AppSizes.iconLg,
                   ),
-                  title: const Text('Shop admins'),
-                  subtitle: const Text('Who can manage this shop'),
+                  title: Text(l.audienceShopAdmins),
+                  subtitle: Text(l.shopAdminsSub),
                   trailing: Icon(Icons.chevron_right, color: muted),
                   onTap: () =>
                       context.push(AppRoutes.superadminShopAdmins(shop.id)),
@@ -168,19 +176,14 @@ class _ShopDetailBody extends ConsumerWidget {
     );
   }
 
-  static String _statusExplainer(ShopVO shop) => switch (shop.status) {
-        ShopStatus.pending =>
-          'Waiting for review. Hidden from customers; its admins can already '
-              'set up stadiums and courts.',
-        ShopStatus.active => shop.isListed
-            ? 'Live: customers can find and book it.'
-            : 'Approved but unlisted: hidden from customers, no new bookings.',
-        ShopStatus.suspended =>
-          'Suspended: hidden from customers, no new bookings. Existing '
-              'bookings stay as they are.',
-        ShopStatus.rejected => 'Rejected: hidden from customers.',
-        ShopStatus.inactive =>
-          'Inactive: hidden from customers, no new bookings.',
+  static String _statusExplainer(ShopVO shop, AppLocalizations l) =>
+      switch (shop.status) {
+        ShopStatus.pending => l.explainPending,
+        ShopStatus.active =>
+          shop.isListed ? l.explainLive : l.explainUnlisted,
+        ShopStatus.suspended => l.explainSuspended,
+        ShopStatus.rejected => l.explainRejected,
+        ShopStatus.inactive => l.explainInactive,
       };
 }
 
@@ -194,6 +197,7 @@ class _StatusActions extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final busy = ref.watch(shopStatusControllerProvider).isLoading;
     final controller = ref.read(shopStatusControllerProvider.notifier);
+    final l = context.l10n;
 
     Future<void> change(
       ShopStatus status, {
@@ -207,7 +211,7 @@ class _StatusActions extends ConsumerWidget {
           title: confirm.title,
           message: confirm.message,
           confirmLabel: confirm.confirm,
-          dismissLabel: 'Cancel',
+          dismissLabel: l.commonCancel,
           destructive: true,
         );
         if (!ok) return;
@@ -220,41 +224,40 @@ class _StatusActions extends ConsumerWidget {
     }
 
     final approve = PrimaryButton(
-      label: 'Approve and list',
+      label: l.approveAndList,
       icon: Icons.verified_outlined,
       isLoading: busy,
       expand: true,
       onPressed: () => change(
         ShopStatus.active,
         isListed: true,
-        done: 'Shop approved and listed',
+        done: l.shopApprovedListed,
       ),
     );
     final reactivate = PrimaryButton(
-      label: 'Reactivate',
+      label: l.reactivateAction,
       icon: Icons.play_circle_outline,
       isLoading: busy,
       expand: true,
       onPressed: () => change(
         ShopStatus.active,
         isListed: shop.isListed,
-        done: 'Shop reactivated',
+        done: l.shopReactivated,
       ),
     );
     final deactivate = AppTextButton(
-      label: 'Deactivate shop',
+      label: l.deactivateShop,
       icon: Icons.power_settings_new,
       onPressed: busy
           ? null
           : () => change(
                 ShopStatus.inactive,
                 isListed: false,
-                done: 'Shop deactivated',
+                done: l.shopDeactivated,
                 confirm: (
-                  title: 'Deactivate this shop?',
-                  message: 'It will be hidden from customers and take no new '
-                      'bookings. You can reactivate it later.',
-                  confirm: 'Deactivate',
+                  title: l.deactivateShopTitle,
+                  message: l.deactivateShopMessage,
+                  confirm: l.deactivateAction,
                 ),
               ),
     );
@@ -264,7 +267,7 @@ class _StatusActions extends ConsumerWidget {
           approve,
           const SizedBox(height: AppSpacing.sm),
           DestructiveButton(
-            label: 'Reject',
+            label: l.rejectAction,
             icon: Icons.cancel_outlined,
             expand: true,
             onPressed: busy
@@ -272,12 +275,11 @@ class _StatusActions extends ConsumerWidget {
                 : () => change(
                       ShopStatus.rejected,
                       isListed: false,
-                      done: 'Shop rejected',
+                      done: l.shopRejectedDone,
                       confirm: (
-                        title: 'Reject this shop?',
-                        message: 'It stays hidden from customers. You can '
-                            'still approve it later.',
-                        confirm: 'Reject',
+                        title: l.rejectShopTitle,
+                        message: l.rejectShopMessage,
+                        confirm: l.rejectAction,
                       ),
                     ),
           ),
@@ -286,23 +288,22 @@ class _StatusActions extends ConsumerWidget {
           AppCard(
             padding: EdgeInsets.zero,
             child: SwitchListTile(
-              title: const Text('Listed for customers'),
-              subtitle: const Text(
-                'When off, the shop is hidden and takes no new bookings.',
-              ),
+              title: Text(l.listedForCustomers),
+              subtitle: Text(l.listedForCustomersSub),
               value: shop.isListed,
               onChanged: busy
                   ? null
                   : (listed) => change(
                         ShopStatus.active,
                         isListed: listed,
-                        done: listed ? 'Shop listed' : 'Shop unlisted',
+                        done:
+                            listed ? l.shopListedDone : l.shopUnlistedDone,
                       ),
             ),
           ),
           const SizedBox(height: AppSpacing.md),
           DestructiveButton(
-            label: 'Suspend',
+            label: l.suspendAction,
             icon: Icons.pause_circle_outline,
             expand: true,
             onPressed: busy
@@ -310,13 +311,11 @@ class _StatusActions extends ConsumerWidget {
                 : () => change(
                       ShopStatus.suspended,
                       isListed: shop.isListed,
-                      done: 'Shop suspended',
+                      done: l.shopSuspendedDone,
                       confirm: (
-                        title: 'Suspend this shop?',
-                        message: 'Customers stop seeing it and it takes no '
-                            'new bookings. Existing bookings are not '
-                            'cancelled.',
-                        confirm: 'Suspend',
+                        title: l.suspendShopTitle,
+                        message: l.suspendShopMessage,
+                        confirm: l.suspendAction,
                       ),
                     ),
           ),
@@ -341,6 +340,7 @@ class _OwnerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     return AppCard(
       padding: EdgeInsets.zero,
       child: Column(
@@ -353,22 +353,25 @@ class _OwnerCard extends StatelessWidget {
               AppSpacing.lg,
               0,
             ),
-            child: Text('Owner (private)', style: context.textStyles.titleSmall),
+            child: Text(
+              l.ownerPrivateTitle,
+              style: context.textStyles.titleSmall,
+            ),
           ),
           DetailRow(
             icon: Icons.person_outline,
-            label: 'Owner name',
+            label: l.ownerNameLabel,
             value: details?.ownerName,
           ),
           DetailRow(
             icon: Icons.phone_outlined,
-            label: 'Owner phone',
+            label: l.ownerPhoneLabel,
             value: details?.ownerPhone,
           ),
           if ((details?.suspendedReason ?? '').isNotEmpty)
             DetailRow(
               icon: Icons.info_outline,
-              label: 'Suspension reason',
+              label: l.suspensionReason,
               value: details?.suspendedReason,
             ),
         ],

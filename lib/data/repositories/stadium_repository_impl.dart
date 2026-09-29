@@ -111,7 +111,8 @@ class StadiumRepositoryImpl implements StadiumRepository {
         VenueValidators.optionalText(r.city, VenuePolicy.placeMaxLength) ==
             null &&
         SlotRules.isValidOpeningHours(r.openMinute, r.closeMinute) &&
-        r.openMinute % VenuePolicy.openingHourStep == 0;
+        r.openMinute % VenuePolicy.openingHourStep == 0 &&
+        VenuePolicy.isValidLocation(r.latitude, r.longitude);
     if (!ok) throw const InvalidVenueDetailsException();
   }
 

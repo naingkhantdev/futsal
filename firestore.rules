@@ -346,8 +346,15 @@ service cloud.firestore {
       return v == null || (v is string && v.size() <= max);
     }
 
-    function optNumber(v) {
-      return v == null || v is number;
+    // Map pin: both or neither, WGS84 degrees in range.
+    // MIRRORED in VenuePolicy.isValidLocation.
+    function validLocation(d) {
+      let lat = d.get('latitude', null);
+      let lng = d.get('longitude', null);
+      return (lat == null && lng == null)
+        || (lat is number && lng is number
+            && lat >= -90 && lat <= 90
+            && lng >= -180 && lng <= 180);
     }
 
     function optStringList(v, max) {
@@ -382,8 +389,7 @@ service cloud.firestore {
         && optText(d.get('address', null), 200)
         && optText(d.get('township', null), 80)
         && optText(d.get('city', null), 80)
-        && optNumber(d.get('latitude', null))
-        && optNumber(d.get('longitude', null))
+        && validLocation(d)
         && d.status in ['pending', 'active', 'suspended', 'rejected', 'inactive']
         && d.isListed is bool
         && (d.get('approvedAt', null) == null || d.approvedAt is timestamp)
@@ -528,8 +534,7 @@ service cloud.firestore {
         && optText(d.get('address', null), 200)
         && optText(d.get('township', null), 80)
         && optText(d.get('city', null), 80)
-        && optNumber(d.get('latitude', null))
-        && optNumber(d.get('longitude', null))
+        && validLocation(d)
         && optStringList(d.get('images', []), 10)
         && optStringList(d.get('facilities', []), 9)
         && d.get('facilities', []).hasOnly(facilityKeys())

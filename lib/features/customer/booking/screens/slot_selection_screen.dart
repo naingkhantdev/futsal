@@ -13,6 +13,7 @@ import '../../../../core/utils/display_format.dart';
 import '../../../../core/utils/money.dart';
 import '../../../../core/utils/time_range.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/day_strip.dart';
 import '../../../../core/widgets/slot_tile.dart';
 import '../../../../core/widgets/sticky_bottom_bar.dart';
 import '../../../../data/demo/demo_data.dart';
@@ -130,7 +131,6 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
     final styles = context.textStyles;
     final muted = context.colors.onSurfaceVariant;
     final slots = _slots;
-    final today = DateTime.now();
     final minutes = _count * court.slotMinutes;
     final l = context.l10n;
 
@@ -193,25 +193,13 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
           const SizedBox(height: AppSpacing.lg),
           Text(l.dayLabel, style: styles.titleSmall),
           const SizedBox(height: AppSpacing.sm),
-          SizedBox(
-            height: 48,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: _days,
-              separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.sm),
-              itemBuilder: (_, i) {
-                final key =
-                    DateKey.fromDate(today.add(Duration(days: i)));
-                return ChoiceChip(
-                  label: Text(DisplayFormat.dayLabel(key, l)),
-                  selected: key == date,
-                  onSelected: (_) => setState(() {
-                    date = key;
-                    _reset();
-                  }),
-                );
-              },
-            ),
+          DayStrip(
+            days: _days,
+            selected: date,
+            onSelected: (key) => setState(() {
+              date = key;
+              _reset();
+            }),
           ),
           const SizedBox(height: AppSpacing.lg),
           Text(

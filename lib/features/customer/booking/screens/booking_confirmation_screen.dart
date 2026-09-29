@@ -5,14 +5,11 @@ import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/theme_context_ext.dart';
-import '../../../../core/utils/display_format.dart';
-import '../../../../core/utils/money.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/content_constraint.dart';
-import '../../../../core/widgets/detail_row.dart';
 import '../../../../core/widgets/empty_view.dart';
 import '../../../../data/demo/demo_data.dart';
+import '../../../shared/widgets/booking_ticket.dart';
 import '../../../shared/widgets/preview_body.dart';
 
 /// `/customer/bookings/:bookingId/confirmation` — CUSTOMER scope: full-screen
@@ -54,28 +51,7 @@ class BookingConfirmationScreen extends StatelessWidget {
                 ?.copyWith(color: context.colors.onSurfaceVariant),
           ),
           const SizedBox(height: AppSpacing.xl),
-          AppCard(
-            padding: EdgeInsets.zero,
-            child: Column(
-              children: [
-                DetailRow(
-                  icon: Icons.event_outlined,
-                  label: DisplayFormat.dayLabel(b.bookingDate, l),
-                  value: DisplayFormat.timeRange(b.startMinute, b.endMinute),
-                ),
-                DetailRow(
-                  icon: Icons.stadium_outlined,
-                  label: b.stadiumNameSnapshot,
-                  value: b.courtNameSnapshot,
-                ),
-                DetailRow(
-                  icon: Icons.payments_outlined,
-                  label: l.totalPayAtVenue,
-                  value: Money.formatMmk(b.totalPrice),
-                ),
-              ],
-            ),
-          ),
+          BookingTicket(booking: b),
           const SizedBox(height: AppSpacing.xl),
           PrimaryButton(
             label: l.viewBooking,

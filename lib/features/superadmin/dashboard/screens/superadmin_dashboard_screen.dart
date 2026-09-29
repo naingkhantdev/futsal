@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/domain_enums.dart';
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/theme/status_tone.dart';
 import '../../../../core/theme/status_visuals.dart';
+import '../../../../core/utils/date_key.dart';
+import '../../../../core/utils/display_format.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/content_constraint.dart';
+import '../../../../core/widgets/hero_header.dart';
 import '../../../../core/widgets/stat_card.dart';
 import '../../../../core/widgets/status_badge.dart';
 import '../../../../data/demo/demo_data.dart';
@@ -34,39 +37,46 @@ class SuperadminDashboardScreen extends StatelessWidget {
         shops.where((s) => s.status == ShopStatus.pending).toList();
     final bookings = DemoData.allBookings();
     final recent = bookings.take(4).toList();
+    final l = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Dashboard')),
+      appBar: AppBar(title: Text(l.navDashboard)),
       body: PreviewBody(
         width: ContentWidth.dashboard,
         children: [
+          HeroHeader(
+            eyebrow: DisplayFormat.fullDate(DateKey.fromDate(DateTime.now())),
+            title: l.shopCount(shops.length),
+            subtitle: l.platformSummary(active, pending.length),
+          ),
+          const SizedBox(height: AppSpacing.xl),
           StatGrid(
             children: [
               StatCard(
                 icon: Icons.storefront_outlined,
-                label: 'Active shops',
+                label: l.activeShops,
                 value: '$active',
-                footer: 'of ${shops.length}',
+                footer: l.ofTotal(shops.length),
                 onTap: () => context.go(AppRoutes.superadminShops),
               ),
               StatCard(
                 icon: Icons.pending_actions_outlined,
-                label: 'To review',
+                label: l.toReview,
                 value: '${pending.length}',
-                footer: 'new shops',
-                tone: pending.isEmpty ? StatusTone.brand : StatusTone.warning,
+                footer: l.newShopsFooter,
+                highlight: pending.isNotEmpty,
                 onTap: () => context.go(_onboarding),
               ),
               StatCard(
                 icon: Icons.event_note_outlined,
-                label: 'Bookings',
+                label: l.navBookings,
                 value: '${bookings.length}',
-                footer: 'last 2 weeks',
+                footer: l.lastTwoWeeks,
                 onTap: () => context.go(AppRoutes.superadminBookings),
               ),
               StatCard(
                 icon: Icons.people_outline,
-                label: 'Customers',
+                label: l.navCustomers,
                 value: '${DemoData.customers.length}',
                 onTap: () => context.go(AppRoutes.superadminCustomers),
               ),
@@ -74,10 +84,10 @@ class SuperadminDashboardScreen extends StatelessWidget {
           ),
           if (pending.isNotEmpty) ...[
             PreviewSectionTitle(
-              'Waiting for review',
+              l.waitingForReview,
               action: TextButton(
                 onPressed: () => context.go(_onboarding),
-                child: const Text('Review'),
+                child: Text(l.reviewAction),
               ),
             ),
             AppCard(
@@ -93,7 +103,7 @@ class SuperadminDashboardScreen extends StatelessWidget {
                       ),
                       trailing: StatusBadge.fromVisual(
                         s.status.visual,
-                        semanticsPrefix: 'Shop status',
+                        semanticsPrefix: l.shopStatusPrefix,
                       ),
                       onTap: () => context.go(_onboarding),
                     ),
@@ -102,20 +112,17 @@ class SuperadminDashboardScreen extends StatelessWidget {
             ),
           ],
           PreviewSectionTitle(
-            'Latest bookings',
+            l.latestBookings,
             action: TextButton(
               onPressed: () => context.go(AppRoutes.superadminBookings),
-              child: const Text('All bookings'),
+              child: Text(l.homeAllBookings),
             ),
           ),
-          for (final b in recent) ...[
-            BookingListTile(
-              booking: b,
-              showCustomer: true,
-              onTap: () => context.push(AppRoutes.superadminBooking(b.id)),
-            ),
-            const SizedBox(height: AppSpacing.md),
-          ],
+          BookingGroup(
+            bookings: recent,
+            showCustomer: true,
+            onOpen: (b) => context.push(AppRoutes.superadminBooking(b.id)),
+          ),
         ],
       ),
     );

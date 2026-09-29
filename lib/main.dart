@@ -8,6 +8,7 @@ import 'core/l10n/l10n.dart';
 import 'core/l10n/locale_controller.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'core/widgets/motion.dart';
 import 'firebase/firebase_bootstrap.dart';
 
 Future<void> main() async {
@@ -34,6 +35,8 @@ class FutsalBookingApp extends ConsumerWidget {
     return MaterialApp.router(
       title: AppConstants.appName,
       debugShowCheckedModeBanner: false,
+      // Bouncing, momentum scrolling everywhere (see AppScrollBehavior).
+      scrollBehavior: const AppScrollBehavior(),
       locale: locale,
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,

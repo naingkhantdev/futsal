@@ -1,15 +1,16 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../theme/app_radius.dart';
-import '../theme/app_sizes.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_typography.dart';
 import '../theme/theme_context_ext.dart';
-import 'app_card.dart';
+import 'motion.dart';
+import 'stadium_photo.dart';
 
-/// Customer stadium list card (design_system.md §5.3). Visual shell only —
-/// takes pre-formatted strings; data wiring arrives in Phase 6.
+/// Customer stadium card (design_system.md §0): the venue photo is the
+/// card. Name, place, facilities and price sit on a navy [AppGradients.scrim]
+/// at the bottom of the image; the price is the one gold line. No white
+/// frame, no chips. Visual shell only: takes pre-formatted strings.
 class StadiumCard extends StatelessWidget {
   const StadiumCard({
     super.key,
@@ -21,7 +22,7 @@ class StadiumCard extends StatelessWidget {
     this.imageUrl,
     this.facilities = const [],
     this.overlayBadge,
-    this.aspectRatio = 16 / 9,
+    this.aspectRatio = 3 / 2,
   });
 
   final String name;
@@ -41,17 +42,21 @@ class StadiumCard extends StatelessWidget {
   /// Optional StatusBadge shown top-left on the image.
   final Widget? overlayBadge;
 
-  /// 16:9 in vertical lists, 4:3 in horizontal carousels.
+  /// 3:2 in vertical lists, 4:3 in horizontal carousels.
   final double aspectRatio;
 
-  static const int _maxFacilityChips = 2;
+  static const int _maxFacilities = 2;
 
   @override
   Widget build(BuildContext context) {
     final styles = context.textStyles;
-    final colors = context.colors;
-    final shown = facilities.take(_maxFacilityChips).toList();
+    final g = context.gradients;
+    final shown = facilities.take(_maxFacilities).toList();
     final extra = facilities.length - shown.length;
+    final facilityLine = [
+      ...shown,
+      if (extra > 0) '+$extra',
+    ].join(' · ');
 
     return Semantics(
       button: true,
@@ -59,134 +64,65 @@ class StadiumCard extends StatelessWidget {
       // excludeSemantics drops the InkWell's action; re-expose it here.
       onTap: onTap,
       excludeSemantics: true,
-      child: AppCard(
-        onTap: onTap,
-        padding: const EdgeInsets.all(AppSpacing.sm),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: AppRadius.mdAll,
-              child: AspectRatio(
-                aspectRatio: aspectRatio,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    _StadiumImage(url: imageUrl),
-                    if (overlayBadge != null)
-                      Positioned(
-                        top: AppSpacing.sm,
-                        left: AppSpacing.sm,
-                        child: overlayBadge!,
+      child: Pressable(
+        child: ClipRRect(
+          borderRadius: AppRadius.lgAll,
+          child: AspectRatio(
+            aspectRatio: aspectRatio,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                StadiumPhoto(url: imageUrl),
+                DecoratedBox(decoration: BoxDecoration(gradient: g.scrim)),
+                if (overlayBadge != null)
+                  Positioned(
+                    top: AppSpacing.md,
+                    left: AppSpacing.md,
+                    child: overlayBadge!,
+                  ),
+                Positioned(
+                  left: AppSpacing.lg,
+                  right: AppSpacing.lg,
+                  bottom: AppSpacing.lg,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: styles.titleLarge?.copyWith(color: g.onHero),
                       ),
-                  ],
+                      const SizedBox(height: AppSpacing.xxs),
+                      Text(
+                        facilityLine.isEmpty
+                            ? location
+                            : '$location  ·  $facilityLine',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style:
+                            styles.bodySmall?.copyWith(color: g.onHeroMuted),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(
+                        priceLabel,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.tabular(styles.labelLarge!)
+                            .copyWith(color: g.gold, fontWeight: FontWeight.w700),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+                Material(
+                  type: MaterialType.transparency,
+                  child: InkWell(onTap: onTap),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.sm,
-                AppSpacing.md,
-                AppSpacing.sm,
-                AppSpacing.sm,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: styles.titleLarge),
-                  const SizedBox(height: AppSpacing.xs),
-                  Row(
-                    children: [
-                      Icon(Icons.place_outlined,
-                          size: AppSizes.iconSm, color: colors.onSurfaceVariant),
-                      const SizedBox(width: AppSpacing.xs),
-                      Expanded(
-                        child: Text(
-                          location,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: styles.bodyMedium
-                              ?.copyWith(color: colors.onSurfaceVariant),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          priceLabel,
-                          style: AppTypography.tabular(styles.titleMedium!)
-                              .copyWith(fontWeight: FontWeight.w800),
-                        ),
-                      ),
-                      for (final f in shown) _FacilityChip(label: f),
-                      if (extra > 0) _FacilityChip(label: '+$extra'),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _StadiumImage extends StatelessWidget {
-  const _StadiumImage({required this.url});
-
-  final String? url;
-
-  @override
-  Widget build(BuildContext context) {
-    Widget placeholder(IconData icon) => ColoredBox(
-          color: context.appColors.imagePlaceholder,
-          child: Center(
-            child: Icon(icon,
-                size: AppSizes.iconXl, color: context.colors.onSurfaceVariant),
           ),
-        );
-
-    final imageUrl = url;
-    if (imageUrl == null || imageUrl.isEmpty) {
-      return placeholder(Icons.sports_soccer_outlined);
-    }
-    return CachedNetworkImage(
-      imageUrl: imageUrl,
-      fit: BoxFit.cover,
-      placeholder: (_, __) => placeholder(Icons.sports_soccer_outlined),
-      errorWidget: (_, __, ___) => placeholder(Icons.image_not_supported_outlined),
-    );
-  }
-}
-
-class _FacilityChip extends StatelessWidget {
-  const _FacilityChip({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(left: AppSpacing.xs),
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: AppSpacing.xxs,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: AppRadius.fullAll,
-        border: Border.all(color: context.colors.outlineVariant),
-      ),
-      child: Text(
-        label,
-        style: context.textStyles.labelSmall
-            ?.copyWith(color: context.colors.onSurfaceVariant),
+        ),
       ),
     );
   }

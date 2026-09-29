@@ -65,6 +65,10 @@ abstract final class AppRoutes {
   static const String shopAdminCustomers = '/shop-admin/customers';
   static const String shopAdminSettings = '/shop-admin/settings';
   static const String shopAdminStadiumNew = '/shop-admin/stadiums/new';
+
+  /// Map pin picker; push with `extra: MapPoint?`, pops a `MapPoint`.
+  static const String shopAdminPickLocation =
+      '/shop-admin/stadiums/pick-location';
   static const String shopAdminBlockedSlots = '/shop-admin/blocked-slots';
   static const String shopAdminBlockedSlotNew = '/shop-admin/blocked-slots/new';
   static const String shopAdminShopProfile = '/shop-admin/settings/shop-profile';

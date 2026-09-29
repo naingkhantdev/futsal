@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/status_tone.dart';
@@ -20,12 +21,13 @@ class AnnouncementsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final styles = context.textStyles;
     final muted = context.colors.onSurfaceVariant;
+    final l = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: const Text('Announcements')),
+      appBar: AppBar(title: Text(l.announcementsTitle)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push(AppRoutes.superadminAnnouncementNew),
         icon: const Icon(Icons.edit_outlined),
-        label: const Text('New'),
+        label: Text(l.newShort),
       ),
       body: PreviewBody(
         bottomPadding: 96,
@@ -40,12 +42,16 @@ class AnnouncementsScreen extends StatelessWidget {
                       StatusBadge(
                         tone: StatusTone.brand,
                         icon: Icons.group_outlined,
-                        label: a.audience.label,
-                        semanticsPrefix: 'Sent to',
+                        label: switch (a.audience) {
+                          DemoAudience.everyone => l.audienceEveryone,
+                          DemoAudience.customers => l.audienceCustomers,
+                          DemoAudience.shopAdmins => l.audienceShopAdmins,
+                        },
+                        semanticsPrefix: l.sentToPrefix,
                       ),
                       const Spacer(),
                       Text(
-                        DisplayFormat.timeAgo(a.sentAt),
+                        DisplayFormat.timeAgo(a.sentAt, l),
                         style: styles.labelSmall?.copyWith(color: muted),
                       ),
                     ],

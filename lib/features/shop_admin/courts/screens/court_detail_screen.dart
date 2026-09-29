@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_sizes.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -33,13 +34,14 @@ class CourtDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final key = (stadiumId: stadiumId, courtId: courtId);
     final court = ref.watch(adminCourtProvider(key));
+    final l = context.l10n;
     return Scaffold(
       appBar: AppBar(
-        title: Text(court.valueOrNull?.name ?? 'Court'),
+        title: Text(court.valueOrNull?.name ?? l.courtLabel),
         actions: [
           if (court.valueOrNull != null)
             IconButton(
-              tooltip: 'Edit court',
+              tooltip: l.courtEdit,
               icon: const Icon(Icons.edit_outlined),
               onPressed: () => context
                   .push(AppRoutes.shopAdminCourtEdit(stadiumId, courtId)),
@@ -50,10 +52,10 @@ class CourtDetailScreen extends ConsumerWidget {
         value: court,
         onRetry: () => ref.invalidate(adminCourtProvider(key)),
         isEmpty: (c) => c == null,
-        empty: const EmptyView(
+        empty: EmptyView(
           icon: Icons.sports_soccer,
-          title: 'Court not found',
-          message: 'It may have been removed.',
+          title: l.courtNotFound,
+          message: l.notFoundRemoved,
         ),
         data: (c) => _CourtBody(court: c!),
       ),
@@ -70,6 +72,7 @@ class _CourtBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final price = court.hourlyPrice;
     final muted = context.colors.onSurfaceVariant;
+    final l = context.l10n;
     return ListView(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
       children: [
@@ -81,18 +84,18 @@ class _CourtBody extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: court.isActive
-                    ? const StatusBadge(
+                    ? StatusBadge(
                         tone: StatusTone.success,
                         icon: Icons.check_circle,
-                        label: 'Bookable',
-                        semanticsPrefix: 'Court',
+                        label: l.bookableLabel,
+                        semanticsPrefix: l.courtLabel,
                         size: StatusBadgeSize.medium,
                       )
-                    : const StatusBadge(
+                    : StatusBadge(
                         tone: StatusTone.neutral,
                         icon: Icons.pause_circle_outline,
-                        label: 'Inactive',
-                        semanticsPrefix: 'Court',
+                        label: l.venueInactive,
+                        semanticsPrefix: l.courtLabel,
                         size: StatusBadgeSize.medium,
                       ),
               ),
@@ -103,29 +106,29 @@ class _CourtBody extends StatelessWidget {
                   children: [
                     DetailRow(
                       icon: Icons.payments_outlined,
-                      label: 'Price per hour',
+                      label: l.pricePerHourTitle,
                       value: price == null ? null : Money.formatMmk(price),
-                      emptyText: 'No price set',
+                      emptyText: l.noPriceSet,
                     ),
                     DetailRow(
                       icon: Icons.timelapse,
-                      label: 'Slot length',
-                      value: '${court.slotMinutes} minutes',
+                      label: l.slotLengthTitle,
+                      value: l.slotMinutesValue(court.slotMinutes),
                     ),
                     DetailRow(
                       icon: Icons.groups_outlined,
-                      label: 'Players',
+                      label: l.playersLabel,
                       value: court.capacity?.toString(),
                     ),
                     DetailRow(
                       icon: Icons.grass,
-                      label: 'Surface',
+                      label: l.surfaceLabel,
                       value: court.surfaceType,
                     ),
                     if ((court.description ?? '').trim().isNotEmpty)
                       DetailRow(
                         icon: Icons.notes,
-                        label: 'Description',
+                        label: l.descriptionLabel,
                         value: court.description,
                       ),
                   ],
@@ -136,9 +139,8 @@ class _CourtBody extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 child: ListTile(
                   leading: const Icon(Icons.block, size: AppSizes.iconLg),
-                  title: const Text('Block time'),
-                  subtitle: const Text('Close this court for maintenance, '
-                      'events and more'),
+                  title: Text(l.blockTimeTitle),
+                  subtitle: Text(l.blockCourtSub),
                   trailing: Icon(Icons.chevron_right, color: muted),
                   onTap: () => context.push(
                     Uri(

@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 /// The translations for English (`en`).
@@ -538,9 +540,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get homeReady => 'Ready to play?';
-
-  @override
   String get homeSearchHint => 'Search stadiums or townships';
 
   @override
@@ -548,12 +547,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeAllBookings => 'All bookings';
-
-  @override
-  String get homeNoGames => 'No games booked. Pick a court below.';
-
-  @override
-  String get homePopular => 'Popular near you';
 
   @override
   String get exploreEmptyTitle => 'No stadiums found';
@@ -1037,4 +1030,599 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get audienceShopAdmins => 'Shop admins';
+
+  @override
+  String get errBlacklisted => 'This venue isn\'t taking bookings from your account. Contact the venue.';
+
+  @override
+  String get blacklistTitle => 'Blacklist';
+
+  @override
+  String get blacklistSubtitle => 'Customers who can\'t book at your shop';
+
+  @override
+  String get blacklistIntro => 'Blacklisted customers can\'t make new bookings at your shop. Their existing bookings stay, and they can still book at other shops.';
+
+  @override
+  String get blacklistEmptyTitle => 'No one is blacklisted';
+
+  @override
+  String get blacklistEmptyMessage => 'Blacklist a customer from their profile, or from a booking they didn\'t show up for.';
+
+  @override
+  String get blacklistAdd => 'Add to blacklist';
+
+  @override
+  String get blacklistNoShowAction => 'Didn\'t show up · blacklist';
+
+  @override
+  String get blacklistRemove => 'Remove from blacklist';
+
+  @override
+  String blacklistRemoveTitle(String name) {
+    return 'Remove $name from the blacklist?';
+  }
+
+  @override
+  String get blacklistRemoveMessage => 'They\'ll be able to book at your shop again.';
+
+  @override
+  String get blacklistRemoveConfirm => 'Remove';
+
+  @override
+  String get blacklistKeep => 'Keep';
+
+  @override
+  String blacklistSheetTitle(String name) {
+    return 'Blacklist $name';
+  }
+
+  @override
+  String get blacklistSheetMessage => 'They won\'t be able to make new bookings at your shop. Existing bookings stay.';
+
+  @override
+  String get blacklistReasonNoShow => 'Didn\'t show up';
+
+  @override
+  String get blacklistConfirm => 'Blacklist';
+
+  @override
+  String blacklistAdded(String name) {
+    return '$name is blacklisted';
+  }
+
+  @override
+  String blacklistRemoved(String name) {
+    return '$name can book again';
+  }
+
+  @override
+  String get blacklistedBadge => 'Blacklisted';
+
+  @override
+  String blacklistedOn(String date) {
+    return 'Blacklisted $date';
+  }
+
+  @override
+  String get stadiumsEmptyTitle => 'Add your first stadium';
+
+  @override
+  String get stadiumsEmptyMessage => 'Set its opening hours, then add the courts customers can book.';
+
+  @override
+  String get staffFilterUpcoming => 'Upcoming';
+
+  @override
+  String get staffFilterPast => 'Past';
+
+  @override
+  String get staffFilterAll => 'All';
+
+  @override
+  String get staffNoBookingsTitle => 'No bookings here';
+
+  @override
+  String get staffTryAnotherFilter => 'Try another filter.';
+
+  @override
+  String get markPaymentPending => 'Mark payment pending';
+
+  @override
+  String get markAsPaid => 'Mark as paid';
+
+  @override
+  String get markAsRefunded => 'Mark as refunded';
+
+  @override
+  String get confirmBooking => 'Confirm booking';
+
+  @override
+  String get markAsCompleted => 'Mark as completed';
+
+  @override
+  String get rejectBooking => 'Reject booking';
+
+  @override
+  String get rejectBookingTitle => 'Reject this booking?';
+
+  @override
+  String get rejectBookingMessage => 'The customer is notified and the slots are released.';
+
+  @override
+  String get rejectAction => 'Reject';
+
+  @override
+  String get keepBooking => 'Keep booking';
+
+  @override
+  String get searchNameOrPhone => 'Search by name or phone';
+
+  @override
+  String get noCustomersFound => 'No customers found';
+
+  @override
+  String bookingCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bookings',
+      one: '1 booking',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String lastPlayedOn(String date) {
+    return 'last played $date';
+  }
+
+  @override
+  String joinedOn(String date) {
+    return 'Joined $date';
+  }
+
+  @override
+  String get statusDisabled => 'Disabled';
+
+  @override
+  String get accountPrefix => 'Account';
+
+  @override
+  String get mmkOnPlatform => 'MMK on the platform';
+
+  @override
+  String get mmkAtYourShop => 'MMK at your shop';
+
+  @override
+  String get bookingHistory => 'Booking history';
+
+  @override
+  String get noBookingsYet => 'No bookings yet';
+
+  @override
+  String totalPaidAmount(String amount) {
+    return 'Total paid: $amount';
+  }
+
+  @override
+  String get settingsShopProfile => 'Shop profile';
+
+  @override
+  String get settingsShopProfileSub => 'Name, contact and address';
+
+  @override
+  String get blockedTimesTitle => 'Blocked times';
+
+  @override
+  String get blockedTimesSub => 'Maintenance, events, closures';
+
+  @override
+  String get stadiumsAndCourts => 'Stadiums & courts';
+
+  @override
+  String get editShopProfile => 'Edit shop profile';
+
+  @override
+  String get commonEdit => 'Edit';
+
+  @override
+  String get shopStatusPrefix => 'Shop status';
+
+  @override
+  String get listingPrefix => 'Listing';
+
+  @override
+  String get addressLabel => 'Address';
+
+  @override
+  String get statusManagedByPlatform => 'Status and listing are managed by the platform team.';
+
+  @override
+  String get visibilityUnlisted => 'Your shop is unlisted, so customers can\'t see or book it.';
+
+  @override
+  String get visibilityPending => 'Your shop is waiting for approval. Set up stadiums and courts now; customers see them once it is approved.';
+
+  @override
+  String get visibilitySuspended => 'Your shop is suspended. Customers can\'t see or book it. Contact the platform team.';
+
+  @override
+  String get visibilityInactive => 'Your shop isn\'t active. Customers can\'t see or book it.';
+
+  @override
+  String get venueActive => 'Active';
+
+  @override
+  String get venueInactive => 'Inactive';
+
+  @override
+  String get visibleToCustomers => 'Visible to customers';
+
+  @override
+  String get hiddenLabel => 'Hidden';
+
+  @override
+  String get discoveryPrefix => 'Discovery';
+
+  @override
+  String get bookableLabel => 'Bookable';
+
+  @override
+  String get noneListed => 'None listed';
+
+  @override
+  String get descriptionLabel => 'Description';
+
+  @override
+  String get noCourtsYet => 'No courts yet';
+
+  @override
+  String get noCourtsMessage => 'Add a court with its price and slot length so customers can book it.';
+
+  @override
+  String get noPrice => 'No price';
+
+  @override
+  String get noPriceSet => 'No price set';
+
+  @override
+  String get pricePerHourTitle => 'Price per hour';
+
+  @override
+  String slotMinutesValue(int minutes) {
+    return '$minutes minutes';
+  }
+
+  @override
+  String get playersLabel => 'Players';
+
+  @override
+  String get surfaceLabel => 'Surface';
+
+  @override
+  String get blockCourtSub => 'Close this court for maintenance, events and more';
+
+  @override
+  String get blockedTimesNote => 'Blocked times cannot be booked by customers.';
+
+  @override
+  String get removeBlock => 'Remove block';
+
+  @override
+  String venueCounts(int stadiums, int courts) {
+    return '$stadiums stadiums · $courts courts';
+  }
+
+  @override
+  String get statBookingsFooter => 'bookings';
+
+  @override
+  String get statNeedReply => 'need a reply';
+
+  @override
+  String get statCollected => 'Collected';
+
+  @override
+  String get statMmkFromPaid => 'MMK from paid bookings';
+
+  @override
+  String get statBookedWithYou => 'booked with you';
+
+  @override
+  String get needsYourReply => 'Needs your reply';
+
+  @override
+  String get allCaughtUp => 'All caught up';
+
+  @override
+  String get allCaughtUpMessage => 'New booking requests show up here.';
+
+  @override
+  String get todaysSchedule => 'Today\'s schedule';
+
+  @override
+  String get noGamesToday => 'No games today';
+
+  @override
+  String get locationLabel => 'Location';
+
+  @override
+  String get shopAdminsSub => 'Who can manage this shop';
+
+  @override
+  String get explainPending => 'Waiting for review. Hidden from customers; its admins can already set up stadiums and courts.';
+
+  @override
+  String get explainLive => 'Live: customers can find and book it.';
+
+  @override
+  String get explainUnlisted => 'Approved but unlisted: hidden from customers, no new bookings.';
+
+  @override
+  String get explainSuspended => 'Suspended: hidden from customers, no new bookings. Existing bookings stay as they are.';
+
+  @override
+  String get explainRejected => 'Rejected: hidden from customers.';
+
+  @override
+  String get explainInactive => 'Inactive: hidden from customers, no new bookings.';
+
+  @override
+  String get commonCancel => 'Cancel';
+
+  @override
+  String get commonRemove => 'Remove';
+
+  @override
+  String get approveAndList => 'Approve and list';
+
+  @override
+  String get shopApprovedListed => 'Shop approved and listed';
+
+  @override
+  String get reactivateAction => 'Reactivate';
+
+  @override
+  String get shopReactivated => 'Shop reactivated';
+
+  @override
+  String get deactivateShop => 'Deactivate shop';
+
+  @override
+  String get shopDeactivated => 'Shop deactivated';
+
+  @override
+  String get deactivateShopTitle => 'Deactivate this shop?';
+
+  @override
+  String get deactivateShopMessage => 'It will be hidden from customers and take no new bookings. You can reactivate it later.';
+
+  @override
+  String get deactivateAction => 'Deactivate';
+
+  @override
+  String get shopRejectedDone => 'Shop rejected';
+
+  @override
+  String get rejectShopTitle => 'Reject this shop?';
+
+  @override
+  String get rejectShopMessage => 'It stays hidden from customers. You can still approve it later.';
+
+  @override
+  String get listedForCustomers => 'Listed for customers';
+
+  @override
+  String get listedForCustomersSub => 'When off, the shop is hidden and takes no new bookings.';
+
+  @override
+  String get shopListedDone => 'Shop listed';
+
+  @override
+  String get shopUnlistedDone => 'Shop unlisted';
+
+  @override
+  String get suspendAction => 'Suspend';
+
+  @override
+  String get shopSuspendedDone => 'Shop suspended';
+
+  @override
+  String get suspendShopTitle => 'Suspend this shop?';
+
+  @override
+  String get suspendShopMessage => 'Customers stop seeing it and it takes no new bookings. Existing bookings are not cancelled.';
+
+  @override
+  String get ownerNameLabel => 'Owner name';
+
+  @override
+  String get ownerPhoneLabel => 'Owner phone';
+
+  @override
+  String get suspensionReason => 'Suspension reason';
+
+  @override
+  String get nothingToReview => 'Nothing to review';
+
+  @override
+  String get nothingToReviewMessage => 'New shops appear here until you approve or reject them.';
+
+  @override
+  String get noShopsYet => 'No shops yet';
+
+  @override
+  String get noShopsMessage => 'Create the first shop, then assign its admin.';
+
+  @override
+  String shopAdminsOf(String shop) {
+    return '$shop admins';
+  }
+
+  @override
+  String get addAdmin => 'Add admin';
+
+  @override
+  String get noAdminsYet => 'No admins yet';
+
+  @override
+  String get noAdminsMessage => 'Add the person who runs this shop. They need a customer account first.';
+
+  @override
+  String get accountDisabledBadge => 'Account disabled';
+
+  @override
+  String get removeAdmin => 'Remove admin';
+
+  @override
+  String get removeAdminTitle => 'Remove this admin?';
+
+  @override
+  String removeAdminMessage(String name) {
+    return '$name loses access to the shop right away and becomes a customer.';
+  }
+
+  @override
+  String get adminRemoved => 'Admin removed';
+
+  @override
+  String shopCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count shops',
+      one: '1 shop',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String platformSummary(int active, int pending) {
+    return '$active active · $pending waiting for review';
+  }
+
+  @override
+  String get activeShops => 'Active shops';
+
+  @override
+  String ofTotal(int total) {
+    return 'of $total';
+  }
+
+  @override
+  String get toReview => 'To review';
+
+  @override
+  String get newShopsFooter => 'new shops';
+
+  @override
+  String get lastTwoWeeks => 'last 2 weeks';
+
+  @override
+  String get waitingForReview => 'Waiting for review';
+
+  @override
+  String get reviewAction => 'Review';
+
+  @override
+  String get latestBookings => 'Latest bookings';
+
+  @override
+  String get disableAccount => 'Disable account';
+
+  @override
+  String disableUserTitle(String name) {
+    return 'Disable $name?';
+  }
+
+  @override
+  String get disableUserMessage => 'They are signed out and cannot book until you enable the account again.';
+
+  @override
+  String get disableAction => 'Disable';
+
+  @override
+  String get keepActive => 'Keep active';
+
+  @override
+  String get enableAccount => 'Enable account';
+
+  @override
+  String get announcementsTitle => 'Announcements';
+
+  @override
+  String get announcementsSub => 'Messages to customers and shops';
+
+  @override
+  String get shopsPendingReview => 'Shops pending review';
+
+  @override
+  String get newShort => 'New';
+
+  @override
+  String get sentToPrefix => 'Sent to';
+
+  @override
+  String homeOpenSlots(String day) {
+    return 'Open times · $day';
+  }
+
+  @override
+  String get homeNoOpenSlots => 'Fully booked this day';
+
+  @override
+  String bookSlotAt(String court, String time) {
+    return 'Book $court at $time';
+  }
+
+  @override
+  String get mapDirections => 'Directions';
+
+  @override
+  String get mapOpenInGoogleMaps => 'Open in Google Maps';
+
+  @override
+  String get mapOpenFailed => 'Couldn\'t open Google Maps';
+
+  @override
+  String mapPinSemantics(String name) {
+    return 'Map showing $name. Opens Google Maps';
+  }
+
+  @override
+  String get locationNotSet => 'No map location yet';
+
+  @override
+  String get locationNote => 'Customers see this on a map and can get directions.';
+
+  @override
+  String get locationPickOnMap => 'Pick on map';
+
+  @override
+  String get locationChangeOnMap => 'Change on map';
+
+  @override
+  String get locationPasteLabel => 'Coordinates or Google Maps link';
+
+  @override
+  String get locationPasteHelper => 'e.g. 16.84090, 96.17350';
+
+  @override
+  String get locationInvalid => 'Couldn\'t read a location. Paste coordinates like 16.84090, 96.17350.';
+
+  @override
+  String get locationShortLink => 'Short links can\'t be read. Open the link, then copy the full link or the coordinates.';
+
+  @override
+  String get locationClear => 'Remove location';
+
+  @override
+  String get pickLocationTitle => 'Pin your venue';
+
+  @override
+  String get pickLocationHint => 'Move the map until the pin sits on your venue.';
+
+  @override
+  String get useThisLocation => 'Use this location';
 }
