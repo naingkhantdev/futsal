@@ -16,6 +16,8 @@ import '../../../../core/widgets/detail_row.dart';
 import '../../../../core/widgets/empty_view.dart';
 import '../../../../core/widgets/status_badge.dart';
 import '../../../../data/vos/court_vo.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../../stadiums/providers/shop_venue_providers.dart';
 
 /// `/shop-admin/stadiums/:stadiumId/courts/:courtId` — SHOP scope: court
@@ -39,12 +41,16 @@ class CourtDetailScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(court.valueOrNull?.name ?? l.courtLabel),
         actions: [
+          const TourHelpButton(),
           if (court.valueOrNull != null)
-            IconButton(
-              tooltip: l.courtEdit,
-              icon: const Icon(Icons.edit_outlined),
-              onPressed: () => context
-                  .push(AppRoutes.shopAdminCourtEdit(stadiumId, courtId)),
+            TourAnchor(
+              id: TourIds.edit,
+              child: IconButton(
+                tooltip: l.courtEdit,
+                icon: const Icon(Icons.edit_outlined),
+                onPressed: () => context
+                    .push(AppRoutes.shopAdminCourtEdit(stadiumId, courtId)),
+              ),
             ),
         ],
       ),

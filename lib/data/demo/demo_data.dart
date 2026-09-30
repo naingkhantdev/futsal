@@ -388,47 +388,6 @@ abstract final class DemoData {
         BlockedSlotReason.cleaning, null),
   ];
 
-  // -------------------------------------------------------- notifications
-
-  static final List<DemoNotification> notifications = [
-    DemoNotification(
-      title: 'Booking confirmed',
-      body: 'Covered Court, today at 20:00 is confirmed. See you there!',
-      kind: DemoNotificationKind.booking,
-      at: _hoursAgo(1),
-      isRead: false,
-    ),
-    DemoNotification(
-      title: 'Reminder: game tomorrow',
-      body: 'Outdoor Pitch at Kick Off Arena Bahan, 17:00 – 19:00.',
-      kind: DemoNotificationKind.reminder,
-      at: _hoursAgo(5),
-      isRead: false,
-    ),
-    DemoNotification(
-      title: 'Booking request sent',
-      body: 'Golden Goal Thingangyun will confirm your 19:00 booking soon.',
-      kind: DemoNotificationKind.booking,
-      at: _hoursAgo(26),
-      isRead: true,
-    ),
-    DemoNotification(
-      title: 'New venue near you',
-      body: 'Kick Off Mini Pitch just opened in Kamayut. Half-hour slots '
-          'from MMK 20,000/hr.',
-      kind: DemoNotificationKind.announcement,
-      at: _hoursAgo(72),
-      isRead: true,
-    ),
-    DemoNotification(
-      title: 'Booking cancelled',
-      body: 'Your Mini Court booking was cancelled.',
-      kind: DemoNotificationKind.cancelled,
-      at: _hoursAgo(96),
-      isRead: true,
-    ),
-  ];
-
   // -------------------------------------------------------- announcements
 
   static final List<DemoAnnouncement> announcements = [
@@ -583,9 +542,6 @@ abstract final class DemoData {
   static DateTime _daysAgo(int days) =>
       DateTime.now().subtract(Duration(days: days));
 
-  static DateTime _hoursAgo(int hours) =>
-      DateTime.now().subtract(Duration(hours: hours));
-
   static String _dateKey(int dayOffset) =>
       DateKey.fromDate(DateTime.now().add(Duration(days: dayOffset)));
 
@@ -664,25 +620,6 @@ abstract final class DemoData {
       note: note,
     );
   }
-}
-
-enum DemoNotificationKind { booking, reminder, cancelled, announcement }
-
-/// Customer notification (no VO yet: notifications arrive in Phase 12).
-class DemoNotification {
-  const DemoNotification({
-    required this.title,
-    required this.body,
-    required this.kind,
-    required this.at,
-    required this.isRead,
-  });
-
-  final String title;
-  final String body;
-  final DemoNotificationKind kind;
-  final DateTime at;
-  final bool isRead;
 }
 
 enum DemoAudience {

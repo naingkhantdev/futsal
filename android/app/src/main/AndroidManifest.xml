@@ -1,4 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Push notifications (FCM) on Android 13+: asked at runtime by
+         FirebaseMessaging.requestPermission(). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <application
         android:label="futsal_booking"
         android:name="${applicationName}"

@@ -9,6 +9,7 @@ import 'core/l10n/locale_controller.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/widgets/motion.dart';
+import 'features/shared/widgets/notification_host.dart';
 import 'firebase/firebase_bootstrap.dart';
 
 Future<void> main() async {
@@ -47,7 +48,9 @@ class FutsalBookingApp extends ConsumerWidget {
       builder: (context, child) {
         // DateFormat (DisplayFormat) follows the app language.
         Intl.defaultLocale = Localizations.localeOf(context).toLanguageTag();
-        return child!;
+        // In-app notification banners + push handling (needs l10n + the
+        // ScaffoldMessenger, both above this builder's child).
+        return NotificationHost(child: child!);
       },
     );
   }

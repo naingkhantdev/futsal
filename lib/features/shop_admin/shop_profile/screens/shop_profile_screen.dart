@@ -11,6 +11,8 @@ import '../../../../core/widgets/content_constraint.dart';
 import '../../../../core/widgets/detail_row.dart';
 import '../../../../core/widgets/status_badge.dart';
 import '../../../../data/demo/demo_data.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../../../shared/widgets/preview_body.dart';
 
 /// `/shop-admin/settings/shop-profile` — SHOP scope: the public profile of
@@ -29,9 +31,13 @@ class ShopProfileScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(l.settingsShopProfile),
         actions: [
-          TextButton(
-            onPressed: () => showPreviewOnly(context, l.editShopProfile),
-            child: Text(l.commonEdit),
+          const TourHelpButton(),
+          TourAnchor(
+            id: TourIds.edit,
+            child: TextButton(
+              onPressed: () => showPreviewOnly(context, l.editShopProfile),
+              child: Text(l.commonEdit),
+            ),
           ),
           const SizedBox(width: AppSpacing.sm),
         ],

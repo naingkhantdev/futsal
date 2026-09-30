@@ -17,6 +17,8 @@ import '../../../../core/widgets/empty_view.dart';
 import '../../../../core/widgets/motion.dart';
 import '../../../../core/widgets/status_badge.dart';
 import '../../../../data/vos/user_vo.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../../shops/providers/shops_providers.dart';
 import '../providers/shop_admins_providers.dart';
 
@@ -51,11 +53,15 @@ class ShopAdminsScreen extends ConsumerWidget {
         title: Text(
           shopName == null ? l.audienceShopAdmins : l.shopAdminsOf(shopName),
         ),
+        actions: const [TourHelpButton()],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: addAdmin,
-        icon: const Icon(Icons.person_add_alt_outlined),
-        label: Text(l.addAdmin),
+      floatingActionButton: TourAnchor(
+        id: TourIds.fab,
+        child: FloatingActionButton.extended(
+          onPressed: addAdmin,
+          icon: const Icon(Icons.person_add_alt_outlined),
+          label: Text(l.addAdmin),
+        ),
       ),
       body: AsyncValueView<List<UserVO>>(
         value: admins,

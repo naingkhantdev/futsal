@@ -16,6 +16,8 @@ import '../../../core/utils/validators.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/inline_banner.dart';
+import '../../shared/widgets/app_tour.dart';
+import '../../shared/widgets/app_tours.dart';
 import '../providers/register_controller.dart';
 import '../widgets/auth_layout.dart';
 
@@ -106,18 +108,21 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                AppTextField(
-                  label: l.fullNameLabel,
-                  controller: _name,
-                  focusNode: _nameFocus,
-                  prefixIcon: Icons.person_outline,
-                  keyboardType: TextInputType.name,
-                  textInputAction: TextInputAction.next,
-                  textCapitalization: TextCapitalization.words,
-                  autofillHints: const [AutofillHints.name],
-                  validator: AppValidators.name,
-                  autovalidateMode: autovalidate,
-                  readOnly: isLoading,
+                TourAnchor(
+                  id: TourIds.name,
+                  child: AppTextField(
+                    label: l.fullNameLabel,
+                    controller: _name,
+                    focusNode: _nameFocus,
+                    prefixIcon: Icons.person_outline,
+                    keyboardType: TextInputType.name,
+                    textInputAction: TextInputAction.next,
+                    textCapitalization: TextCapitalization.words,
+                    autofillHints: const [AutofillHints.name],
+                    validator: AppValidators.name,
+                    autovalidateMode: autovalidate,
+                    readOnly: isLoading,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 AppTextField(
@@ -133,18 +138,21 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   readOnly: isLoading,
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                AppTextField(
-                  label: l.phoneOptionalLabel,
-                  controller: _phone,
-                  focusNode: _phoneFocus,
-                  prefixIcon: Icons.phone_outlined,
-                  helperText: l.phoneHelper,
-                  keyboardType: TextInputType.phone,
-                  textInputAction: TextInputAction.next,
-                  autofillHints: const [AutofillHints.telephoneNumber],
-                  validator: AppValidators.optionalPhone,
-                  autovalidateMode: autovalidate,
-                  readOnly: isLoading,
+                TourAnchor(
+                  id: TourIds.phone,
+                  child: AppTextField(
+                    label: l.phoneOptionalLabel,
+                    controller: _phone,
+                    focusNode: _phoneFocus,
+                    prefixIcon: Icons.phone_outlined,
+                    helperText: l.phoneHelper,
+                    keyboardType: TextInputType.phone,
+                    textInputAction: TextInputAction.next,
+                    autofillHints: const [AutofillHints.telephoneNumber],
+                    validator: AppValidators.optionalPhone,
+                    autovalidateMode: autovalidate,
+                    readOnly: isLoading,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 PasswordField(
@@ -179,12 +187,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           ),
           const SizedBox(height: AppSpacing.lg),
         ],
-        PrimaryButton(
-          label: l.createAccountButton,
-          onPressed: _submit,
-          isLoading: isLoading,
-          size: AppButtonSize.large,
-          expand: true,
+        TourAnchor(
+          id: TourIds.primary,
+          child: PrimaryButton(
+            label: l.createAccountButton,
+            onPressed: _submit,
+            isLoading: isLoading,
+            size: AppButtonSize.large,
+            expand: true,
+          ),
         ),
         const SizedBox(height: AppSpacing.lg),
         Wrap(

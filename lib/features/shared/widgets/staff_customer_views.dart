@@ -16,6 +16,8 @@ import '../../../core/widgets/status_badge.dart';
 import '../../../data/demo/demo_data.dart';
 import '../../../data/vos/booking_vo.dart';
 import '../../../data/vos/user_vo.dart';
+import './app_tour.dart';
+import './app_tours.dart';
 import 'booking_list_tile.dart';
 import 'person_tile.dart';
 import 'preview_body.dart';
@@ -49,9 +51,12 @@ class _StaffCustomerListState extends State<StaffCustomerList> {
     final l = context.l10n;
     return PreviewBody(
       children: [
-        SearchField(
-          hintText: l.searchNameOrPhone,
-          onChanged: (v) => setState(() => _query = v),
+        TourAnchor(
+          id: TourIds.search,
+          child: SearchField(
+            hintText: l.searchNameOrPhone,
+            onChanged: (v) => setState(() => _query = v),
+          ),
         ),
         const SizedBox(height: AppSpacing.lg),
         if (people.isEmpty)

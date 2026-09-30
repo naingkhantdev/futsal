@@ -24,6 +24,8 @@ import '../../../../core/widgets/empty_view.dart';
 import '../../../../core/widgets/inline_banner.dart';
 import '../../../../data/requests/venue_write_requests.dart';
 import '../../../../data/vos/court_vo.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../../stadiums/providers/shop_venue_providers.dart';
 
 /// `/shop-admin/stadiums/:stadiumId/courts/new` and `.../:courtId/edit`.
@@ -45,13 +47,19 @@ class CourtFormScreen extends ConsumerWidget {
     final l = context.l10n;
     if (id == null) {
       return Scaffold(
-        appBar: AppBar(title: Text(l.courtNew)),
+        appBar: AppBar(
+          title: Text(l.courtNew),
+          actions: const [TourHelpButton()],
+        ),
         body: _CourtForm(stadiumId: stadiumId, court: null),
       );
     }
     final key = (stadiumId: stadiumId, courtId: id);
     return Scaffold(
-      appBar: AppBar(title: Text(l.courtEdit)),
+      appBar: AppBar(
+        title: Text(l.courtEdit),
+        actions: const [TourHelpButton()],
+      ),
       body: AsyncValueView<CourtVO?>(
         value: ref.watch(adminCourtProvider(key)),
         onRetry: () => ref.invalidate(adminCourtProvider(key)),
@@ -221,48 +229,57 @@ class _CourtFormState extends ConsumerState<_CourtForm>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                AppTextField(
-                  label: l.courtNameLabel,
-                  controller: _name,
-                  focusNode: _nameFocus,
-                  prefixIcon: Icons.sports_soccer,
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.next,
-                  textCapitalization: TextCapitalization.words,
-                  validator: _nameError,
-                  autovalidateMode: autovalidate,
-                  readOnly: isLoading,
+                TourAnchor(
+                  id: TourIds.name,
+                  child: AppTextField(
+                    label: l.courtNameLabel,
+                    controller: _name,
+                    focusNode: _nameFocus,
+                    prefixIcon: Icons.sports_soccer,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    textCapitalization: TextCapitalization.words,
+                    validator: _nameError,
+                    autovalidateMode: autovalidate,
+                    readOnly: isLoading,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                AppTextField(
-                  label: l.pricePerHourLabel(BookingPolicy.currency),
-                  controller: _price,
-                  focusNode: _priceFocus,
-                  prefixIcon: Icons.payments_outlined,
-                  helperText: l.priceHelper,
-                  keyboardType: TextInputType.number,
-                  textInputAction: TextInputAction.next,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  validator: VenueValidators.hourlyPrice,
-                  autovalidateMode: autovalidate,
-                  readOnly: isLoading,
+                TourAnchor(
+                  id: TourIds.price,
+                  child: AppTextField(
+                    label: l.pricePerHourLabel(BookingPolicy.currency),
+                    controller: _price,
+                    focusNode: _priceFocus,
+                    prefixIcon: Icons.payments_outlined,
+                    helperText: l.priceHelper,
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.next,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    validator: VenueValidators.hourlyPrice,
+                    autovalidateMode: autovalidate,
+                    readOnly: isLoading,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.xl),
                 Text(l.slotLengthTitle, style: context.textStyles.titleSmall),
                 const SizedBox(height: AppSpacing.md),
                 if (_isCreate) ...[
-                  SegmentedButton<int>(
-                    segments: [
-                      for (final m in VenuePolicy.allowedSlotMinutes)
-                        ButtonSegment(
-                          value: m,
-                          label: Text(l.durationMinutes(m)),
-                        ),
-                    ],
-                    selected: {_slotMinutes},
-                    onSelectionChanged: isLoading
-                        ? null
-                        : (s) => setState(() => _slotMinutes = s.first),
+                  TourAnchor(
+                    id: TourIds.slotLength,
+                    child: SegmentedButton<int>(
+                      segments: [
+                        for (final m in VenuePolicy.allowedSlotMinutes)
+                          ButtonSegment(
+                            value: m,
+                            label: Text(l.durationMinutes(m)),
+                          ),
+                      ],
+                      selected: {_slotMinutes},
+                      onSelectionChanged: isLoading
+                          ? null
+                          : (s) => setState(() => _slotMinutes = s.first),
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
@@ -334,12 +351,15 @@ class _CourtFormState extends ConsumerState<_CourtForm>
                   InlineBanner(message: error.messageIn(l)),
                   const SizedBox(height: AppSpacing.lg),
                 ],
-                PrimaryButton(
-                  label: _isCreate ? l.addCourt : l.commonSaveChanges,
-                  onPressed: _save,
-                  isLoading: isLoading,
-                  size: AppButtonSize.large,
-                  expand: true,
+                TourAnchor(
+                  id: TourIds.primary,
+                  child: PrimaryButton(
+                    label: _isCreate ? l.addCourt : l.commonSaveChanges,
+                    onPressed: _save,
+                    isLoading: isLoading,
+                    size: AppButtonSize.large,
+                    expand: true,
+                  ),
                 ),
               ],
             ),

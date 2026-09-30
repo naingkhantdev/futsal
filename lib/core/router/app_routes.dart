@@ -74,6 +74,9 @@ abstract final class AppRoutes {
   static const String shopAdminShopProfile = '/shop-admin/settings/shop-profile';
   static const String shopAdminBlacklist = '/shop-admin/settings/blacklist';
 
+  /// Shop inbox (booking requests / cancellations); bell on the dashboard.
+  static const String shopAdminNotifications = '/shop-admin/notifications';
+
   static String shopAdminBooking(String bookingId) =>
       '/shop-admin/bookings/$bookingId';
   static String shopAdminStadium(String stadiumId) =>

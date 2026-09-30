@@ -19,6 +19,8 @@ import '../../../../core/widgets/sticky_bottom_bar.dart';
 import '../../../../data/demo/demo_data.dart';
 import '../../../../data/vos/booking_draft.dart';
 import '../../../../data/vos/court_vo.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../../../shared/widgets/preview_body.dart';
 import '../providers/booking_draft_provider.dart';
 
@@ -135,7 +137,10 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
     final l = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(title: Text(stadium.name)),
+      appBar: AppBar(
+        title: Text(stadium.name),
+        actions: const [TourHelpButton()],
+      ),
       bottomNavigationBar: StickyBottomBar(
         child: Row(
           children: [
@@ -164,9 +169,12 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
                       ],
                     ),
             ),
-            PrimaryButton(
-              label: l.commonContinue,
-              onPressed: _first == null ? null : _continue,
+            TourAnchor(
+              id: TourIds.primary,
+              child: PrimaryButton(
+                label: l.commonContinue,
+                onPressed: _first == null ? null : _continue,
+              ),
             ),
           ],
         ),
@@ -175,31 +183,37 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
         children: [
           Text(l.courtLabel, style: styles.titleSmall),
           const SizedBox(height: AppSpacing.sm),
-          Wrap(
-            spacing: AppSpacing.sm,
-            runSpacing: AppSpacing.sm,
-            children: [
-              for (final c in courts)
-                ChoiceChip(
-                  label: Text(c.name),
-                  selected: c.id == court.id,
-                  onSelected: (_) => setState(() {
-                    court = c;
-                    _reset();
-                  }),
-                ),
-            ],
+          TourAnchor(
+            id: TourIds.courts,
+            child: Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
+              children: [
+                for (final c in courts)
+                  ChoiceChip(
+                    label: Text(c.name),
+                    selected: c.id == court.id,
+                    onSelected: (_) => setState(() {
+                      court = c;
+                      _reset();
+                    }),
+                  ),
+              ],
+            ),
           ),
           const SizedBox(height: AppSpacing.lg),
           Text(l.dayLabel, style: styles.titleSmall),
           const SizedBox(height: AppSpacing.sm),
-          DayStrip(
-            days: _days,
-            selected: date,
-            onSelected: (key) => setState(() {
-              date = key;
-              _reset();
-            }),
+          TourAnchor(
+            id: TourIds.dayStrip,
+            child: DayStrip(
+              days: _days,
+              selected: date,
+              onSelected: (key) => setState(() {
+                date = key;
+                _reset();
+              }),
+            ),
           ),
           const SizedBox(height: AppSpacing.lg),
           Text(
@@ -211,35 +225,38 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
             style: styles.bodySmall?.copyWith(color: muted),
           ),
           const SizedBox(height: AppSpacing.md),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: slots.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: context.slotGridColumns,
-              mainAxisSpacing: AppSpacing.sm,
-              crossAxisSpacing: AppSpacing.sm,
-              mainAxisExtent: 72,
+          TourAnchor(
+            id: TourIds.slots,
+            child: GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: slots.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: context.slotGridColumns,
+                mainAxisSpacing: AppSpacing.sm,
+                crossAxisSpacing: AppSpacing.sm,
+                mainAxisExtent: 72,
+              ),
+              itemBuilder: (_, i) {
+                final state = _stateOf(i);
+                final label = formatMinuteOfDay(slots[i].startMinute);
+                final tappable = state == SlotState.available ||
+                    state == SlotState.selected;
+                final stateText = switch (state) {
+                  SlotState.available => l.slotAvailable,
+                  SlotState.selected => l.slotSelected,
+                  SlotState.booked => l.slotBooked,
+                  SlotState.blocked => l.slotClosed,
+                  SlotState.unavailable => l.slotUnavailable,
+                };
+                return SlotTile(
+                  state: state,
+                  startLabel: label,
+                  semanticLabel: '$label, $stateText',
+                  onTap: tappable ? () => _tap(i) : null,
+                );
+              },
             ),
-            itemBuilder: (_, i) {
-              final state = _stateOf(i);
-              final label = formatMinuteOfDay(slots[i].startMinute);
-              final tappable = state == SlotState.available ||
-                  state == SlotState.selected;
-              final stateText = switch (state) {
-                SlotState.available => l.slotAvailable,
-                SlotState.selected => l.slotSelected,
-                SlotState.booked => l.slotBooked,
-                SlotState.blocked => l.slotClosed,
-                SlotState.unavailable => l.slotUnavailable,
-              };
-              return SlotTile(
-                state: state,
-                startLabel: label,
-                semanticLabel: '$label, $stateText',
-                onTap: tappable ? () => _tap(i) : null,
-              );
-            },
           ),
         ],
       ),

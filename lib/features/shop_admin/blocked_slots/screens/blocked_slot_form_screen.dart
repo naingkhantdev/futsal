@@ -14,6 +14,8 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/content_constraint.dart';
 import '../../../../core/widgets/sticky_bottom_bar.dart';
 import '../../../../data/demo/demo_data.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../../../shared/widgets/preview_body.dart';
 
 /// `/shop-admin/blocked-slots/new?stadiumId=&courtId=&date=` — SHOP scope:
@@ -85,34 +87,43 @@ class _BlockedSlotFormScreenState extends State<BlockedSlotFormScreen> {
     final l = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l.blockTimeTitle)),
+      appBar: AppBar(
+        title: Text(l.blockTimeTitle),
+        actions: const [TourHelpButton()],
+      ),
       bottomNavigationBar: StickyBottomBar(
-        child: PrimaryButton(
-          label: l.blockTimeTitle,
-          expand: true,
-          onPressed: start == null
-              ? null
-              : () {
-                  showPreviewOnly(context, l.blockTimeTitle);
-                  context.pop();
-                },
+        child: TourAnchor(
+          id: TourIds.primary,
+          child: PrimaryButton(
+            label: l.blockTimeTitle,
+            expand: true,
+            onPressed: start == null
+                ? null
+                : () {
+                    showPreviewOnly(context, l.blockTimeTitle);
+                    context.pop();
+                  },
+          ),
         ),
       ),
       body: PreviewBody(
         width: ContentWidth.form,
         children: [
-          DropdownButtonFormField<String>(
-            value: _stadiumId,
-            decoration: InputDecoration(labelText: l.stadiumLabel),
-            items: [
-              for (final s in _stadiums)
-                DropdownMenuItem(value: s.id, child: Text(s.name)),
-            ],
-            onChanged: (id) => setState(() {
-              _stadiumId = id!;
-              _courtId = DemoData.courtsOf(id).first.id;
-              _startIndex = null;
-            }),
+          TourAnchor(
+            id: TourIds.where,
+            child: DropdownButtonFormField<String>(
+              value: _stadiumId,
+              decoration: InputDecoration(labelText: l.stadiumLabel),
+              items: [
+                for (final s in _stadiums)
+                  DropdownMenuItem(value: s.id, child: Text(s.name)),
+              ],
+              onChanged: (id) => setState(() {
+                _stadiumId = id!;
+                _courtId = DemoData.courtsOf(id).first.id;
+                _startIndex = null;
+              }),
+            ),
           ),
           const SizedBox(height: AppSpacing.lg),
           DropdownButtonFormField<String>(

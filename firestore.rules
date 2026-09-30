@@ -33,6 +33,10 @@ rules_version = '2';
 //   bookings  -> where('customerId', '==', auth.uid)       (customers)
 //             -> where('shopId', '==', users/{uid}.shopId) (shop admins)
 //   blocked_slots -> where('shopId', '==', users/{uid}.shopId)
+//   notifications -> where('audience', '==', 'customer')
+//                    + where('recipientId', '==', auth.uid)    (customers)
+//                 -> where('audience', '==', 'shop')
+//                    + where('recipientId', '==', users/{uid}.shopId)
 //   shops/{shopId}/blacklist -> admins of that shop / superadmin only
 // Queries live in lib/firebase/firestore/*_collection.dart.
 //
@@ -934,6 +938,93 @@ service cloud.firestore {
       allow update: if false;
       allow delete: if (isSuperadmin() || isAdminOfShop(resource.data.shopId))
         && allSlotsFreed(resource.data, resource.data.date);
+    }
+
+    // --- notifications/{bookingId}_{type} ---------------------------------
+    // In-app notifications (Spark plan: no server can send them). The client
+    // writes one right after a booking event; every field must match the
+    // booking as stored, and the id is fixed per event, so a user can only
+    // report real events of bookings they are part of, once each.
+    //   customer -> shop     : bookingRequested (pending), bookingCancelled
+    //   shop staff -> customer: bookingConfirmed, bookingRejected
+    // Access budget: users/{uid} + bookings/{id} = 2.
+
+    function notificationKeys() {
+      return ['audience', 'recipientId', 'shopId', 'bookingId', 'type',
+              'actorId', 'customerNameSnapshot', 'stadiumNameSnapshot',
+              'courtNameSnapshot', 'bookingDate', 'startMinute', 'endMinute',
+              'reason', 'isRead', 'createdAt'];
+    }
+
+    function validNewNotification(notificationId) {
+      let n = request.resource.data;
+      return isActiveUser()
+        && n.keys().hasOnly(notificationKeys())
+        && n.keys().hasAll(notificationKeys())
+        && n.bookingId is string
+        && n.type is string
+        && notificationId == n.bookingId + '_' + n.type
+        && n.actorId == request.auth.uid
+        && n.isRead == false
+        && n.createdAt == request.time
+        && notificationMatchesBooking(n, get(bookingPath(n.bookingId)).data);
+    }
+
+    function notificationMatchesBooking(n, b) {
+      return n.shopId == b.shopId
+        && n.customerNameSnapshot == b.customerNameSnapshot
+        && n.stadiumNameSnapshot == b.stadiumNameSnapshot
+        && n.courtNameSnapshot == b.courtNameSnapshot
+        && n.bookingDate == b.bookingDate
+        && n.startMinute == b.startMinute
+        && n.endMinute == b.endMinute
+        && n.reason == b.get('cancelReason', null)
+        && notificationEventOk(n, b);
+    }
+
+    // Mirror: NotificationType (lib/core/constants/domain_enums.dart).
+    function notificationEventOk(n, b) {
+      return (n.type == 'bookingRequested' && b.status == 'pending'
+              && customerToShop(n, b))
+        || (n.type == 'bookingCancelled' && b.status == 'cancelled'
+              && customerToShop(n, b))
+        || (n.type == 'bookingConfirmed' && b.status == 'confirmed'
+              && staffToCustomer(n, b))
+        || (n.type == 'bookingRejected' && b.status == 'rejected'
+              && staffToCustomer(n, b));
+    }
+
+    function customerToShop(n, b) {
+      return b.customerId == request.auth.uid
+        && n.audience == 'shop'
+        && n.recipientId == b.shopId;
+    }
+
+    function staffToCustomer(n, b) {
+      return (isSuperadmin() || isAdminOfShop(b.shopId))
+        && n.audience == 'customer'
+        && n.recipientId == b.customerId;
+    }
+
+    function isNotificationRecipient(n) {
+      return (n.audience == 'customer'
+              && isSelf(n.recipientId)
+              && isActiveUser())
+        || (n.audience == 'shop' && isAdminOfShop(n.recipientId));
+    }
+
+    match /notifications/{notificationId} {
+      allow read: if isNotificationRecipient(resource.data);
+
+      allow create: if validNewNotification(notificationId);
+
+      // Only "mark as read".
+      allow update: if isNotificationRecipient(resource.data)
+        && changedKeys().hasOnly(['isRead', 'readAt'])
+        && request.resource.data.isRead == true
+        && request.resource.data.readAt == request.time;
+
+      allow delete: if false;
     }
 
     // --- Everything else: deny --------------------------------------------

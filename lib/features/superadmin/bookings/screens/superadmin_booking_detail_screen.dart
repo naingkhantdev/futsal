@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../data/demo/demo_data.dart';
+import '../../../shared/widgets/app_tour.dart';
 import '../../../shared/widgets/staff_booking_views.dart';
 
 /// `/superadmin/bookings/:bookingId` — PLATFORM scope: any booking, with the
@@ -17,7 +18,10 @@ class SuperadminBookingDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final b = DemoData.booking(bookingId);
     return Scaffold(
-      appBar: AppBar(title: Text(context.l10n.bookingTitle)),
+      appBar: AppBar(
+        title: Text(context.l10n.bookingTitle),
+        actions: const [TourHelpButton()],
+      ),
       body: StaffBookingDetail(
         booking: b,
         shopName: DemoData.shop(b.shopId).name,

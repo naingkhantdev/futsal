@@ -20,6 +20,9 @@ abstract final class FirestoreCollections {
   static const String slots = 'slots';
   static const String bookings = 'bookings';
   static const String blockedSlots = 'blocked_slots';
+
+  /// In-app notifications, id = `{bookingId}_{type}` (one per event).
+  static const String notifications = 'notifications';
 }
 
 /// Document / collection paths. Build every path through here.
@@ -58,4 +61,11 @@ abstract final class FirestorePaths {
 
   static String blockedSlot(String blockedSlotId) =>
       '${FirestoreCollections.blockedSlots}/$blockedSlotId';
+
+  static String notification(String notificationId) =>
+      '${FirestoreCollections.notifications}/$notificationId';
+
+  /// Deterministic id: the rules allow one notification per booking event.
+  static String notificationId(String bookingId, String type) =>
+      '${bookingId}_$type';
 }

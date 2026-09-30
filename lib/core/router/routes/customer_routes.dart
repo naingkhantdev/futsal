@@ -12,6 +12,7 @@ import '../../../features/customer/profile/screens/customer_profile_screen.dart'
 import '../../../features/customer/profile/screens/edit_profile_screen.dart';
 import '../../../features/customer/stadiums/screens/customer_explore_screen.dart';
 import '../../../features/customer/stadiums/screens/stadium_details_screen.dart';
+import '../../../features/shared/widgets/app_tours.dart';
 import '../../constants/domain_enums.dart';
 import '../app_routes.dart';
 import '../navigator_keys.dart';
@@ -26,34 +27,44 @@ final List<RouteBase> customerRoutes = [
       StatefulShellBranch(routes: [
         GoRoute(
           path: AppRoutes.customerHome,
-          builder: (_, __) => const CustomerHomeScreen(),
+          builder: (_, __) => AppTours.customerHome.wrap(
+            const CustomerHomeScreen(),
+          ),
         ),
       ]),
       StatefulShellBranch(routes: [
         GoRoute(
           path: AppRoutes.customerExplore,
-          builder: (_, __) => const CustomerExploreScreen(),
+          builder: (_, __) => AppTours.customerExplore.wrap(
+            const CustomerExploreScreen(),
+          ),
         ),
       ]),
       StatefulShellBranch(routes: [
         GoRoute(
           path: AppRoutes.customerBookings,
-          builder: (_, __) => const CustomerBookingsScreen(),
+          builder: (_, __) => AppTours.customerBookings.wrap(
+            const CustomerBookingsScreen(),
+          ),
           routes: [
             // Sibling of the detail route (not a child) so Back from the
             // confirmation returns to Bookings. Listed first to match first.
             GoRoute(
               path: ':${AppRoutes.bookingIdParam}/confirmation',
               parentNavigatorKey: rootNavigatorKey,
-              builder: (_, s) => BookingConfirmationScreen(
-                bookingId: s.pathParameters[AppRoutes.bookingIdParam]!,
+              builder: (_, s) => AppTours.customerConfirmation.wrap(
+                BookingConfirmationScreen(
+                  bookingId: s.pathParameters[AppRoutes.bookingIdParam]!,
+                ),
               ),
             ),
             GoRoute(
               path: ':${AppRoutes.bookingIdParam}',
               parentNavigatorKey: rootNavigatorKey,
-              builder: (_, s) => CustomerBookingDetailScreen(
-                bookingId: s.pathParameters[AppRoutes.bookingIdParam]!,
+              builder: (_, s) => AppTours.customerBookingDetail.wrap(
+                CustomerBookingDetailScreen(
+                  bookingId: s.pathParameters[AppRoutes.bookingIdParam]!,
+                ),
               ),
             ),
           ],
@@ -62,23 +73,31 @@ final List<RouteBase> customerRoutes = [
       StatefulShellBranch(routes: [
         GoRoute(
           path: AppRoutes.customerNotifications,
-          builder: (_, __) => const CustomerNotificationsScreen(),
+          builder: (_, __) => AppTours.customerNotifications.wrap(
+            const CustomerNotificationsScreen(),
+          ),
         ),
       ]),
       StatefulShellBranch(routes: [
         GoRoute(
           path: AppRoutes.customerProfile,
-          builder: (_, __) => const CustomerProfileScreen(),
+          builder: (_, __) => AppTours.customerProfile.wrap(
+            const CustomerProfileScreen(),
+          ),
           routes: [
             GoRoute(
               path: 'edit',
               parentNavigatorKey: rootNavigatorKey,
-              builder: (_, __) => const EditProfileScreen(),
+              builder: (_, __) => AppTours.customerEditProfile.wrap(
+                const EditProfileScreen(),
+              ),
             ),
             GoRoute(
               path: 'change-password',
               parentNavigatorKey: rootNavigatorKey,
-              builder: (_, __) => const ChangePasswordScreen(),
+              builder: (_, __) => AppTours.customerChangePassword.wrap(
+                const ChangePasswordScreen(),
+              ),
             ),
           ],
         ),
@@ -89,22 +108,28 @@ final List<RouteBase> customerRoutes = [
   // (root navigator, nav hidden). Open them with `push` from Home/Explore.
   GoRoute(
     path: AppRoutes.customerStadiumPattern,
-    builder: (_, s) => StadiumDetailsScreen(
-      stadiumId: s.pathParameters[AppRoutes.stadiumIdParam]!,
+    builder: (_, s) => AppTours.customerStadium.wrap(
+      StadiumDetailsScreen(
+        stadiumId: s.pathParameters[AppRoutes.stadiumIdParam]!,
+      ),
     ),
     routes: [
       GoRoute(
         path: 'book',
-        builder: (_, s) => SlotSelectionScreen(
-          stadiumId: s.pathParameters[AppRoutes.stadiumIdParam]!,
-          courtId: s.uri.queryParameters[AppRoutes.courtIdQuery],
-          date: s.uri.queryParameters[AppRoutes.dateQuery],
+        builder: (_, s) => AppTours.customerSlots.wrap(
+          SlotSelectionScreen(
+            stadiumId: s.pathParameters[AppRoutes.stadiumIdParam]!,
+            courtId: s.uri.queryParameters[AppRoutes.courtIdQuery],
+            date: s.uri.queryParameters[AppRoutes.dateQuery],
+          ),
         ),
         routes: [
           GoRoute(
             path: 'review',
-            builder: (_, s) => BookingReviewScreen(
-              stadiumId: s.pathParameters[AppRoutes.stadiumIdParam]!,
+            builder: (_, s) => AppTours.customerReview.wrap(
+              BookingReviewScreen(
+                stadiumId: s.pathParameters[AppRoutes.stadiumIdParam]!,
+              ),
             ),
           ),
         ],

@@ -21,6 +21,8 @@ import '../../../../core/widgets/venue_location_card.dart';
 import '../../../../data/demo/demo_data.dart';
 import '../../../../data/vos/shop_vo.dart';
 import '../../../../data/vos/stadium_vo.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../../../shared/widgets/preview_body.dart';
 
 /// `/customer/stadiums/:stadiumId` — CUSTOMER scope: venue photo and info,
@@ -74,9 +76,12 @@ class StadiumDetailsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            PrimaryButton(
-              label: l.bookACourt,
-              onPressed: () => context.push(AppRoutes.customerBookStadium(s.id)),
+            TourAnchor(
+              id: TourIds.primary,
+              child: PrimaryButton(
+                label: l.bookACourt,
+                onPressed: () => context.push(AppRoutes.customerBookStadium(s.id)),
+              ),
             ),
           ],
         ),
@@ -123,37 +128,40 @@ class StadiumDetailsScreen extends StatelessWidget {
             ),
           ],
           PreviewSectionTitle(l.courtsTitle),
-          GroupedList(
-            children: [
-              for (final c in courts)
-                ListTile(
-                  title: Text(c.name),
-                  subtitle: Text(
-                    [
-                      c.surfaceType,
-                      if (c.capacity != null) l.upToPlayers(c.capacity!),
-                      l.slotLengthLabel(c.slotMinutes),
-                    ].whereType<String>().join(' · '),
+          TourAnchor(
+            id: TourIds.courts,
+            child: GroupedList(
+              children: [
+                for (final c in courts)
+                  ListTile(
+                    title: Text(c.name),
+                    subtitle: Text(
+                      [
+                        c.surfaceType,
+                        if (c.capacity != null) l.upToPlayers(c.capacity!),
+                        l.slotLengthLabel(c.slotMinutes),
+                      ].whereType<String>().join(' · '),
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          l.pricePerHour(Money.formatMmk(c.hourlyPrice!)),
+                          style: AppTypography.tabular(styles.labelLarge!),
+                        ),
+                        const SizedBox(width: AppSpacing.xs),
+                        Icon(Icons.chevron_right, color: muted),
+                      ],
+                    ),
+                    onTap: () => context.push(
+                      Uri(
+                        path: AppRoutes.customerBookStadium(s.id),
+                        queryParameters: {AppRoutes.courtIdQuery: c.id},
+                      ).toString(),
+                    ),
                   ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        l.pricePerHour(Money.formatMmk(c.hourlyPrice!)),
-                        style: AppTypography.tabular(styles.labelLarge!),
-                      ),
-                      const SizedBox(width: AppSpacing.xs),
-                      Icon(Icons.chevron_right, color: muted),
-                    ],
-                  ),
-                  onTap: () => context.push(
-                    Uri(
-                      path: AppRoutes.customerBookStadium(s.id),
-                      queryParameters: {AppRoutes.courtIdQuery: c.id},
-                    ).toString(),
-                  ),
-                ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

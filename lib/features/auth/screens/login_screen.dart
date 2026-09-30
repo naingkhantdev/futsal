@@ -13,6 +13,8 @@ import '../../../core/utils/validators.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/inline_banner.dart';
+import '../../shared/widgets/app_tour.dart';
+import '../../shared/widgets/app_tours.dart';
 import '../providers/login_controller.dart';
 import '../widgets/auth_layout.dart';
 
@@ -85,17 +87,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                AppTextField(
-                  label: l.emailLabel,
-                  controller: _email,
-                  focusNode: _emailFocus,
-                  prefixIcon: Icons.mail_outline,
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
-                  autofillHints: const [AutofillHints.email],
-                  validator: AppValidators.email,
-                  autovalidateMode: autovalidate,
-                  readOnly: isLoading,
+                TourAnchor(
+                  id: TourIds.email,
+                  child: AppTextField(
+                    label: l.emailLabel,
+                    controller: _email,
+                    focusNode: _emailFocus,
+                    prefixIcon: Icons.mail_outline,
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    autofillHints: const [AutofillHints.email],
+                    validator: AppValidators.email,
+                    autovalidateMode: autovalidate,
+                    readOnly: isLoading,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 PasswordField(
@@ -110,12 +115,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
           ),
         ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: AppTextButton(
-            label: l.forgotPasswordLink,
-            onPressed:
-                isLoading ? null : () => context.push(AppRoutes.forgotPassword),
+        TourAnchor(
+          id: TourIds.forgot,
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: AppTextButton(
+              label: l.forgotPasswordLink,
+              onPressed:
+                  isLoading ? null : () => context.push(AppRoutes.forgotPassword),
+            ),
           ),
         ),
         const SizedBox(height: AppSpacing.lg),
@@ -136,9 +144,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Text(l.newHere),
-            AppTextButton(
-              label: l.createAccountLink,
-              onPressed: isLoading ? null : () => context.go(AppRoutes.register),
+            TourAnchor(
+              id: TourIds.register,
+              child: AppTextButton(
+                label: l.createAccountLink,
+                onPressed: isLoading ? null : () => context.go(AppRoutes.register),
+              ),
             ),
           ],
         ),

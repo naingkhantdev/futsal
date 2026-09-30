@@ -1,11 +1,10 @@
-import 'dart:async';
+import '../../../core/constants/app_constants.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/constants/app_constants.dart';
 import '../../../core/helpers/form_submit.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../core/l10n/l10n_labels.dart';
@@ -18,8 +17,11 @@ import '../../../core/widgets/app_snackbar.dart';
 import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/empty_view.dart';
 import '../../../core/widgets/inline_banner.dart';
+import '../../shared/widgets/app_tour.dart';
+import '../../shared/widgets/app_tours.dart';
 import '../providers/password_reset_controller.dart';
 import '../widgets/auth_layout.dart';
+import 'dart:async';
 
 /// `/forgot-password` (design_system.md §9). On success the form is
 /// replaced by a "Check your email" view that never reveals whether an
@@ -112,20 +114,23 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
         Form(
           key: _formKey,
           child: AutofillGroup(
-            child: AppTextField(
-              label: l.emailLabel,
-              controller: _email,
-              focusNode: _emailFocus,
-              prefixIcon: Icons.mail_outline,
-              keyboardType: TextInputType.emailAddress,
-              textInputAction: TextInputAction.done,
-              autofillHints: const [AutofillHints.email],
-              validator: AppValidators.email,
-              autovalidateMode: _submitted
-                  ? AutovalidateMode.onUserInteraction
-                  : AutovalidateMode.disabled,
-              readOnly: state.isSending,
-              onFieldSubmitted: (_) => _submit(),
+            child: TourAnchor(
+              id: TourIds.email,
+              child: AppTextField(
+                label: l.emailLabel,
+                controller: _email,
+                focusNode: _emailFocus,
+                prefixIcon: Icons.mail_outline,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.done,
+                autofillHints: const [AutofillHints.email],
+                validator: AppValidators.email,
+                autovalidateMode: _submitted
+                    ? AutovalidateMode.onUserInteraction
+                    : AutovalidateMode.disabled,
+                readOnly: state.isSending,
+                onFieldSubmitted: (_) => _submit(),
+              ),
             ),
           ),
         ),
@@ -134,12 +139,15 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
           InlineBanner(message: state.error!.messageIn(l)),
           const SizedBox(height: AppSpacing.lg),
         ],
-        PrimaryButton(
-          label: l.sendResetLink,
-          onPressed: _submit,
-          isLoading: state.isSending,
-          size: AppButtonSize.large,
-          expand: true,
+        TourAnchor(
+          id: TourIds.primary,
+          child: PrimaryButton(
+            label: l.sendResetLink,
+            onPressed: _submit,
+            isLoading: state.isSending,
+            size: AppButtonSize.large,
+            expand: true,
+          ),
         ),
         const SizedBox(height: AppSpacing.lg),
         Center(

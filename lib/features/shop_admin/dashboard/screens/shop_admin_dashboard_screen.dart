@@ -12,7 +12,10 @@ import '../../../../core/widgets/empty_view.dart';
 import '../../../../core/widgets/hero_header.dart';
 import '../../../../core/widgets/stat_card.dart';
 import '../../../../data/demo/demo_data.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../../../shared/widgets/booking_list_tile.dart';
+import '../../../shared/widgets/notification_bell_button.dart';
 import '../../../shared/widgets/preview_body.dart';
 import '../../../shared/widgets/stat_grid.dart';
 
@@ -39,7 +42,19 @@ class ShopAdminDashboardScreen extends StatelessWidget {
     final l = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l.navDashboard)),
+      appBar: AppBar(
+        title: Text(l.navDashboard),
+        actions: const [
+          TourHelpButton(),
+          TourAnchor(
+            id: TourIds.bell,
+            child: NotificationBellButton(
+              route: AppRoutes.shopAdminNotifications,
+            ),
+          ),
+          SizedBox(width: AppSpacing.xs),
+        ],
+      ),
       body: PreviewBody(
         width: ContentWidth.dashboard,
         children: [
@@ -52,38 +67,41 @@ class ShopAdminDashboardScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.xl),
-          StatGrid(
-            children: [
-              StatCard(
-                icon: Icons.today_outlined,
-                label: l.dayToday,
-                value: '${todays.length}',
-                footer: l.statBookingsFooter,
-                onTap: () => context.go(AppRoutes.shopAdminBookings),
-              ),
-              StatCard(
-                icon: Icons.hourglass_top,
-                label: l.bookingPending,
-                value: '${pending.length}',
-                footer: l.statNeedReply,
-                highlight: pending.isNotEmpty,
-                onTap: () => context.go(AppRoutes.shopAdminBookings),
-              ),
-              StatCard(
-                icon: Icons.payments_outlined,
-                label: l.statCollected,
-                // Compact so it fits a half-width card.
-                value: '${revenue ~/ 1000}K',
-                footer: l.statMmkFromPaid,
-              ),
-              StatCard(
-                icon: Icons.people_outline,
-                label: l.navCustomers,
-                value: '${DemoData.customersOf(shop.id).length}',
-                footer: l.statBookedWithYou,
-                onTap: () => context.go(AppRoutes.shopAdminCustomers),
-              ),
-            ],
+          TourAnchor(
+            id: TourIds.stats,
+            child: StatGrid(
+              children: [
+                StatCard(
+                  icon: Icons.today_outlined,
+                  label: l.dayToday,
+                  value: '${todays.length}',
+                  footer: l.statBookingsFooter,
+                  onTap: () => context.go(AppRoutes.shopAdminBookings),
+                ),
+                StatCard(
+                  icon: Icons.hourglass_top,
+                  label: l.bookingPending,
+                  value: '${pending.length}',
+                  footer: l.statNeedReply,
+                  highlight: pending.isNotEmpty,
+                  onTap: () => context.go(AppRoutes.shopAdminBookings),
+                ),
+                StatCard(
+                  icon: Icons.payments_outlined,
+                  label: l.statCollected,
+                  // Compact so it fits a half-width card.
+                  value: '${revenue ~/ 1000}K',
+                  footer: l.statMmkFromPaid,
+                ),
+                StatCard(
+                  icon: Icons.people_outline,
+                  label: l.navCustomers,
+                  value: '${DemoData.customersOf(shop.id).length}',
+                  footer: l.statBookedWithYou,
+                  onTap: () => context.go(AppRoutes.shopAdminCustomers),
+                ),
+              ],
+            ),
           ),
           PreviewSectionTitle(
             l.needsYourReply,

@@ -13,6 +13,8 @@ import '../../../../core/widgets/content_constraint.dart';
 import '../../../../core/widgets/language_picker.dart';
 import '../../../../data/vos/user_vo.dart';
 import '../../../auth/widgets/sign_out_button.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../providers/current_user_profile_provider.dart';
 import '../widgets/profile_pending_view.dart';
 
@@ -25,7 +27,10 @@ class CustomerProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profile = ref.watch(currentUserProfileProvider);
     return Scaffold(
-      appBar: AppBar(title: Text(context.l10n.navProfile)),
+      appBar: AppBar(
+        title: Text(context.l10n.navProfile),
+        actions: const [TourHelpButton()],
+      ),
       body: AsyncValueView<UserVO?>(
         value: profile,
         onRetry: () => ref.invalidate(currentUserProfileProvider),
@@ -39,13 +44,13 @@ class CustomerProfileScreen extends ConsumerWidget {
   }
 }
 
-class _ProfileBody extends StatelessWidget {
+class _ProfileBody extends ConsumerWidget {
   const _ProfileBody({required this.user});
 
   final UserVO user;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final muted = context.colors.onSurfaceVariant;
     final l = context.l10n;
     return ListView(
@@ -72,12 +77,15 @@ class _ProfileBody extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 child: Column(
                   children: [
-                    ListTile(
-                      leading: const Icon(Icons.edit_outlined,
-                          size: AppSizes.iconLg),
-                      title: Text(l.editProfile),
-                      trailing: Icon(Icons.chevron_right, color: muted),
-                      onTap: () => context.push(AppRoutes.customerProfileEdit),
+                    TourAnchor(
+                      id: TourIds.edit,
+                      child: ListTile(
+                        leading: const Icon(Icons.edit_outlined,
+                            size: AppSizes.iconLg),
+                        title: Text(l.editProfile),
+                        trailing: Icon(Icons.chevron_right, color: muted),
+                        onTap: () => context.push(AppRoutes.customerProfileEdit),
+                      ),
                     ),
                     ListTile(
                       leading: const Icon(Icons.lock_reset,
@@ -87,11 +95,27 @@ class _ProfileBody extends StatelessWidget {
                       onTap: () =>
                           context.push(AppRoutes.customerChangePassword),
                     ),
+                    ListTile(
+                      leading: const Icon(Icons.tips_and_updates_outlined,
+                          size: AppSizes.iconLg),
+                      title: Text(l.tourReplay),
+                      subtitle: Text(l.tourReplaySub),
+                      trailing: Icon(Icons.chevron_right, color: muted),
+                      onTap: () => replayAppTours(
+                        context,
+                        ref,
+                        AppTours.customerHome,
+                        AppRoutes.customerHome,
+                      ),
+                    ),
                   ],
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
-              const AppCard(padding: EdgeInsets.zero, child: LanguageTile()),
+              TourAnchor(
+                id: TourIds.language,
+                child: const AppCard(padding: EdgeInsets.zero, child: LanguageTile()),
+              ),
               const SizedBox(height: AppSpacing.xl),
               const SignOutButton(),
             ],

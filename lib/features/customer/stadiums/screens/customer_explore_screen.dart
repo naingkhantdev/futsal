@@ -7,6 +7,8 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/empty_view.dart';
 import '../../../../data/demo/demo_data.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../../../shared/widgets/preview_body.dart';
 import '../widgets/stadium_list_card.dart';
 
@@ -40,27 +42,36 @@ class _CustomerExploreScreenState extends State<CustomerExploreScreen> {
 
     final l = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: Text(l.navExplore)),
+      appBar: AppBar(
+        title: Text(l.navExplore),
+        actions: const [TourHelpButton()],
+      ),
       body: PreviewBody(
         children: [
-          SearchField(
-            hintText: l.homeSearchHint,
-            onChanged: (v) => setState(() => _query = v),
+          TourAnchor(
+            id: TourIds.search,
+            child: SearchField(
+              hintText: l.homeSearchHint,
+              onChanged: (v) => setState(() => _query = v),
+            ),
           ),
           const SizedBox(height: AppSpacing.md),
-          Wrap(
-            spacing: AppSpacing.sm,
-            runSpacing: AppSpacing.sm,
-            children: [
-              for (final f in _filters)
-                FilterChip(
-                  label: Text(f.labelIn(l)),
-                  selected: _selected.contains(f),
-                  onSelected: (on) => setState(
-                    () => on ? _selected.add(f) : _selected.remove(f),
+          TourAnchor(
+            id: TourIds.filters,
+            child: Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
+              children: [
+                for (final f in _filters)
+                  FilterChip(
+                    label: Text(f.labelIn(l)),
+                    selected: _selected.contains(f),
+                    onSelected: (on) => setState(
+                      () => on ? _selected.add(f) : _selected.remove(f),
+                    ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(height: AppSpacing.lg),
           if (results.isEmpty)

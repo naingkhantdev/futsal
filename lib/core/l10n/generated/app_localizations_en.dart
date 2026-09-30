@@ -1625,4 +1625,653 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get useThisLocation => 'Use this location';
+
+  @override
+  String get notifBookingRequestedTitle => 'New booking request';
+
+  @override
+  String get notifBookingCancelledTitle => 'Booking cancelled by customer';
+
+  @override
+  String get notifBookingConfirmedTitle => 'Booking confirmed';
+
+  @override
+  String get notifBookingRejectedTitle => 'Booking declined';
+
+  @override
+  String notifReason(String reason) {
+    return 'Reason: $reason';
+  }
+
+  @override
+  String get notificationsEmptyTitle => 'No notifications yet';
+
+  @override
+  String get notificationsEmptyMessage => 'You\'ll see here when a shop confirms or declines your booking.';
+
+  @override
+  String get notificationsEmptyMessageShop => 'New booking requests and cancellations will show up here.';
+
+  @override
+  String get notificationsOpen => 'Open notifications';
+
+  @override
+  String get notificationView => 'View';
+
+  @override
+  String get tourSkip => 'Skip';
+
+  @override
+  String get tourNext => 'Next';
+
+  @override
+  String get tourBack => 'Back';
+
+  @override
+  String get tourDone => 'Got it';
+
+  @override
+  String tourStepOf(int current, int total) {
+    return '$current of $total';
+  }
+
+  @override
+  String get tourReplay => 'App tour';
+
+  @override
+  String get tourReplaySub => 'See how the app works again';
+
+  @override
+  String get tourCustSearchTitle => 'Find a venue';
+
+  @override
+  String get tourCustSearchBody => 'Search by venue name or township to see courts near you.';
+
+  @override
+  String get tourCustDayTitle => 'Pick a day';
+
+  @override
+  String get tourCustDayBody => 'Choose the day you want to play. The open times below follow it.';
+
+  @override
+  String get tourCustVenuesTitle => 'Book in one tap';
+
+  @override
+  String get tourCustVenuesBody => 'Tap an open time to go straight to booking that court.';
+
+  @override
+  String get tourCustBookingsTitle => 'Your bookings';
+
+  @override
+  String get tourCustBookingsBody => 'See upcoming games and their status, or cancel if plans change.';
+
+  @override
+  String get tourCustNotifTitle => 'Stay updated';
+
+  @override
+  String get tourCustNotifBody => 'You\'ll be told here when the shop confirms or declines your booking.';
+
+  @override
+  String get tourCustProfileTitle => 'Profile & language';
+
+  @override
+  String get tourCustProfileBody => 'Edit your details, switch between Myanmar and English, or replay this tour.';
+
+  @override
+  String get tourShopStatsTitle => 'Today at a glance';
+
+  @override
+  String get tourShopStatsBody => 'Today\'s bookings, requests waiting for you and paid revenue.';
+
+  @override
+  String get tourShopBellTitle => 'Booking alerts';
+
+  @override
+  String get tourShopBellBody => 'New requests and cancellations arrive here. The badge shows how many are unread.';
+
+  @override
+  String get tourShopBookingsTitle => 'Manage bookings';
+
+  @override
+  String get tourShopBookingsBody => 'Confirm or decline requests and record payments.';
+
+  @override
+  String get tourShopStadiumsTitle => 'Stadiums & courts';
+
+  @override
+  String get tourShopStadiumsBody => 'Add venues, opening hours, courts and hourly prices.';
+
+  @override
+  String get tourShopCustomersBody => 'See who books with you and their booking history.';
+
+  @override
+  String get tourShopSettingsBody => 'Shop profile, blocked times, the blacklist and this tour.';
+
+  @override
+  String get tourAdminStatsTitle => 'Platform at a glance';
+
+  @override
+  String get tourAdminStatsBody => 'Shops, bookings and activity across the whole platform.';
+
+  @override
+  String get tourAdminShopsBody => 'Review new shops, activate or suspend them, and assign shop admins.';
+
+  @override
+  String get tourAdminBookingsTitle => 'All bookings';
+
+  @override
+  String get tourAdminBookingsBody => 'Look up any booking on the platform.';
+
+  @override
+  String get tourAdminCustomersBody => 'Find customers and manage their account status.';
+
+  @override
+  String get tourAdminSettingsBody => 'Announcements, shops waiting for review and this tour.';
+
+  @override
+  String get tourHelp => 'How to use this page';
+
+  @override
+  String get tourSaveTitle => 'Save';
+
+  @override
+  String get tourSaveBody => 'Tap here when you\'re done. Nothing is saved until you do.';
+
+  @override
+  String get tourLoginEmailTitle => 'Your email';
+
+  @override
+  String get tourLoginEmailBody => 'Sign in with the email and password you registered with.';
+
+  @override
+  String get tourLoginForgotTitle => 'Forgot your password?';
+
+  @override
+  String get tourLoginForgotBody => 'Tap here and we\'ll email you a link to set a new one.';
+
+  @override
+  String get tourLoginRegisterTitle => 'New here?';
+
+  @override
+  String get tourLoginRegisterBody => 'Create a free account in about a minute.';
+
+  @override
+  String get tourLanguageTitle => 'Language';
+
+  @override
+  String get tourLanguageBody => 'Switch between Myanmar and English at any time.';
+
+  @override
+  String get tourRegisterNameTitle => 'Your name';
+
+  @override
+  String get tourRegisterNameBody => 'Shops see this name on your bookings.';
+
+  @override
+  String get tourRegisterPhoneTitle => 'Phone (optional)';
+
+  @override
+  String get tourRegisterPhoneBody => 'Lets the shop call you about your booking.';
+
+  @override
+  String get tourRegisterButtonTitle => 'Create your account';
+
+  @override
+  String get tourRegisterButtonBody => 'Tap when done. You can change your details later in Profile.';
+
+  @override
+  String get tourForgotEmailTitle => 'Reset your password';
+
+  @override
+  String get tourForgotEmailBody => 'Enter your account email.';
+
+  @override
+  String get tourForgotButtonTitle => 'Send the link';
+
+  @override
+  String get tourForgotButtonBody => 'Then check your inbox (and spam folder) and follow the link.';
+
+  @override
+  String get tourExploreSearchTitle => 'Search venues';
+
+  @override
+  String get tourExploreSearchBody => 'Type a venue name or township.';
+
+  @override
+  String get tourExploreFiltersTitle => 'Filter by facilities';
+
+  @override
+  String get tourExploreFiltersBody => 'Tap what you need, like parking or showers. Tap again to remove.';
+
+  @override
+  String get tourStadiumIntroTitle => 'Venue details';
+
+  @override
+  String get tourStadiumIntroBody => 'Opening hours, prices, facilities, location and the courts of this venue.';
+
+  @override
+  String get tourStadiumCourtsTitle => 'Pick a court';
+
+  @override
+  String get tourStadiumCourtsBody => 'Tap a court to see its free times.';
+
+  @override
+  String get tourStadiumBookTitle => 'Book a court';
+
+  @override
+  String get tourStadiumBookBody => 'Or tap here to choose the court, day and time.';
+
+  @override
+  String get tourSlotsCourtTitle => 'Choose a court';
+
+  @override
+  String get tourSlotsCourtBody => 'Each court can have its own price.';
+
+  @override
+  String get tourSlotsDayTitle => 'Choose a day';
+
+  @override
+  String get tourSlotsDayBody => 'You can book up to 30 days ahead.';
+
+  @override
+  String get tourSlotsGridTitle => 'Pick your time';
+
+  @override
+  String get tourSlotsGridBody => 'Tap a start time, then the next free slots to play longer. Grey slots are booked or blocked.';
+
+  @override
+  String get tourSlotsContinueTitle => 'Continue';
+
+  @override
+  String get tourSlotsContinueBody => 'Check the time and price, then send your request.';
+
+  @override
+  String get tourReviewIntroTitle => 'Check your booking';
+
+  @override
+  String get tourReviewIntroBody => 'Make sure the venue, date, time and price are right.';
+
+  @override
+  String get tourReviewSendTitle => 'Send your request';
+
+  @override
+  String get tourReviewSendBody => 'The shop confirms or declines it and we notify you. You pay at the venue.';
+
+  @override
+  String get tourConfirmIntroTitle => 'Request sent';
+
+  @override
+  String get tourConfirmIntroBody => 'Your booking is pending until the shop confirms it. You\'ll get a notification.';
+
+  @override
+  String get tourConfirmViewTitle => 'View your booking';
+
+  @override
+  String get tourConfirmViewBody => 'Check its status and details any time.';
+
+  @override
+  String get tourBookingsIntroTitle => 'Booking status';
+
+  @override
+  String get tourBookingsIntroBody => 'Pending: waiting for the shop. Confirmed: see you there. Declined or cancelled: the time is free again.';
+
+  @override
+  String get tourBookingsTabsTitle => 'Upcoming and past';
+
+  @override
+  String get tourBookingsTabsBody => 'Switch between games to come and games already played.';
+
+  @override
+  String get tourBookingDetailIntroTitle => 'Your booking';
+
+  @override
+  String get tourBookingDetailIntroBody => 'Status, time, court and price of this booking.';
+
+  @override
+  String get tourBookingDetailVenueTitle => 'Venue';
+
+  @override
+  String get tourBookingDetailVenueBody => 'Open the venue page for its location and directions.';
+
+  @override
+  String get tourBookingDetailCancelTitle => 'Cancel';
+
+  @override
+  String get tourBookingDetailCancelBody => 'Plans changed? Cancel before the start time so someone else can play.';
+
+  @override
+  String get tourNotifIntroTitle => 'Your notifications';
+
+  @override
+  String get tourNotifIntroBody => 'Booking updates appear here. Tap one to open that booking.';
+
+  @override
+  String get tourNotifShopIntroBody => 'New booking requests and cancellations appear here. Tap one to open that booking.';
+
+  @override
+  String get tourNotifMarkTitle => 'Mark all read';
+
+  @override
+  String get tourNotifMarkBody => 'Clears the unread dots in one tap.';
+
+  @override
+  String get tourProfileIntroTitle => 'Your profile';
+
+  @override
+  String get tourProfileIntroBody => 'Your name, email and phone, as shops see them.';
+
+  @override
+  String get tourProfileEditTitle => 'Edit profile';
+
+  @override
+  String get tourProfileEditBody => 'Change your name or phone number.';
+
+  @override
+  String get tourEditPhoneBody => 'Add a number so the shop can reach you about a booking.';
+
+  @override
+  String get tourPasswordCurrentTitle => 'Current password';
+
+  @override
+  String get tourPasswordCurrentBody => 'For your safety, enter the password you use now.';
+
+  @override
+  String get tourPasswordNewTitle => 'New password';
+
+  @override
+  String get tourPasswordNewBody => 'Use at least 8 characters, and not one from another app.';
+
+  @override
+  String get tourStaffStadiumFilterTitle => 'Filter by stadium';
+
+  @override
+  String get tourStaffStadiumFilterBody => 'Show bookings of one stadium only.';
+
+  @override
+  String get tourStaffFiltersTitle => 'Filter the list';
+
+  @override
+  String get tourStaffFiltersBody => 'Pending means waiting for a decision. Switch to upcoming, past or all bookings.';
+
+  @override
+  String get tourStaffBlockTitle => 'Block time';
+
+  @override
+  String get tourStaffBlockBody => 'Close a court for maintenance or a private event so nobody can book it.';
+
+  @override
+  String get tourStaffDetailIntroTitle => 'Booking';
+
+  @override
+  String get tourStaffDetailIntroBody => 'Customer, time, court, price and payment. Tap the customer to see their history.';
+
+  @override
+  String get tourStaffConfirmTitle => 'Confirm';
+
+  @override
+  String get tourStaffConfirmBody => 'Accept the request. The customer gets a notification.';
+
+  @override
+  String get tourStaffPaymentTitle => 'Payment';
+
+  @override
+  String get tourStaffPaymentBody => 'Record the payment step by step: pending, then paid.';
+
+  @override
+  String get tourStaffRejectTitle => 'Decline';
+
+  @override
+  String get tourStaffRejectBody => 'Frees the time for others. The customer is notified.';
+
+  @override
+  String get tourShopCustomersIntroBody => 'Everyone who has booked at your shop. Tap a name for details.';
+
+  @override
+  String get tourCustomerSearchTitle => 'Find a customer';
+
+  @override
+  String get tourCustomerSearchBody => 'Search by name or phone number.';
+
+  @override
+  String get tourCustomerDetailIntroTitle => 'Customer';
+
+  @override
+  String get tourCustomerDetailIntroBody => 'Contact details and booking history.';
+
+  @override
+  String get tourBlacklistActionTitle => 'Blacklist';
+
+  @override
+  String get tourBlacklistActionBody => 'Stops repeat no-shows from booking at your shop. Other shops aren\'t affected.';
+
+  @override
+  String get tourShopSettingsIntroTitle => 'Settings';
+
+  @override
+  String get tourShopSettingsIntroBody => 'Shop profile, blocked times, blacklist and stadiums in one place.';
+
+  @override
+  String get tourShopProfileIntroTitle => 'Shop profile';
+
+  @override
+  String get tourShopProfileIntroBody => 'How your shop appears to customers.';
+
+  @override
+  String get tourShopProfileEditTitle => 'Edit';
+
+  @override
+  String get tourShopProfileEditBody => 'Update the name, phone and address.';
+
+  @override
+  String get tourStadiumsIntroTitle => 'Your stadiums';
+
+  @override
+  String get tourStadiumsIntroBody => 'Each stadium has its own opening hours and courts. Tap one to manage it.';
+
+  @override
+  String get tourStadiumsAddTitle => 'Add a stadium';
+
+  @override
+  String get tourStadiumsAddBody => 'Start here: add your venue, then its courts.';
+
+  @override
+  String get tourStadiumEditTitle => 'Edit stadium';
+
+  @override
+  String get tourStadiumEditBody => 'Change the name, address, opening hours and facilities.';
+
+  @override
+  String get tourStadiumAddCourtTitle => 'Add a court';
+
+  @override
+  String get tourStadiumAddCourtBody => 'Each court has its own price and slot length.';
+
+  @override
+  String get tourStadiumFormNameTitle => 'Stadium name';
+
+  @override
+  String get tourStadiumFormNameBody => 'The name customers see and search for.';
+
+  @override
+  String get tourStadiumFormMapTitle => 'Map location';
+
+  @override
+  String get tourStadiumFormMapBody => 'Pin the venue so customers get directions.';
+
+  @override
+  String get tourStadiumFormHoursTitle => 'Opening hours';
+
+  @override
+  String get tourStadiumFormHoursBody => 'Customers can only book inside these hours.';
+
+  @override
+  String get tourStadiumFormFacilitiesTitle => 'Facilities';
+
+  @override
+  String get tourStadiumFormFacilitiesBody => 'Tick what you offer. Customers filter venues by these.';
+
+  @override
+  String get tourCourtIntroTitle => 'Court';
+
+  @override
+  String get tourCourtIntroBody => 'Price, slot length and whether customers can book this court.';
+
+  @override
+  String get tourCourtEditTitle => 'Edit court';
+
+  @override
+  String get tourCourtEditBody => 'Change the name or price, or turn bookings off.';
+
+  @override
+  String get tourCourtFormNameTitle => 'Court name';
+
+  @override
+  String get tourCourtFormNameBody => 'For example “Court A” or “Indoor pitch”.';
+
+  @override
+  String get tourCourtFormPriceTitle => 'Hourly price';
+
+  @override
+  String get tourCourtFormPriceBody => 'In kyat per hour. The booking price is worked out from it.';
+
+  @override
+  String get tourCourtFormSlotTitle => 'Slot length';
+
+  @override
+  String get tourCourtFormSlotBody => '30 or 60 minutes. It can\'t be changed later, so choose carefully.';
+
+  @override
+  String get tourBlockedIntroTitle => 'Blocked times';
+
+  @override
+  String get tourBlockedIntroBody => 'Times you closed. Customers can\'t book them.';
+
+  @override
+  String get tourBlockedAddBody => 'Close a court for maintenance, cleaning or an event.';
+
+  @override
+  String get tourBlockFormWhereTitle => 'Where';
+
+  @override
+  String get tourBlockFormWhereBody => 'Choose the stadium, then the court to close.';
+
+  @override
+  String get tourBlockFormButtonBody => 'Booked times can\'t be blocked. Decline that booking first.';
+
+  @override
+  String get tourBlacklistIntroTitle => 'Blacklist';
+
+  @override
+  String get tourBlacklistIntroBody => 'Customers here can\'t make new bookings at your shop. Tap the remove icon to allow them again.';
+
+  @override
+  String get tourMapTitle => 'Move the map';
+
+  @override
+  String get tourMapBody => 'Drag until the pin sits on your venue. Pinch to zoom.';
+
+  @override
+  String get tourMapUseTitle => 'Use this location';
+
+  @override
+  String get tourMapUseBody => 'Saves the pin to the stadium form.';
+
+  @override
+  String get tourShopsSegmentsTitle => 'All or pending review';
+
+  @override
+  String get tourShopsSegmentsBody => 'New shop sign-ups wait in Pending review until you approve them.';
+
+  @override
+  String get tourShopsAddTitle => 'Add a shop';
+
+  @override
+  String get tourShopsAddBody => 'Create a shop yourself, then assign its admin.';
+
+  @override
+  String get tourShopDetailEditTitle => 'Edit shop';
+
+  @override
+  String get tourShopDetailEditBody => 'Change the name, contact and owner details.';
+
+  @override
+  String get tourShopDetailStatusTitle => 'Shop status';
+
+  @override
+  String get tourShopDetailStatusBody => 'Approve, suspend or reactivate. Suspended or unlisted shops take no new bookings.';
+
+  @override
+  String get tourShopDetailAdminsTitle => 'Shop admins';
+
+  @override
+  String get tourShopDetailAdminsBody => 'See and assign who manages this shop.';
+
+  @override
+  String get tourShopFormNameTitle => 'Shop name';
+
+  @override
+  String get tourShopFormNameBody => 'Shown to customers on every stadium of this shop.';
+
+  @override
+  String get tourShopFormOwnerTitle => 'Owner details';
+
+  @override
+  String get tourShopFormOwnerBody => 'Private: only you and the shop\'s admins see these.';
+
+  @override
+  String get tourShopAdminsIntroTitle => 'Shop admins';
+
+  @override
+  String get tourShopAdminsIntroBody => 'People who manage this shop. They only see this shop\'s data.';
+
+  @override
+  String get tourShopAdminsAddTitle => 'Add an admin';
+
+  @override
+  String get tourShopAdminsAddBody => 'The person must register a customer account first.';
+
+  @override
+  String get tourInviteEmailTitle => 'Find the account';
+
+  @override
+  String get tourInviteEmailBody => 'Enter the email they registered with.';
+
+  @override
+  String get tourInviteFindTitle => 'Search';
+
+  @override
+  String get tourInviteFindBody => 'Then check the name and make them this shop\'s admin.';
+
+  @override
+  String get tourAnnouncementsIntroTitle => 'Announcements';
+
+  @override
+  String get tourAnnouncementsIntroBody => 'Messages you have sent to users.';
+
+  @override
+  String get tourAnnouncementsAddTitle => 'New announcement';
+
+  @override
+  String get tourAnnouncementsAddBody => 'Write a message for customers, shop admins or everyone.';
+
+  @override
+  String get tourAnnounceAudienceTitle => 'Audience';
+
+  @override
+  String get tourAnnounceAudienceBody => 'Choose who receives it.';
+
+  @override
+  String get tourAnnounceSendTitle => 'Send';
+
+  @override
+  String get tourAnnounceSendBody => 'Check the text first: it can\'t be unsent.';
+
+  @override
+  String get tourAdminCustomersIntroBody => 'Every customer on the platform. Tap a name for details.';
+
+  @override
+  String get tourAdminCustomerDetailBody => 'Contact details and bookings. The button below disables or re-enables the account.';
+
+  @override
+  String get tourAdminSettingsIntroBody => 'Announcements, shops waiting for review and this tour.';
 }

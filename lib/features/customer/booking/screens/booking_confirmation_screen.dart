@@ -9,6 +9,8 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/content_constraint.dart';
 import '../../../../core/widgets/empty_view.dart';
 import '../../../../data/demo/demo_data.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../../../shared/widgets/booking_ticket.dart';
 import '../../../shared/widgets/preview_body.dart';
 
@@ -25,7 +27,10 @@ class BookingConfirmationScreen extends StatelessWidget {
     final styles = context.textStyles;
     final l = context.l10n;
     return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: false),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        actions: const [TourHelpButton()],
+      ),
       body: PreviewBody(
         width: ContentWidth.form,
         children: [
@@ -53,10 +58,13 @@ class BookingConfirmationScreen extends StatelessWidget {
           const SizedBox(height: AppSpacing.xl),
           BookingTicket(booking: b),
           const SizedBox(height: AppSpacing.xl),
-          PrimaryButton(
-            label: l.viewBooking,
-            expand: true,
-            onPressed: () => context.go(AppRoutes.customerBooking(b.id)),
+          TourAnchor(
+            id: TourIds.primary,
+            child: PrimaryButton(
+              label: l.viewBooking,
+              expand: true,
+              onPressed: () => context.go(AppRoutes.customerBooking(b.id)),
+            ),
           ),
           const SizedBox(height: AppSpacing.md),
           SecondaryButton(

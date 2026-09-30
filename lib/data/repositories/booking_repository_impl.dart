@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../core/constants/booking_policy.dart';
 import '../../core/constants/domain_enums.dart';
@@ -7,9 +8,11 @@ import '../../core/errors/error_guard.dart';
 import '../data_agents/auth_data_agent.dart';
 import '../data_agents/blacklist_data_agent.dart';
 import '../data_agents/booking_data_agent.dart';
+import '../data_agents/notification_data_agent.dart';
 import '../data_agents/user_data_agent.dart';
 import '../requests/booking_request_builder.dart';
 import '../requests/booking_write_requests.dart';
+import '../requests/notification_requests.dart';
 import '../vos/booking_draft.dart';
 import '../vos/booking_vo.dart';
 import '../vos/court_vo.dart';
@@ -24,17 +27,20 @@ class BookingRepositoryImpl implements BookingRepository {
     required AuthDataAgent authDataAgent,
     required UserDataAgent userDataAgent,
     required BlacklistDataAgent blacklistDataAgent,
+    required NotificationDataAgent notificationDataAgent,
     DateTime Function()? clock,
   })  : _bookings = bookingDataAgent,
         _auth = authDataAgent,
         _users = userDataAgent,
         _blacklist = blacklistDataAgent,
+        _notifications = notificationDataAgent,
         _clock = clock ?? DateTime.now;
 
   final BookingDataAgent _bookings;
   final AuthDataAgent _auth;
   final UserDataAgent _users;
   final BlacklistDataAgent _blacklist;
+  final NotificationDataAgent _notifications;
   final DateTime Function() _clock;
 
   @override
@@ -85,6 +91,21 @@ class BookingRepositoryImpl implements BookingRepository {
         now: _clock(),
       );
       await _createWithSlots(() => _bookings.createBooking(request));
+      await _notify(
+        NotificationCreateRequest(
+          type: NotificationType.bookingRequested,
+          recipientId: request.shopId,
+          shopId: request.shopId,
+          bookingId: bookingId,
+          actorId: uid,
+          customerNameSnapshot: request.customerNameSnapshot,
+          stadiumNameSnapshot: request.stadiumNameSnapshot,
+          courtNameSnapshot: request.courtNameSnapshot,
+          bookingDate: request.bookingDate,
+          startMinute: request.startMinute,
+          endMinute: request.endMinute,
+        ),
+      );
       return bookingId;
     });
   }
@@ -101,13 +122,22 @@ class BookingRepositoryImpl implements BookingRepository {
           !start.isAfter(_clock())) {
         throw const InvalidBookingChangeException();
       }
+      final cancelReason = BookingRequestBuilder.cleanReason(reason);
       await _bookings.updateBooking(
         BookingUpdateRequest(
           bookingId: bookingId,
           status: BookingStatus.cancelled,
-          cancelReason: BookingRequestBuilder.cleanReason(reason),
+          cancelReason: cancelReason,
           stampCancelledAt: true,
           slotPathsToDelete: BookingRequestBuilder.bookingSlotPaths(booking),
+        ),
+      );
+      await _notify(
+        NotificationCreateRequest.forBooking(
+          type: NotificationType.bookingCancelled,
+          booking: booking,
+          actorId: uid,
+          reason: cancelReason,
         ),
       );
     });
@@ -120,7 +150,7 @@ class BookingRepositoryImpl implements BookingRepository {
     String? reason,
   }) {
     return guardAppException(() async {
-      _requireUid();
+      final uid = _requireUid();
       final booking = await _requireBooking(bookingId);
       if (!BookingPolicy.canStaffChangeStatus(booking.status, status)) {
         throw const InvalidBookingChangeException();
@@ -132,17 +162,33 @@ class BookingRepositoryImpl implements BookingRepository {
         }
       }
       final rejecting = status == BookingStatus.rejected;
+      final cancelReason =
+          rejecting ? BookingRequestBuilder.cleanReason(reason) : null;
       await _bookings.updateBooking(
         BookingUpdateRequest(
           bookingId: bookingId,
           status: status,
-          cancelReason:
-              rejecting ? BookingRequestBuilder.cleanReason(reason) : null,
+          cancelReason: cancelReason,
           slotPathsToDelete: rejecting
               ? BookingRequestBuilder.bookingSlotPaths(booking)
               : const [],
         ),
       );
+      final type = switch (status) {
+        BookingStatus.confirmed => NotificationType.bookingConfirmed,
+        BookingStatus.rejected => NotificationType.bookingRejected,
+        _ => null,
+      };
+      if (type != null) {
+        await _notify(
+          NotificationCreateRequest.forBooking(
+            type: type,
+            booking: booking,
+            actorId: uid,
+            reason: cancelReason,
+          ),
+        );
+      }
     });
   }
 
@@ -203,6 +249,19 @@ class BookingRepositoryImpl implements BookingRepository {
   }
 
   // --- internals ------------------------------------------------------------
+
+  /// Writes the in-app notification for a booking event that already
+  /// committed. Best effort: the booking change stands even if this fails
+  /// (offline, rules), so errors are logged, never thrown. Its own request,
+  /// not part of the booking transaction, to keep that transaction inside
+  /// the rules' document-access budget.
+  Future<void> _notify(NotificationCreateRequest request) async {
+    try {
+      await _notifications.create(request);
+    } catch (error) {
+      debugPrint('Notification ${request.id} not written: $error');
+    }
+  }
 
   String _requireUid() {
     final user = _auth.currentUser;

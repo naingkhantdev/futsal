@@ -12,6 +12,8 @@ import '../../../../core/utils/display_format.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../data/demo/demo_data.dart';
 import '../../../../data/vos/blocked_slot_vo.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../../../shared/widgets/preview_body.dart';
 
 /// `/shop-admin/blocked-slots` — SHOP scope: upcoming blocked court times.
@@ -27,11 +29,17 @@ class BlockedSlotsScreen extends StatelessWidget {
       ..sort((a, b) => a.startAt!.compareTo(b.startAt!));
     final l = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: Text(l.blockedTimesTitle)),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push(AppRoutes.shopAdminBlockedSlotNew),
-        icon: const Icon(Icons.add),
-        label: Text(l.blockTimeTitle),
+      appBar: AppBar(
+        title: Text(l.blockedTimesTitle),
+        actions: const [TourHelpButton()],
+      ),
+      floatingActionButton: TourAnchor(
+        id: TourIds.fab,
+        child: FloatingActionButton.extended(
+          onPressed: () => context.push(AppRoutes.shopAdminBlockedSlotNew),
+          icon: const Icon(Icons.add),
+          label: Text(l.blockTimeTitle),
+        ),
       ),
       body: PreviewBody(
         bottomPadding: 96,

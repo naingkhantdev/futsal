@@ -14,6 +14,8 @@ import '../../../../core/widgets/hero_header.dart';
 import '../../../../core/widgets/stat_card.dart';
 import '../../../../core/widgets/status_badge.dart';
 import '../../../../data/demo/demo_data.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../../../shared/widgets/booking_list_tile.dart';
 import '../../../shared/widgets/preview_body.dart';
 import '../../../shared/widgets/stat_grid.dart';
@@ -40,7 +42,10 @@ class SuperadminDashboardScreen extends StatelessWidget {
     final l = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l.navDashboard)),
+      appBar: AppBar(
+        title: Text(l.navDashboard),
+        actions: const [TourHelpButton()],
+      ),
       body: PreviewBody(
         width: ContentWidth.dashboard,
         children: [
@@ -50,37 +55,40 @@ class SuperadminDashboardScreen extends StatelessWidget {
             subtitle: l.platformSummary(active, pending.length),
           ),
           const SizedBox(height: AppSpacing.xl),
-          StatGrid(
-            children: [
-              StatCard(
-                icon: Icons.storefront_outlined,
-                label: l.activeShops,
-                value: '$active',
-                footer: l.ofTotal(shops.length),
-                onTap: () => context.go(AppRoutes.superadminShops),
-              ),
-              StatCard(
-                icon: Icons.pending_actions_outlined,
-                label: l.toReview,
-                value: '${pending.length}',
-                footer: l.newShopsFooter,
-                highlight: pending.isNotEmpty,
-                onTap: () => context.go(_onboarding),
-              ),
-              StatCard(
-                icon: Icons.event_note_outlined,
-                label: l.navBookings,
-                value: '${bookings.length}',
-                footer: l.lastTwoWeeks,
-                onTap: () => context.go(AppRoutes.superadminBookings),
-              ),
-              StatCard(
-                icon: Icons.people_outline,
-                label: l.navCustomers,
-                value: '${DemoData.customers.length}',
-                onTap: () => context.go(AppRoutes.superadminCustomers),
-              ),
-            ],
+          TourAnchor(
+            id: TourIds.stats,
+            child: StatGrid(
+              children: [
+                StatCard(
+                  icon: Icons.storefront_outlined,
+                  label: l.activeShops,
+                  value: '$active',
+                  footer: l.ofTotal(shops.length),
+                  onTap: () => context.go(AppRoutes.superadminShops),
+                ),
+                StatCard(
+                  icon: Icons.pending_actions_outlined,
+                  label: l.toReview,
+                  value: '${pending.length}',
+                  footer: l.newShopsFooter,
+                  highlight: pending.isNotEmpty,
+                  onTap: () => context.go(_onboarding),
+                ),
+                StatCard(
+                  icon: Icons.event_note_outlined,
+                  label: l.navBookings,
+                  value: '${bookings.length}',
+                  footer: l.lastTwoWeeks,
+                  onTap: () => context.go(AppRoutes.superadminBookings),
+                ),
+                StatCard(
+                  icon: Icons.people_outline,
+                  label: l.navCustomers,
+                  value: '${DemoData.customers.length}',
+                  onTap: () => context.go(AppRoutes.superadminCustomers),
+                ),
+              ],
+            ),
           ),
           if (pending.isNotEmpty) ...[
             PreviewSectionTitle(

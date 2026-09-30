@@ -5,6 +5,8 @@ import '../../../../core/constants/domain_enums.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../data/demo/demo_data.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../../../shared/widgets/staff_booking_views.dart';
 import '../../blacklist/widgets/blacklist_action.dart';
 
@@ -24,18 +26,24 @@ class ShopAdminBookingDetailScreen extends StatelessWidget {
         b.status != BookingStatus.cancelled &&
         b.status != BookingStatus.rejected;
     return Scaffold(
-      appBar: AppBar(title: Text(context.l10n.bookingTitle)),
+      appBar: AppBar(
+        title: Text(context.l10n.bookingTitle),
+        actions: const [TourHelpButton()],
+      ),
       body: StaffBookingDetail(
         booking: b,
         onCustomerTap: () =>
             context.push(AppRoutes.shopAdminCustomer(b.customerId)),
         extraActions: [
           if (mayBeNoShow)
-            BlacklistCustomerAction(
-              customerId: b.customerId,
-              customerName: b.customerNameSnapshot,
-              customerPhone: b.customerPhoneSnapshot,
-              noShow: true,
+            TourAnchor(
+              id: TourIds.blacklist,
+              child: BlacklistCustomerAction(
+                customerId: b.customerId,
+                customerName: b.customerNameSnapshot,
+                customerPhone: b.customerPhoneSnapshot,
+                noShow: true,
+              ),
             ),
         ],
       ),

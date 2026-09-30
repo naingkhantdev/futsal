@@ -6,6 +6,8 @@ import '../../../../core/router/app_routes.dart';
 import '../../../../core/widgets/empty_view.dart';
 import '../../../../data/demo/demo_data.dart';
 import '../../../../data/vos/booking_vo.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../../../shared/widgets/booking_list_tile.dart';
 import '../../../shared/widgets/preview_body.dart';
 import '../../../shared/widgets/stadium_filter_bar.dart';
@@ -26,12 +28,20 @@ class CustomerBookingsScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(l.navBookings),
-          bottom: TabBar(
-            tabs: [
-              Tab(text: l.tabUpcoming(upcoming.length)),
-              Tab(text: l.tabPast(past.length)),
-            ],
+          // PreferredSize so the tab bar can be a tour anchor.
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(kTextTabBarHeight),
+            child: TourAnchor(
+              id: TourIds.tabs,
+              child: TabBar(
+                tabs: [
+                  Tab(text: l.tabUpcoming(upcoming.length)),
+                  Tab(text: l.tabPast(past.length)),
+                ],
+              ),
+            ),
           ),
+          actions: const [TourHelpButton()],
         ),
         body: TabBarView(
           children: [

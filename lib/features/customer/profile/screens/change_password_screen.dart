@@ -16,6 +16,8 @@ import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/content_constraint.dart';
 import '../../../../core/widgets/inline_banner.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../providers/change_password_controller.dart';
 
 /// `/customer/profile/change-password` — re-authenticates with the current
@@ -117,7 +119,10 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     final l = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l.changePassword)),
+      appBar: AppBar(
+        title: Text(l.changePassword),
+        actions: const [TourHelpButton()],
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
         child: ContentConstraint(
@@ -128,46 +133,55 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  PasswordField(
-                    label: l.currentPasswordLabel,
-                    controller: _current,
-                    focusNode: _currentFocus,
-                    errorText: _currentError,
-                    onChanged: _onCurrentChanged,
-                    textInputAction: TextInputAction.next,
-                    // While the server's "incorrect" error is shown (field
-                    // just cleared), don't replace it with "required".
-                    validator: (v) => _currentError != null
-                        ? null
-                        : AppValidators.currentPassword(v),
-                    autovalidateMode: autovalidate,
-                    readOnly: isLoading,
+                  TourAnchor(
+                    id: TourIds.password,
+                    child: PasswordField(
+                      label: l.currentPasswordLabel,
+                      controller: _current,
+                      focusNode: _currentFocus,
+                      errorText: _currentError,
+                      onChanged: _onCurrentChanged,
+                      textInputAction: TextInputAction.next,
+                      // While the server's "incorrect" error is shown (field
+                      // just cleared), don't replace it with "required".
+                      validator: (v) => _currentError != null
+                          ? null
+                          : AppValidators.currentPassword(v),
+                      autovalidateMode: autovalidate,
+                      readOnly: isLoading,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
-                  PasswordField(
-                    label: l.newPasswordLabel,
-                    controller: _new,
-                    focusNode: _newFocus,
-                    fieldKey: _newFieldKey,
-                    helperText: l.passwordHelper,
-                    autofillHints: const [AutofillHints.newPassword],
-                    validator: (v) =>
-                        AppValidators.changedPassword(v, _current.text),
-                    autovalidateMode: autovalidate,
-                    readOnly: isLoading,
-                    onFieldSubmitted: (_) => _submit(),
+                  TourAnchor(
+                    id: TourIds.newPassword,
+                    child: PasswordField(
+                      label: l.newPasswordLabel,
+                      controller: _new,
+                      focusNode: _newFocus,
+                      fieldKey: _newFieldKey,
+                      helperText: l.passwordHelper,
+                      autofillHints: const [AutofillHints.newPassword],
+                      validator: (v) =>
+                          AppValidators.changedPassword(v, _current.text),
+                      autovalidateMode: autovalidate,
+                      readOnly: isLoading,
+                      onFieldSubmitted: (_) => _submit(),
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   if (error != null) ...[
                     InlineBanner(message: error.messageIn(l)),
                     const SizedBox(height: AppSpacing.lg),
                   ],
-                  PrimaryButton(
-                    label: l.updatePassword,
-                    onPressed: _submit,
-                    isLoading: isLoading,
-                    size: AppButtonSize.large,
-                    expand: true,
+                  TourAnchor(
+                    id: TourIds.primary,
+                    child: PrimaryButton(
+                      label: l.updatePassword,
+                      onPressed: _submit,
+                      isLoading: isLoading,
+                      size: AppButtonSize.large,
+                      expand: true,
+                    ),
                   ),
                 ],
               ),

@@ -17,6 +17,8 @@ import '../../../../core/widgets/empty_view.dart';
 import '../../../../core/widgets/inline_banner.dart';
 import '../../../../core/widgets/sticky_bottom_bar.dart';
 import '../../../../data/demo/demo_data.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../../../shared/widgets/preview_body.dart';
 import '../providers/booking_draft_provider.dart';
 
@@ -35,7 +37,10 @@ class BookingReviewScreen extends ConsumerWidget {
     final l = context.l10n;
     if (draft == null) {
       return Scaffold(
-        appBar: AppBar(title: Text(l.reviewTitle)),
+        appBar: AppBar(
+          title: Text(l.reviewTitle),
+          actions: const [TourHelpButton()],
+        ),
         body: EmptyView(
           icon: Icons.event_busy,
           title: l.reviewNothingTitle,
@@ -52,24 +57,30 @@ class BookingReviewScreen extends ConsumerWidget {
     final muted = context.colors.onSurfaceVariant;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l.reviewTitle)),
+      appBar: AppBar(
+        title: Text(l.reviewTitle),
+        actions: const [TourHelpButton()],
+      ),
       bottomNavigationBar: StickyBottomBar(
-        child: PrimaryButton(
-          label: l.requestBookingButton(Money.formatMmk(total)),
-          size: AppButtonSize.large,
-          expand: true,
-          onPressed: () {
-            ref.read(bookingDraftProvider.notifier).clear();
-            showPreviewOnly(context, l.bookingRequestAction);
-            // Sample pending booking stands in for the one just requested.
-            context.go(
-              AppRoutes.customerBookingConfirmation(
-                DemoData.bookingsOfCustomer(DemoData.meId)
-                    .firstWhere((b) => b.blocksAvailability)
-                    .id,
-              ),
-            );
-          },
+        child: TourAnchor(
+          id: TourIds.primary,
+          child: PrimaryButton(
+            label: l.requestBookingButton(Money.formatMmk(total)),
+            size: AppButtonSize.large,
+            expand: true,
+            onPressed: () {
+              ref.read(bookingDraftProvider.notifier).clear();
+              showPreviewOnly(context, l.bookingRequestAction);
+              // Sample pending booking stands in for the one just requested.
+              context.go(
+                AppRoutes.customerBookingConfirmation(
+                  DemoData.bookingsOfCustomer(DemoData.meId)
+                      .firstWhere((b) => b.blocksAvailability)
+                      .id,
+                ),
+              );
+            },
+          ),
         ),
       ),
       body: PreviewBody(

@@ -6,6 +6,7 @@ import '../../../../core/router/app_routes.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_dialogs.dart';
 import '../../../../data/demo/demo_data.dart';
+import '../../../shared/widgets/app_tour.dart';
 import '../../../shared/widgets/preview_body.dart';
 import '../../../shared/widgets/staff_customer_views.dart';
 
@@ -22,7 +23,10 @@ class SuperadminCustomerDetailScreen extends StatelessWidget {
     final c = DemoData.customer(customerId);
     final l = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: Text(l.roleCustomer)),
+      appBar: AppBar(
+        title: Text(l.roleCustomer),
+        actions: const [TourHelpButton()],
+      ),
       body: StaffCustomerDetail(
         customer: c,
         shopId: null,

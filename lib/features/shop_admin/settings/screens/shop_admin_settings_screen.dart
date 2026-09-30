@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../../../shared/widgets/settings_list.dart';
 
-/// `/shop-admin/settings` — SHOP scope: shop profile, blocked times, venues
-/// and log out.
-class ShopAdminSettingsScreen extends StatelessWidget {
+/// `/shop-admin/settings` — SHOP scope: shop profile, blocked times, venues,
+/// app tour and log out.
+class ShopAdminSettingsScreen extends ConsumerWidget {
   const ShopAdminSettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: Text(l.navSettings)),
+      appBar: AppBar(
+        title: Text(l.navSettings),
+        actions: const [TourHelpButton()],
+      ),
       body: SettingsList(
         items: [
           SettingsItem(
@@ -39,6 +45,17 @@ class ShopAdminSettingsScreen extends StatelessWidget {
             icon: Icons.stadium_outlined,
             title: l.stadiumsAndCourts,
             onTap: () => context.go(AppRoutes.shopAdminStadiums),
+          ),
+          SettingsItem(
+            icon: Icons.tips_and_updates_outlined,
+            title: l.tourReplay,
+            subtitle: l.tourReplaySub,
+            onTap: () => replayAppTours(
+              context,
+              ref,
+              AppTours.shopAdminDashboard,
+              AppRoutes.shopAdminDashboard,
+            ),
           ),
         ],
       ),

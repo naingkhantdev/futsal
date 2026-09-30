@@ -95,6 +95,34 @@ enum BusyKind {
   static BusyKind? tryParse(String? value) => _parse(values, value);
 }
 
+/// Who a `notifications/{id}` doc is for (field `audience`): one customer
+/// (`recipientId` = uid) or every admin of one shop (`recipientId` = shopId).
+/// Mirror: firestore.rules `notifications`.
+enum NotificationAudience {
+  customer,
+  shop;
+
+  static NotificationAudience? tryParse(String? value) => _parse(values, value);
+}
+
+/// Booking event a notification reports (field `type`). Requested /
+/// cancelled go to the shop (sent by the customer); confirmed / rejected go
+/// to the customer (sent by staff). Mirror: firestore.rules
+/// `notificationEventOk`.
+enum NotificationType {
+  bookingRequested,
+  bookingCancelled,
+  bookingConfirmed,
+  bookingRejected;
+
+  static NotificationType? tryParse(String? value) => _parse(values, value);
+
+  NotificationAudience get audience => switch (this) {
+        bookingRequested || bookingCancelled => NotificationAudience.shop,
+        bookingConfirmed || bookingRejected => NotificationAudience.customer,
+      };
+}
+
 /// Visual state of a bookable time slot (UI only, never persisted).
 enum SlotState { available, selected, booked, blocked, unavailable }
 

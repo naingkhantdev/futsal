@@ -9,6 +9,8 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_dialogs.dart';
 import '../../../../core/widgets/content_constraint.dart';
 import '../../../../data/demo/demo_data.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../../../shared/widgets/booking_detail_view.dart';
 import '../../../shared/widgets/preview_body.dart';
 
@@ -27,36 +29,45 @@ class CustomerBookingDetailScreen extends StatelessWidget {
         b.isUpcoming(DateTime.now());
     final l = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: Text(l.bookingTitle)),
+      appBar: AppBar(
+        title: Text(l.bookingTitle),
+        actions: const [TourHelpButton()],
+      ),
       body: PreviewBody(
         width: ContentWidth.form,
         children: [
           BookingDetailSections(booking: b),
           const SizedBox(height: AppSpacing.xl),
-          SecondaryButton(
-            label: l.viewVenue,
-            icon: Icons.stadium_outlined,
-            expand: true,
-            onPressed: () =>
-                context.push(AppRoutes.customerStadium(b.stadiumId)),
+          TourAnchor(
+            id: TourIds.secondary,
+            child: SecondaryButton(
+              label: l.viewVenue,
+              icon: Icons.stadium_outlined,
+              expand: true,
+              onPressed: () =>
+                  context.push(AppRoutes.customerStadium(b.stadiumId)),
+            ),
           ),
           if (canCancel) ...[
             const SizedBox(height: AppSpacing.md),
-            AppTextButton(
-              label: l.cancelBooking,
-              onPressed: () async {
-                final ok = await showConfirmDialog(
-                  context,
-                  title: l.cancelBookingTitle,
-                  message: l.cancelBookingMessage,
-                  confirmLabel: l.cancelBooking,
-                  dismissLabel: l.keepIt,
-                  destructive: true,
-                );
-                if (ok && context.mounted) {
-                  showPreviewOnly(context, l.cancelBooking);
-                }
-              },
+            TourAnchor(
+              id: TourIds.cancel,
+              child: AppTextButton(
+                label: l.cancelBooking,
+                onPressed: () async {
+                  final ok = await showConfirmDialog(
+                    context,
+                    title: l.cancelBookingTitle,
+                    message: l.cancelBookingMessage,
+                    confirmLabel: l.cancelBooking,
+                    dismissLabel: l.keepIt,
+                    destructive: true,
+                  );
+                  if (ok && context.mounted) {
+                    showPreviewOnly(context, l.cancelBooking);
+                  }
+                },
+              ),
             ),
           ],
         ],

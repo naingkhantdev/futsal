@@ -11,6 +11,8 @@ import '../../../../core/widgets/empty_view.dart';
 import '../../../../core/widgets/motion.dart';
 import '../../../../core/widgets/skeleton.dart';
 import '../../../../data/vos/stadium_vo.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../providers/shop_venue_providers.dart';
 import '../widgets/shop_visibility_banner.dart';
 import '../widgets/stadium_admin_card.dart';
@@ -30,11 +32,17 @@ class ShopAdminStadiumsScreen extends ConsumerWidget {
     final l = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l.navStadiums)),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: addStadium,
-        icon: const Icon(Icons.add),
-        label: Text(l.stadiumNew),
+      appBar: AppBar(
+        title: Text(l.navStadiums),
+        actions: const [TourHelpButton()],
+      ),
+      floatingActionButton: TourAnchor(
+        id: TourIds.fab,
+        child: FloatingActionButton.extended(
+          onPressed: addStadium,
+          icon: const Icon(Icons.add),
+          label: Text(l.stadiumNew),
+        ),
       ),
       body: AsyncValueView<List<StadiumVO>>(
         value: stadiums,

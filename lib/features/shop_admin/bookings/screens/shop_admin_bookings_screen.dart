@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../data/demo/demo_data.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../../../shared/widgets/staff_booking_views.dart';
 
 /// `/shop-admin/bookings` — SHOP scope (own `shopId` only): bookings with
@@ -17,10 +19,14 @@ class ShopAdminBookingsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(context.l10n.navBookings),
         actions: [
-          IconButton(
-            tooltip: context.l10n.blockTimeTitle,
-            icon: const Icon(Icons.block),
-            onPressed: () => context.push(AppRoutes.shopAdminBlockedSlots),
+          const TourHelpButton(),
+          TourAnchor(
+            id: TourIds.block,
+            child: IconButton(
+              tooltip: context.l10n.blockTimeTitle,
+              icon: const Icon(Icons.block),
+              onPressed: () => context.push(AppRoutes.shopAdminBlockedSlots),
+            ),
           ),
         ],
       ),

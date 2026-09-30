@@ -10,6 +10,8 @@ import '../../../../core/utils/display_format.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/status_badge.dart';
 import '../../../../data/demo/demo_data.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../../../shared/widgets/preview_body.dart';
 
 /// `/superadmin/settings/announcements` — PLATFORM scope: sent
@@ -23,11 +25,17 @@ class AnnouncementsScreen extends StatelessWidget {
     final muted = context.colors.onSurfaceVariant;
     final l = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: Text(l.announcementsTitle)),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push(AppRoutes.superadminAnnouncementNew),
-        icon: const Icon(Icons.edit_outlined),
-        label: Text(l.newShort),
+      appBar: AppBar(
+        title: Text(l.announcementsTitle),
+        actions: const [TourHelpButton()],
+      ),
+      floatingActionButton: TourAnchor(
+        id: TourIds.fab,
+        child: FloatingActionButton.extended(
+          onPressed: () => context.push(AppRoutes.superadminAnnouncementNew),
+          icon: const Icon(Icons.edit_outlined),
+          label: Text(l.newShort),
+        ),
       ),
       body: PreviewBody(
         bottomPadding: 96,

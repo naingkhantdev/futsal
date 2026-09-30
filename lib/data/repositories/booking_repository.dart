@@ -4,6 +4,7 @@ import '../../core/constants/domain_enums.dart';
 import '../data_agents/auth_data_agent_impl.dart';
 import '../data_agents/blacklist_data_agent_impl.dart';
 import '../data_agents/booking_data_agent_impl.dart';
+import '../data_agents/notification_data_agent_impl.dart';
 import '../data_agents/user_data_agent_impl.dart';
 import '../vos/booking_draft.dart';
 import '../vos/booking_vo.dart';
@@ -87,5 +88,6 @@ final bookingRepositoryProvider = Provider<BookingRepository>(
     authDataAgent: ref.watch(authDataAgentProvider),
     userDataAgent: ref.watch(userDataAgentProvider),
     blacklistDataAgent: ref.watch(blacklistDataAgentProvider),
+    notificationDataAgent: ref.watch(notificationDataAgentProvider),
   ),
 );

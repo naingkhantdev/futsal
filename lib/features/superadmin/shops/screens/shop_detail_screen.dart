@@ -22,6 +22,8 @@ import '../../../../core/widgets/empty_view.dart';
 import '../../../../core/widgets/status_badge.dart';
 import '../../../../data/vos/shop_private_vo.dart';
 import '../../../../data/vos/shop_vo.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../providers/shops_providers.dart';
 
 /// `/superadmin/shops/:shopId` — PLATFORM scope: shop profile, status
@@ -53,12 +55,16 @@ class ShopDetailScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(shop.valueOrNull?.name ?? l.shopLabel),
         actions: [
+          const TourHelpButton(),
           if (shop.valueOrNull != null)
-            IconButton(
-              tooltip: l.shopEdit,
-              icon: const Icon(Icons.edit_outlined),
-              onPressed: () =>
-                  context.push(AppRoutes.superadminShopEdit(shopId)),
+            TourAnchor(
+              id: TourIds.edit,
+              child: IconButton(
+                tooltip: l.shopEdit,
+                icon: const Icon(Icons.edit_outlined),
+                onPressed: () =>
+                    context.push(AppRoutes.superadminShopEdit(shopId)),
+              ),
             ),
         ],
       ),
@@ -122,7 +128,10 @@ class _ShopDetailBody extends ConsumerWidget {
                 style: context.textStyles.bodyMedium?.copyWith(color: muted),
               ),
               const SizedBox(height: AppSpacing.lg),
-              _StatusActions(shop: shop),
+              TourAnchor(
+                id: TourIds.status,
+                child: _StatusActions(shop: shop),
+              ),
               const SizedBox(height: AppSpacing.xl),
               AppCard(
                 padding: EdgeInsets.zero,
@@ -157,16 +166,19 @@ class _ShopDetailBody extends ConsumerWidget {
               const SizedBox(height: AppSpacing.lg),
               AppCard(
                 padding: EdgeInsets.zero,
-                child: ListTile(
-                  leading: const Icon(
-                    Icons.admin_panel_settings_outlined,
-                    size: AppSizes.iconLg,
+                child: TourAnchor(
+                  id: TourIds.admins,
+                  child: ListTile(
+                    leading: const Icon(
+                      Icons.admin_panel_settings_outlined,
+                      size: AppSizes.iconLg,
+                    ),
+                    title: Text(l.audienceShopAdmins),
+                    subtitle: Text(l.shopAdminsSub),
+                    trailing: Icon(Icons.chevron_right, color: muted),
+                    onTap: () =>
+                        context.push(AppRoutes.superadminShopAdmins(shop.id)),
                   ),
-                  title: Text(l.audienceShopAdmins),
-                  subtitle: Text(l.shopAdminsSub),
-                  trailing: Icon(Icons.chevron_right, color: muted),
-                  onTap: () =>
-                      context.push(AppRoutes.superadminShopAdmins(shop.id)),
                 ),
               ),
             ],

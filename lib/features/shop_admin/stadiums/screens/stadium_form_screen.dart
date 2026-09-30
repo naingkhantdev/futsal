@@ -28,6 +28,8 @@ import '../../../../core/widgets/empty_view.dart';
 import '../../../../core/widgets/inline_banner.dart';
 import '../../../../data/requests/venue_write_requests.dart';
 import '../../../../data/vos/stadium_vo.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../providers/shop_venue_providers.dart';
 import '../widgets/stadium_location_field.dart';
 
@@ -46,12 +48,18 @@ class StadiumFormScreen extends ConsumerWidget {
     final l = context.l10n;
     if (id == null) {
       return Scaffold(
-        appBar: AppBar(title: Text(l.stadiumNew)),
+        appBar: AppBar(
+          title: Text(l.stadiumNew),
+          actions: const [TourHelpButton()],
+        ),
         body: const _StadiumForm(stadium: null),
       );
     }
     return Scaffold(
-      appBar: AppBar(title: Text(l.stadiumEdit)),
+      appBar: AppBar(
+        title: Text(l.stadiumEdit),
+        actions: const [TourHelpButton()],
+      ),
       body: AsyncValueView<StadiumVO?>(
         value: ref.watch(adminStadiumProvider(id)),
         onRetry: () => ref.invalidate(adminStadiumProvider(id)),
@@ -307,10 +315,13 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                text(l.stadiumNameLabel, _name,
-                    icon: Icons.stadium_outlined,
-                    focusNode: _nameFocus,
-                    validator: _nameError),
+                TourAnchor(
+                  id: TourIds.name,
+                  child: text(l.stadiumNameLabel, _name,
+                      icon: Icons.stadium_outlined,
+                      focusNode: _nameFocus,
+                      validator: _nameError),
+                ),
                 text(l.addressOptional, _address,
                     icon: Icons.place_outlined, validator: _addressError),
                 text(l.townshipOptional, _township,
@@ -318,10 +329,13 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
                 text(l.cityOptional, _city,
                     icon: Icons.location_city_outlined,
                     validator: _placeError),
-                StadiumLocationField(
-                  value: _location,
-                  enabled: !isLoading,
-                  onChanged: (p) => setState(() => _location = p),
+                TourAnchor(
+                  id: TourIds.location,
+                  child: StadiumLocationField(
+                    value: _location,
+                    enabled: !isLoading,
+                    onChanged: (p) => setState(() => _location = p),
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.xl),
                 text(l.descriptionOptional, _description,
@@ -331,28 +345,31 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
                 const SizedBox(height: AppSpacing.sm),
                 Text(l.openingHoursTitle, style: context.textStyles.titleSmall),
                 const SizedBox(height: AppSpacing.md),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _TimeDropdown(
-                        label: l.opensLabel,
-                        value: _open,
-                        options: _openOptions,
-                        onChanged: isLoading ? null : _setOpen,
+                TourAnchor(
+                  id: TourIds.hours,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _TimeDropdown(
+                          label: l.opensLabel,
+                          value: _open,
+                          options: _openOptions,
+                          onChanged: isLoading ? null : _setOpen,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: AppSpacing.md),
-                    Expanded(
-                      child: _TimeDropdown(
-                        label: l.closesLabel,
-                        value: _close,
-                        options: _closeOptions,
-                        onChanged: isLoading
-                            ? null
-                            : (v) => setState(() => _close = v),
+                      const SizedBox(width: AppSpacing.md),
+                      Expanded(
+                        child: _TimeDropdown(
+                          label: l.closesLabel,
+                          value: _close,
+                          options: _closeOptions,
+                          onChanged: isLoading
+                              ? null
+                              : (v) => setState(() => _close = v),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 Text(
@@ -362,24 +379,27 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
                 const SizedBox(height: AppSpacing.xl),
                 Text(l.facilitiesTitle, style: context.textStyles.titleSmall),
                 const SizedBox(height: AppSpacing.md),
-                Wrap(
-                  spacing: AppSpacing.sm,
-                  runSpacing: AppSpacing.sm,
-                  children: [
-                    for (final f in Facility.values)
-                      FilterChip(
-                        avatar: Icon(f.icon, size: AppSizes.iconSm),
-                        label: Text(f.labelIn(l)),
-                        selected: _facilities.contains(f),
-                        onSelected: isLoading
-                            ? null
-                            : (on) => setState(() {
-                                  _facilities = on
-                                      ? {..._facilities, f}
-                                      : ({..._facilities}..remove(f));
-                                }),
-                      ),
-                  ],
+                TourAnchor(
+                  id: TourIds.facilities,
+                  child: Wrap(
+                    spacing: AppSpacing.sm,
+                    runSpacing: AppSpacing.sm,
+                    children: [
+                      for (final f in Facility.values)
+                        FilterChip(
+                          avatar: Icon(f.icon, size: AppSizes.iconSm),
+                          label: Text(f.labelIn(l)),
+                          selected: _facilities.contains(f),
+                          onSelected: isLoading
+                              ? null
+                              : (on) => setState(() {
+                                    _facilities = on
+                                        ? {..._facilities, f}
+                                        : ({..._facilities}..remove(f));
+                                  }),
+                        ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.xl),
                 AppCard(
@@ -398,12 +418,15 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
                   InlineBanner(message: error.messageIn(l)),
                   const SizedBox(height: AppSpacing.lg),
                 ],
-                PrimaryButton(
-                  label: _isCreate ? l.addStadium : l.commonSaveChanges,
-                  onPressed: _save,
-                  isLoading: isLoading,
-                  size: AppButtonSize.large,
-                  expand: true,
+                TourAnchor(
+                  id: TourIds.primary,
+                  child: PrimaryButton(
+                    label: _isCreate ? l.addStadium : l.commonSaveChanges,
+                    onPressed: _save,
+                    isLoading: isLoading,
+                    size: AppButtonSize.large,
+                    expand: true,
+                  ),
                 ),
               ],
             ),

@@ -21,6 +21,8 @@ import '../../../../core/widgets/inline_banner.dart';
 import '../../../../data/vos/auth_session.dart';
 import '../../../../data/vos/user_vo.dart';
 import '../../../auth/providers/auth_session_provider.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../providers/shop_admins_providers.dart';
 
 /// `/superadmin/shops/:shopId/admins/invite` — PLATFORM scope.
@@ -100,7 +102,10 @@ class _InviteShopAdminScreenState extends ConsumerState<InviteShopAdminScreen> {
     final l = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l.addShopAdminTitle)),
+      appBar: AppBar(
+        title: Text(l.addShopAdminTitle),
+        actions: const [TourHelpButton()],
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
         child: ContentConstraint(
@@ -116,34 +121,40 @@ class _InviteShopAdminScreenState extends ConsumerState<InviteShopAdminScreen> {
               const SizedBox(height: AppSpacing.xl),
               Form(
                 key: _formKey,
-                child: AppTextField(
-                  label: l.accountEmailLabel,
-                  controller: _email,
-                  focusNode: _emailFocus,
-                  prefixIcon: Icons.mail_outline,
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.search,
-                  validator: AppValidators.email,
-                  autovalidateMode: _submitted
-                      ? AutovalidateMode.onUserInteraction
-                      : AutovalidateMode.disabled,
-                  onChanged: (_) {
-                    if (lookup.valueOrNull != null) {
-                      ref
-                          .read(shopAdminLookupControllerProvider.notifier)
-                          .clear();
-                    }
-                  },
-                  onFieldSubmitted: (_) => _search(),
+                child: TourAnchor(
+                  id: TourIds.email,
+                  child: AppTextField(
+                    label: l.accountEmailLabel,
+                    controller: _email,
+                    focusNode: _emailFocus,
+                    prefixIcon: Icons.mail_outline,
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.search,
+                    validator: AppValidators.email,
+                    autovalidateMode: _submitted
+                        ? AutovalidateMode.onUserInteraction
+                        : AutovalidateMode.disabled,
+                    onChanged: (_) {
+                      if (lookup.valueOrNull != null) {
+                        ref
+                            .read(shopAdminLookupControllerProvider.notifier)
+                            .clear();
+                      }
+                    },
+                    onFieldSubmitted: (_) => _search(),
+                  ),
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
-              SecondaryButton(
-                label: l.findAccount,
-                icon: Icons.search,
-                isLoading: lookup.isLoading,
-                expand: true,
-                onPressed: _search,
+              TourAnchor(
+                id: TourIds.secondary,
+                child: SecondaryButton(
+                  label: l.findAccount,
+                  icon: Icons.search,
+                  isLoading: lookup.isLoading,
+                  expand: true,
+                  onPressed: _search,
+                ),
               ),
               const SizedBox(height: AppSpacing.xl),
               if (error != null) ...[

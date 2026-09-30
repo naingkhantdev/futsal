@@ -16,6 +16,7 @@ import '../../../../core/widgets/content_constraint.dart';
 import '../../../../core/widgets/empty_view.dart';
 import '../../../../core/widgets/skeleton.dart';
 import '../../../../data/vos/blacklist_entry_vo.dart';
+import '../../../shared/widgets/app_tour.dart';
 import '../../../shared/widgets/person_tile.dart';
 import '../providers/blacklist_providers.dart';
 
@@ -29,7 +30,10 @@ class BlacklistScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: Text(l.blacklistTitle)),
+      appBar: AppBar(
+        title: Text(l.blacklistTitle),
+        actions: const [TourHelpButton()],
+      ),
       body: AsyncValueView<List<BlacklistEntryVO>>(
         value: ref.watch(myBlacklistProvider),
         onRetry: () => ref.invalidate(myBlacklistProvider),

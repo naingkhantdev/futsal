@@ -1613,4 +1613,653 @@ class AppLocalizationsMy extends AppLocalizations {
 
   @override
   String get useThisLocation => 'ဤတည်နေရာကို သုံးမည်';
+
+  @override
+  String get notifBookingRequestedTitle => 'ဘိုကင် တောင်းဆိုမှု အသစ်';
+
+  @override
+  String get notifBookingCancelledTitle => 'ဖောက်သည်က ဘိုကင်ကို ပယ်ဖျက်လိုက်သည်';
+
+  @override
+  String get notifBookingConfirmedTitle => 'ဘိုကင် အတည်ပြုပြီးပါပြီ';
+
+  @override
+  String get notifBookingRejectedTitle => 'ဘိုကင်ကို ငြင်းပယ်လိုက်သည်';
+
+  @override
+  String notifReason(String reason) {
+    return 'အကြောင်းရင်း - $reason';
+  }
+
+  @override
+  String get notificationsEmptyTitle => 'အသိပေးချက် မရှိသေးပါ';
+
+  @override
+  String get notificationsEmptyMessage => 'ဆိုင်က သင့်ဘိုကင်ကို အတည်ပြု သို့မဟုတ် ငြင်းပယ်သည့်အခါ ဤနေရာတွင် မြင်ရပါမည်။';
+
+  @override
+  String get notificationsEmptyMessageShop => 'ဘိုကင် တောင်းဆိုမှုအသစ်များနှင့် ပယ်ဖျက်မှုများကို ဤနေရာတွင် ပြပါမည်။';
+
+  @override
+  String get notificationsOpen => 'အသိပေးချက်များ ဖွင့်ရန်';
+
+  @override
+  String get notificationView => 'ကြည့်ရန်';
+
+  @override
+  String get tourSkip => 'ကျော်မည်';
+
+  @override
+  String get tourNext => 'ရှေ့သို့';
+
+  @override
+  String get tourBack => 'နောက်သို့';
+
+  @override
+  String get tourDone => 'နားလည်ပါပြီ';
+
+  @override
+  String tourStepOf(int current, int total) {
+    return '$total ခုအနက် $current';
+  }
+
+  @override
+  String get tourReplay => 'အက်ပ် လမ်းညွှန်';
+
+  @override
+  String get tourReplaySub => 'အက်ပ် အသုံးပြုပုံကို ပြန်ကြည့်ရန်';
+
+  @override
+  String get tourCustSearchTitle => 'ကွင်း ရှာပါ';
+
+  @override
+  String get tourCustSearchBody => 'အနီးနားရှိ ကွင်းများကို ကြည့်ရန် အားကစားကွင်းအမည် သို့မဟုတ် မြို့နယ်ဖြင့် ရှာပါ။';
+
+  @override
+  String get tourCustDayTitle => 'နေ့ ရွေးပါ';
+
+  @override
+  String get tourCustDayBody => 'ကစားလိုသည့်နေ့ကို ရွေးပါ။ အောက်ရှိ အားလပ်ချိန်များ ထိုနေ့အတိုင်း ပြောင်းပါမည်။';
+
+  @override
+  String get tourCustVenuesTitle => 'တစ်ချက်နှိပ်ရုံဖြင့် ဘိုကင်လုပ်ပါ';
+
+  @override
+  String get tourCustVenuesBody => 'အားလပ်ချိန်တစ်ခုကို နှိပ်ပြီး ထိုကွင်းကို တိုက်ရိုက် ဘိုကင်လုပ်ပါ။';
+
+  @override
+  String get tourCustBookingsTitle => 'သင့်ဘိုကင်များ';
+
+  @override
+  String get tourCustBookingsBody => 'လာမည့်ပွဲများနှင့် အခြေအနေကို ကြည့်ပါ။ အစီအစဉ်ပြောင်းလျှင် ပယ်ဖျက်နိုင်ပါသည်။';
+
+  @override
+  String get tourCustNotifTitle => 'အသိပေးချက်များ';
+
+  @override
+  String get tourCustNotifBody => 'ဆိုင်က သင့်ဘိုကင်ကို အတည်ပြု သို့မဟုတ် ငြင်းပယ်သည့်အခါ ဤနေရာတွင် အသိပေးပါမည်။';
+
+  @override
+  String get tourCustProfileTitle => 'ပရိုဖိုင်နှင့် ဘာသာစကား';
+
+  @override
+  String get tourCustProfileBody => 'အချက်အလက် ပြင်ရန်၊ မြန်မာ/အင်္ဂလိပ် ပြောင်းရန် သို့မဟုတ် ဤလမ်းညွှန်ကို ပြန်ကြည့်ရန်။';
+
+  @override
+  String get tourShopStatsTitle => 'ယနေ့ အခြေအနေ';
+
+  @override
+  String get tourShopStatsBody => 'ယနေ့ ဘိုကင်များ၊ စောင့်ဆိုင်းနေသော တောင်းဆိုမှုများနှင့် ရရှိပြီး ငွေ။';
+
+  @override
+  String get tourShopBellTitle => 'ဘိုကင် အသိပေးချက်';
+
+  @override
+  String get tourShopBellBody => 'တောင်းဆိုမှုအသစ်နှင့် ပယ်ဖျက်မှုများ ဤနေရာသို့ ရောက်လာပါမည်။ မဖတ်ရသေးသည့် အရေအတွက်ကို ပြပါသည်။';
+
+  @override
+  String get tourShopBookingsTitle => 'ဘိုကင် စီမံရန်';
+
+  @override
+  String get tourShopBookingsBody => 'တောင်းဆိုမှုများကို အတည်ပြု သို့မဟုတ် ငြင်းပယ်ပြီး ငွေပေးချေမှုကို မှတ်တမ်းတင်ပါ။';
+
+  @override
+  String get tourShopStadiumsTitle => 'အားကစားကွင်းနှင့် ကွင်းများ';
+
+  @override
+  String get tourShopStadiumsBody => 'အားကစားကွင်း၊ ဖွင့်ချိန်၊ ကွင်းများနှင့် တစ်နာရီဈေးနှုန်းကို ထည့်ပါ။';
+
+  @override
+  String get tourShopCustomersBody => 'သင့်ထံ ဘိုကင်လုပ်သူများနှင့် ၎င်းတို့၏ မှတ်တမ်းကို ကြည့်ပါ။';
+
+  @override
+  String get tourShopSettingsBody => 'ဆိုင်ပရိုဖိုင်၊ ပိတ်ထားသော အချိန်များ၊ အမည်ပျက်စာရင်းနှင့် ဤလမ်းညွှန်။';
+
+  @override
+  String get tourAdminStatsTitle => 'ပလက်ဖောင်း အခြေအနေ';
+
+  @override
+  String get tourAdminStatsBody => 'ပလက်ဖောင်းတစ်ခုလုံးရှိ ဆိုင်များ၊ ဘိုကင်များနှင့် လှုပ်ရှားမှုများ။';
+
+  @override
+  String get tourAdminShopsBody => 'ဆိုင်အသစ်များကို စစ်ဆေးပါ၊ ဖွင့်ပါ သို့မဟုတ် ဆိုင်းငံ့ပါ၊ ဆိုင်စီမံသူများကို သတ်မှတ်ပါ။';
+
+  @override
+  String get tourAdminBookingsTitle => 'ဘိုကင်အားလုံး';
+
+  @override
+  String get tourAdminBookingsBody => 'ပလက်ဖောင်းပေါ်ရှိ မည်သည့်ဘိုကင်ကိုမဆို ရှာကြည့်ပါ။';
+
+  @override
+  String get tourAdminCustomersBody => 'ဖောက်သည်များကို ရှာပြီး အကောင့်အခြေအနေကို စီမံပါ။';
+
+  @override
+  String get tourAdminSettingsBody => 'ကြေညာချက်များ၊ စစ်ဆေးရန် စောင့်နေသော ဆိုင်များနှင့် ဤလမ်းညွှန်။';
+
+  @override
+  String get tourHelp => 'ဤစာမျက်နှာ အသုံးပြုပုံ';
+
+  @override
+  String get tourSaveTitle => 'သိမ်းဆည်းရန်';
+
+  @override
+  String get tourSaveBody => 'ပြီးလျှင် ဤနေရာကို နှိပ်ပါ။ မနှိပ်မချင်း ဘာမှ မသိမ်းရသေးပါ။';
+
+  @override
+  String get tourLoginEmailTitle => 'သင့်အီးမေးလ်';
+
+  @override
+  String get tourLoginEmailBody => 'စာရင်းသွင်းခဲ့သော အီးမေးလ်နှင့် စကားဝှက်ဖြင့် ဝင်ပါ။';
+
+  @override
+  String get tourLoginForgotTitle => 'စကားဝှက် မေ့နေပါသလား';
+
+  @override
+  String get tourLoginForgotBody => 'ဤနေရာကို နှိပ်ပါ၊ စကားဝှက်အသစ် သတ်မှတ်ရန် လင့်ခ်ကို အီးမေးလ်ဖြင့် ပို့ပေးပါမည်။';
+
+  @override
+  String get tourLoginRegisterTitle => 'အသစ်လား';
+
+  @override
+  String get tourLoginRegisterBody => 'တစ်မိနစ်ခန့်အတွင်း အခမဲ့ အကောင့်ဖွင့်ပါ။';
+
+  @override
+  String get tourLanguageTitle => 'ဘာသာစကား';
+
+  @override
+  String get tourLanguageBody => 'မြန်မာနှင့် အင်္ဂလိပ်ကို အချိန်မရွေး ပြောင်းနိုင်ပါသည်။';
+
+  @override
+  String get tourRegisterNameTitle => 'သင့်အမည်';
+
+  @override
+  String get tourRegisterNameBody => 'ဆိုင်များက သင့်ဘိုကင်တွင် ဤအမည်ကို မြင်ရပါမည်။';
+
+  @override
+  String get tourRegisterPhoneTitle => 'ဖုန်း (မဖြစ်မနေ မဟုတ်)';
+
+  @override
+  String get tourRegisterPhoneBody => 'ဘိုကင်အကြောင်း ဆိုင်က သင့်ကို ဖုန်းဆက်နိုင်ပါမည်။';
+
+  @override
+  String get tourRegisterButtonTitle => 'အကောင့် ဖွင့်ပါ';
+
+  @override
+  String get tourRegisterButtonBody => 'ပြီးလျှင် နှိပ်ပါ။ အချက်အလက်များကို နောက်မှ ပရိုဖိုင်တွင် ပြင်နိုင်ပါသည်။';
+
+  @override
+  String get tourForgotEmailTitle => 'စကားဝှက် ပြန်သတ်မှတ်ရန်';
+
+  @override
+  String get tourForgotEmailBody => 'သင့်အကောင့် အီးမေးလ်ကို ထည့်ပါ။';
+
+  @override
+  String get tourForgotButtonTitle => 'လင့်ခ် ပို့ပါ';
+
+  @override
+  String get tourForgotButtonBody => 'ထို့နောက် inbox (နှင့် spam) ကို စစ်ပြီး လင့်ခ်အတိုင်း လုပ်ပါ။';
+
+  @override
+  String get tourExploreSearchTitle => 'ကွင်း ရှာရန်';
+
+  @override
+  String get tourExploreSearchBody => 'အားကစားကွင်းအမည် သို့မဟုတ် မြို့နယ်ကို ရိုက်ပါ။';
+
+  @override
+  String get tourExploreFiltersTitle => 'အထောက်အကူပစ္စည်းဖြင့် စစ်ရန်';
+
+  @override
+  String get tourExploreFiltersBody => 'ကားပါကင်၊ ရေချိုးခန်း စသည့် လိုအပ်သည်ကို နှိပ်ပါ။ ပြန်ဖြုတ်ရန် ထပ်နှိပ်ပါ။';
+
+  @override
+  String get tourStadiumIntroTitle => 'ကွင်း အသေးစိတ်';
+
+  @override
+  String get tourStadiumIntroBody => 'ဖွင့်ချိန်၊ ဈေးနှုန်း၊ အထောက်အကူပစ္စည်း၊ တည်နေရာနှင့် ဤကွင်းရှိ ကွင်းများ။';
+
+  @override
+  String get tourStadiumCourtsTitle => 'ကွင်း ရွေးပါ';
+
+  @override
+  String get tourStadiumCourtsBody => 'ကွင်းတစ်ခုကို နှိပ်ပြီး အားလပ်ချိန်များကို ကြည့်ပါ။';
+
+  @override
+  String get tourStadiumBookTitle => 'ကွင်း ဘိုကင်လုပ်ရန်';
+
+  @override
+  String get tourStadiumBookBody => 'သို့မဟုတ် ဤနေရာကို နှိပ်ပြီး ကွင်း၊ နေ့နှင့် အချိန် ရွေးပါ။';
+
+  @override
+  String get tourSlotsCourtTitle => 'ကွင်း ရွေးပါ';
+
+  @override
+  String get tourSlotsCourtBody => 'ကွင်းတစ်ခုစီတွင် ဈေးနှုန်း ကွဲပြားနိုင်ပါသည်။';
+
+  @override
+  String get tourSlotsDayTitle => 'နေ့ ရွေးပါ';
+
+  @override
+  String get tourSlotsDayBody => 'ရက် ၃၀ အထိ ကြိုတင် ဘိုကင်လုပ်နိုင်ပါသည်။';
+
+  @override
+  String get tourSlotsGridTitle => 'အချိန် ရွေးပါ';
+
+  @override
+  String get tourSlotsGridBody => 'စတင်ချိန်ကို နှိပ်ပါ၊ ပိုကြာကြာ ကစားလိုလျှင် နောက်ထပ် အားလပ်ချိန်များကို ဆက်နှိပ်ပါ။ မီးခိုးရောင်သည် ဘိုကင်ပြီး သို့မဟုတ် ပိတ်ထားသည်။';
+
+  @override
+  String get tourSlotsContinueTitle => 'ဆက်လုပ်ရန်';
+
+  @override
+  String get tourSlotsContinueBody => 'အချိန်နှင့် ဈေးနှုန်းကို စစ်ပြီး တောင်းဆိုမှု ပို့ပါ။';
+
+  @override
+  String get tourReviewIntroTitle => 'ဘိုကင်ကို စစ်ဆေးပါ';
+
+  @override
+  String get tourReviewIntroBody => 'ကွင်း၊ ရက်စွဲ၊ အချိန်နှင့် ဈေးနှုန်း မှန်ကန်ကြောင်း စစ်ပါ။';
+
+  @override
+  String get tourReviewSendTitle => 'တောင်းဆိုမှု ပို့ပါ';
+
+  @override
+  String get tourReviewSendBody => 'ဆိုင်က အတည်ပြု သို့မဟုတ် ငြင်းပယ်ပြီး သင့်ကို အသိပေးပါမည်။ ငွေကို ကွင်းတွင် ပေးချေပါ။';
+
+  @override
+  String get tourConfirmIntroTitle => 'တောင်းဆိုမှု ပို့ပြီးပါပြီ';
+
+  @override
+  String get tourConfirmIntroBody => 'ဆိုင်က အတည်ပြုသည်အထိ ဘိုကင်သည် စောင့်ဆိုင်းဆဲ ဖြစ်ပါသည်။ အသိပေးချက် ရရှိပါမည်။';
+
+  @override
+  String get tourConfirmViewTitle => 'ဘိုကင် ကြည့်ရန်';
+
+  @override
+  String get tourConfirmViewBody => 'အခြေအနေနှင့် အသေးစိတ်ကို အချိန်မရွေး ကြည့်နိုင်ပါသည်။';
+
+  @override
+  String get tourBookingsIntroTitle => 'ဘိုကင် အခြေအနေ';
+
+  @override
+  String get tourBookingsIntroBody => 'စောင့်ဆိုင်းဆဲ - ဆိုင်ကို စောင့်နေသည်။ အတည်ပြုပြီး - ကွင်းတွင် တွေ့မည်။ ငြင်းပယ်/ပယ်ဖျက်ပြီး - အချိန် ပြန်လွတ်သွားပြီ။';
+
+  @override
+  String get tourBookingsTabsTitle => 'လာမည့်ပွဲနှင့် ပြီးခဲ့သည့်ပွဲ';
+
+  @override
+  String get tourBookingsTabsBody => 'လာမည့်ပွဲများနှင့် ကစားပြီးသော ပွဲများကြား ပြောင်းကြည့်ပါ။';
+
+  @override
+  String get tourBookingDetailIntroTitle => 'သင့်ဘိုကင်';
+
+  @override
+  String get tourBookingDetailIntroBody => 'ဤဘိုကင်၏ အခြေအနေ၊ အချိန်၊ ကွင်းနှင့် ဈေးနှုန်း။';
+
+  @override
+  String get tourBookingDetailVenueTitle => 'ကွင်း';
+
+  @override
+  String get tourBookingDetailVenueBody => 'တည်နေရာနှင့် လမ်းညွှန်အတွက် ကွင်းစာမျက်နှာကို ဖွင့်ပါ။';
+
+  @override
+  String get tourBookingDetailCancelTitle => 'ပယ်ဖျက်ရန်';
+
+  @override
+  String get tourBookingDetailCancelBody => 'အစီအစဉ် ပြောင်းသွားပါသလား။ အခြားသူ ကစားနိုင်ရန် စတင်ချိန်မတိုင်မီ ပယ်ဖျက်ပါ။';
+
+  @override
+  String get tourNotifIntroTitle => 'သင့် အသိပေးချက်များ';
+
+  @override
+  String get tourNotifIntroBody => 'ဘိုကင် အခြေအနေများ ဤနေရာတွင် ပေါ်ပါမည်။ တစ်ခုကို နှိပ်ပြီး ထိုဘိုကင်ကို ဖွင့်ပါ။';
+
+  @override
+  String get tourNotifShopIntroBody => 'ဘိုကင် တောင်းဆိုမှုအသစ်နှင့် ပယ်ဖျက်မှုများ ဤနေရာတွင် ပေါ်ပါမည်။ တစ်ခုကို နှိပ်ပြီး ထိုဘိုကင်ကို ဖွင့်ပါ။';
+
+  @override
+  String get tourNotifMarkTitle => 'အားလုံး ဖတ်ပြီးအဖြစ် မှတ်ရန်';
+
+  @override
+  String get tourNotifMarkBody => 'မဖတ်ရသေးသော အမှတ်အသားများကို တစ်ချက်တည်းဖြင့် ရှင်းပါ။';
+
+  @override
+  String get tourProfileIntroTitle => 'သင့်ပရိုဖိုင်';
+
+  @override
+  String get tourProfileIntroBody => 'ဆိုင်များ မြင်ရသည့် သင့်အမည်၊ အီးမေးလ်နှင့် ဖုန်း။';
+
+  @override
+  String get tourProfileEditTitle => 'ပရိုဖိုင် ပြင်ရန်';
+
+  @override
+  String get tourProfileEditBody => 'အမည် သို့မဟုတ် ဖုန်းနံပါတ် ပြောင်းပါ။';
+
+  @override
+  String get tourEditPhoneBody => 'ဘိုကင်အကြောင်း ဆိုင်က ဆက်သွယ်နိုင်ရန် ဖုန်းနံပါတ် ထည့်ပါ။';
+
+  @override
+  String get tourPasswordCurrentTitle => 'လက်ရှိ စကားဝှက်';
+
+  @override
+  String get tourPasswordCurrentBody => 'လုံခြုံရေးအတွက် လက်ရှိသုံးနေသော စကားဝှက်ကို ထည့်ပါ။';
+
+  @override
+  String get tourPasswordNewTitle => 'စကားဝှက် အသစ်';
+
+  @override
+  String get tourPasswordNewBody => 'အနည်းဆုံး အက္ခရာ ၈ လုံး သုံးပါ၊ အခြားအက်ပ်မှ စကားဝှက်ကို ပြန်မသုံးပါနှင့်။';
+
+  @override
+  String get tourStaffStadiumFilterTitle => 'အားကစားကွင်းအလိုက် စစ်ရန်';
+
+  @override
+  String get tourStaffStadiumFilterBody => 'အားကစားကွင်း တစ်ခုတည်း၏ ဘိုကင်များကိုသာ ပြပါ။';
+
+  @override
+  String get tourStaffFiltersTitle => 'စာရင်းကို စစ်ရန်';
+
+  @override
+  String get tourStaffFiltersBody => 'စောင့်ဆိုင်းဆဲ ဆိုသည်မှာ ဆုံးဖြတ်ချက် စောင့်နေခြင်း ဖြစ်သည်။ လာမည့်၊ ပြီးခဲ့သည့် သို့မဟုတ် အားလုံးသို့ ပြောင်းပါ။';
+
+  @override
+  String get tourStaffBlockTitle => 'အချိန် ပိတ်ရန်';
+
+  @override
+  String get tourStaffBlockBody => 'ပြုပြင်ထိန်းသိမ်းမှု သို့မဟုတ် သီးသန့်ပွဲအတွက် ကွင်းကို ပိတ်ပြီး မည်သူမျှ ဘိုကင်မလုပ်နိုင်အောင် ထားပါ။';
+
+  @override
+  String get tourStaffDetailIntroTitle => 'ဘိုကင်';
+
+  @override
+  String get tourStaffDetailIntroBody => 'ဖောက်သည်၊ အချိန်၊ ကွင်း၊ ဈေးနှုန်းနှင့် ငွေပေးချေမှု။ ဖောက်သည်ကို နှိပ်ပြီး မှတ်တမ်း ကြည့်ပါ။';
+
+  @override
+  String get tourStaffConfirmTitle => 'အတည်ပြုရန်';
+
+  @override
+  String get tourStaffConfirmBody => 'တောင်းဆိုမှုကို လက်ခံပါ။ ဖောက်သည်ထံ အသိပေးချက် ရောက်ပါမည်။';
+
+  @override
+  String get tourStaffPaymentTitle => 'ငွေပေးချေမှု';
+
+  @override
+  String get tourStaffPaymentBody => 'ငွေပေးချေမှုကို အဆင့်လိုက် မှတ်ပါ - စောင့်ဆိုင်းဆဲ၊ ထို့နောက် ပေးပြီး။';
+
+  @override
+  String get tourStaffRejectTitle => 'ငြင်းပယ်ရန်';
+
+  @override
+  String get tourStaffRejectBody => 'အချိန်ကို အခြားသူများအတွက် လွတ်စေပါသည်။ ဖောက်သည်ကို အသိပေးပါမည်။';
+
+  @override
+  String get tourShopCustomersIntroBody => 'သင့်ဆိုင်တွင် ဘိုကင်လုပ်ဖူးသူ အားလုံး။ အသေးစိတ်အတွက် အမည်ကို နှိပ်ပါ။';
+
+  @override
+  String get tourCustomerSearchTitle => 'ဖောက်သည် ရှာရန်';
+
+  @override
+  String get tourCustomerSearchBody => 'အမည် သို့မဟုတ် ဖုန်းနံပါတ်ဖြင့် ရှာပါ။';
+
+  @override
+  String get tourCustomerDetailIntroTitle => 'ဖောက်သည်';
+
+  @override
+  String get tourCustomerDetailIntroBody => 'ဆက်သွယ်ရန် အချက်အလက်နှင့် ဘိုကင် မှတ်တမ်း။';
+
+  @override
+  String get tourBlacklistActionTitle => 'အမည်ပျက်စာရင်း';
+
+  @override
+  String get tourBlacklistActionBody => 'မကြာခဏ မလာသူကို သင့်ဆိုင်တွင် ဘိုကင်မလုပ်နိုင်အောင် တားပါသည်။ အခြားဆိုင်များကို မထိခိုက်ပါ။';
+
+  @override
+  String get tourShopSettingsIntroTitle => 'ဆက်တင်များ';
+
+  @override
+  String get tourShopSettingsIntroBody => 'ဆိုင်ပရိုဖိုင်၊ ပိတ်ထားသော အချိန်၊ အမည်ပျက်စာရင်းနှင့် အားကစားကွင်းများ တစ်နေရာတည်းတွင်။';
+
+  @override
+  String get tourShopProfileIntroTitle => 'ဆိုင်ပရိုဖိုင်';
+
+  @override
+  String get tourShopProfileIntroBody => 'ဖောက်သည်များ မြင်ရမည့် သင့်ဆိုင်ပုံစံ။';
+
+  @override
+  String get tourShopProfileEditTitle => 'ပြင်ရန်';
+
+  @override
+  String get tourShopProfileEditBody => 'အမည်၊ ဖုန်းနှင့် လိပ်စာကို ပြင်ပါ။';
+
+  @override
+  String get tourStadiumsIntroTitle => 'သင့် အားကစားကွင်းများ';
+
+  @override
+  String get tourStadiumsIntroBody => 'အားကစားကွင်းတိုင်းတွင် ကိုယ်ပိုင် ဖွင့်ချိန်နှင့် ကွင်းများ ရှိသည်။ စီမံရန် တစ်ခုကို နှိပ်ပါ။';
+
+  @override
+  String get tourStadiumsAddTitle => 'အားကစားကွင်း ထည့်ရန်';
+
+  @override
+  String get tourStadiumsAddBody => 'ဤနေရာမှ စပါ - ကွင်းကို ထည့်ပြီး ၎င်း၏ ကွင်းများကို ထည့်ပါ။';
+
+  @override
+  String get tourStadiumEditTitle => 'အားကစားကွင်း ပြင်ရန်';
+
+  @override
+  String get tourStadiumEditBody => 'အမည်၊ လိပ်စာ၊ ဖွင့်ချိန်နှင့် အထောက်အကူပစ္စည်းများကို ပြင်ပါ။';
+
+  @override
+  String get tourStadiumAddCourtTitle => 'ကွင်း ထည့်ရန်';
+
+  @override
+  String get tourStadiumAddCourtBody => 'ကွင်းတစ်ခုစီတွင် ကိုယ်ပိုင် ဈေးနှုန်းနှင့် အချိန်အပိုင်း ရှိသည်။';
+
+  @override
+  String get tourStadiumFormNameTitle => 'အားကစားကွင်း အမည်';
+
+  @override
+  String get tourStadiumFormNameBody => 'ဖောက်သည်များ မြင်ရပြီး ရှာမည့် အမည်။';
+
+  @override
+  String get tourStadiumFormMapTitle => 'မြေပုံ တည်နေရာ';
+
+  @override
+  String get tourStadiumFormMapBody => 'ဖောက်သည်များ လမ်းညွှန် ရနိုင်ရန် ကွင်းကို ပင်ထိုးပါ။';
+
+  @override
+  String get tourStadiumFormHoursTitle => 'ဖွင့်ချိန်';
+
+  @override
+  String get tourStadiumFormHoursBody => 'ဖောက်သည်များ ဤအချိန်အတွင်းသာ ဘိုကင်လုပ်နိုင်ပါသည်။';
+
+  @override
+  String get tourStadiumFormFacilitiesTitle => 'အထောက်အကူပစ္စည်းများ';
+
+  @override
+  String get tourStadiumFormFacilitiesBody => 'သင်ပေးနိုင်သည်များကို ရွေးပါ။ ဖောက်သည်များ ဤအချက်ဖြင့် ကွင်းများကို စစ်ပါသည်။';
+
+  @override
+  String get tourCourtIntroTitle => 'ကွင်း';
+
+  @override
+  String get tourCourtIntroBody => 'ဈေးနှုန်း၊ အချိန်အပိုင်းနှင့် ဖောက်သည်များ ဘိုကင်လုပ်နိုင်/မနိုင်။';
+
+  @override
+  String get tourCourtEditTitle => 'ကွင်း ပြင်ရန်';
+
+  @override
+  String get tourCourtEditBody => 'အမည် သို့မဟုတ် ဈေးနှုန်း ပြင်ရန်၊ သို့မဟုတ် ဘိုကင် ပိတ်ရန်။';
+
+  @override
+  String get tourCourtFormNameTitle => 'ကွင်း အမည်';
+
+  @override
+  String get tourCourtFormNameBody => 'ဥပမာ “ကွင်း A” သို့မဟုတ် “အမိုးအကာပါ ကွင်း”။';
+
+  @override
+  String get tourCourtFormPriceTitle => 'တစ်နာရီ ဈေးနှုန်း';
+
+  @override
+  String get tourCourtFormPriceBody => 'တစ်နာရီလျှင် ကျပ်ဖြင့်။ ဘိုကင်ဈေးကို ဤနှုန်းမှ တွက်ပါသည်။';
+
+  @override
+  String get tourCourtFormSlotTitle => 'အချိန်အပိုင်း';
+
+  @override
+  String get tourCourtFormSlotBody => 'မိနစ် ၃၀ သို့မဟုတ် ၆၀။ နောက်မှ ပြောင်း၍ မရသဖြင့် သေချာ ရွေးပါ။';
+
+  @override
+  String get tourBlockedIntroTitle => 'ပိတ်ထားသော အချိန်များ';
+
+  @override
+  String get tourBlockedIntroBody => 'သင် ပိတ်ထားသော အချိန်များ။ ဖောက်သည်များ ဘိုကင်မလုပ်နိုင်ပါ။';
+
+  @override
+  String get tourBlockedAddBody => 'ပြုပြင်ထိန်းသိမ်းမှု၊ သန့်ရှင်းရေး သို့မဟုတ် ပွဲအတွက် ကွင်းကို ပိတ်ပါ။';
+
+  @override
+  String get tourBlockFormWhereTitle => 'မည်သည့်နေရာ';
+
+  @override
+  String get tourBlockFormWhereBody => 'အားကစားကွင်းကို ရွေးပြီး ပိတ်မည့် ကွင်းကို ရွေးပါ။';
+
+  @override
+  String get tourBlockFormButtonBody => 'ဘိုကင်ပြီးသော အချိန်ကို ပိတ်၍ မရပါ။ ထိုဘိုကင်ကို အရင် ငြင်းပယ်ပါ။';
+
+  @override
+  String get tourBlacklistIntroTitle => 'အမည်ပျက်စာရင်း';
+
+  @override
+  String get tourBlacklistIntroBody => 'ဤစာရင်းရှိ ဖောက်သည်များ သင့်ဆိုင်တွင် ဘိုကင်အသစ် မလုပ်နိုင်ပါ။ ပြန်ခွင့်ပြုရန် ဖယ်ရှားရန် အိုင်ကွန်ကို နှိပ်ပါ။';
+
+  @override
+  String get tourMapTitle => 'မြေပုံကို ရွှေ့ပါ';
+
+  @override
+  String get tourMapBody => 'ပင်သည် သင့်ကွင်းပေါ် ရောက်သည်အထိ ဆွဲရွှေ့ပါ။ ချဲ့ရန် လက်နှစ်ချောင်းဖြင့် ဖြန့်ပါ။';
+
+  @override
+  String get tourMapUseTitle => 'ဤတည်နေရာကို သုံးမည်';
+
+  @override
+  String get tourMapUseBody => 'ပင်ကို အားကစားကွင်း ဖောင်တွင် သိမ်းပါသည်။';
+
+  @override
+  String get tourShopsSegmentsTitle => 'အားလုံး သို့မဟုတ် စစ်ဆေးရန် ကျန်';
+
+  @override
+  String get tourShopsSegmentsBody => 'ဆိုင်အသစ် လျှောက်ထားမှုများ သင် အတည်ပြုသည်အထိ စစ်ဆေးရန် ကျန်တွင် စောင့်ပါသည်။';
+
+  @override
+  String get tourShopsAddTitle => 'ဆိုင် ထည့်ရန်';
+
+  @override
+  String get tourShopsAddBody => 'ဆိုင်ကို ကိုယ်တိုင် ဖန်တီးပြီး ဆိုင်စီမံသူကို သတ်မှတ်ပါ။';
+
+  @override
+  String get tourShopDetailEditTitle => 'ဆိုင် ပြင်ရန်';
+
+  @override
+  String get tourShopDetailEditBody => 'အမည်၊ ဆက်သွယ်ရန်နှင့် ပိုင်ရှင် အချက်အလက်ကို ပြင်ပါ။';
+
+  @override
+  String get tourShopDetailStatusTitle => 'ဆိုင် အခြေအနေ';
+
+  @override
+  String get tourShopDetailStatusBody => 'အတည်ပြု၊ ဆိုင်းငံ့ သို့မဟုတ် ပြန်ဖွင့်ပါ။ ဆိုင်းငံ့ထားသော သို့မဟုတ် စာရင်းမပြသော ဆိုင်များ ဘိုကင်အသစ် မရပါ။';
+
+  @override
+  String get tourShopDetailAdminsTitle => 'ဆိုင်စီမံသူများ';
+
+  @override
+  String get tourShopDetailAdminsBody => 'ဤဆိုင်ကို စီမံသူများကို ကြည့်ပြီး သတ်မှတ်ပါ။';
+
+  @override
+  String get tourShopFormNameTitle => 'ဆိုင် အမည်';
+
+  @override
+  String get tourShopFormNameBody => 'ဤဆိုင်၏ အားကစားကွင်းတိုင်းတွင် ဖောက်သည်များကို ပြပါသည်။';
+
+  @override
+  String get tourShopFormOwnerTitle => 'ပိုင်ရှင် အချက်အလက်';
+
+  @override
+  String get tourShopFormOwnerBody => 'သီးသန့် - သင်နှင့် ဆိုင်စီမံသူများသာ မြင်ရပါသည်။';
+
+  @override
+  String get tourShopAdminsIntroTitle => 'ဆိုင်စီမံသူများ';
+
+  @override
+  String get tourShopAdminsIntroBody => 'ဤဆိုင်ကို စီမံသူများ။ ၎င်းတို့ ဤဆိုင်၏ အချက်အလက်ကိုသာ မြင်ရပါသည်။';
+
+  @override
+  String get tourShopAdminsAddTitle => 'စီမံသူ ထည့်ရန်';
+
+  @override
+  String get tourShopAdminsAddBody => 'ထိုသူသည် ဖောက်သည်အကောင့်ကို အရင် ဖွင့်ထားရပါမည်။';
+
+  @override
+  String get tourInviteEmailTitle => 'အကောင့် ရှာရန်';
+
+  @override
+  String get tourInviteEmailBody => '၎င်းတို့ စာရင်းသွင်းခဲ့သော အီးမေးလ်ကို ထည့်ပါ။';
+
+  @override
+  String get tourInviteFindTitle => 'ရှာရန်';
+
+  @override
+  String get tourInviteFindBody => 'ထို့နောက် အမည်ကို စစ်ပြီး ဤဆိုင်၏ စီမံသူ အဖြစ် သတ်မှတ်ပါ။';
+
+  @override
+  String get tourAnnouncementsIntroTitle => 'ကြေညာချက်များ';
+
+  @override
+  String get tourAnnouncementsIntroBody => 'အသုံးပြုသူများထံ သင် ပို့ခဲ့သော စာများ။';
+
+  @override
+  String get tourAnnouncementsAddTitle => 'ကြေညာချက် အသစ်';
+
+  @override
+  String get tourAnnouncementsAddBody => 'ဖောက်သည်၊ ဆိုင်စီမံသူ သို့မဟုတ် အားလုံးအတွက် စာ ရေးပါ။';
+
+  @override
+  String get tourAnnounceAudienceTitle => 'ပို့မည့်သူ';
+
+  @override
+  String get tourAnnounceAudienceBody => 'မည်သူ လက်ခံမည်ကို ရွေးပါ။';
+
+  @override
+  String get tourAnnounceSendTitle => 'ပို့ရန်';
+
+  @override
+  String get tourAnnounceSendBody => 'စာသားကို အရင် စစ်ပါ - ပို့ပြီးလျှင် ပြန်ရုပ်သိမ်း၍ မရပါ။';
+
+  @override
+  String get tourAdminCustomersIntroBody => 'ပလက်ဖောင်းရှိ ဖောက်သည် အားလုံး။ အသေးစိတ်အတွက် အမည်ကို နှိပ်ပါ။';
+
+  @override
+  String get tourAdminCustomerDetailBody => 'ဆက်သွယ်ရန် အချက်အလက်နှင့် ဘိုကင်များ။ အောက်ရှိ ခလုတ်ဖြင့် အကောင့်ကို ပိတ် သို့မဟုတ် ပြန်ဖွင့်ပါ။';
+
+  @override
+  String get tourAdminSettingsIntroBody => 'ကြေညာချက်များ၊ စစ်ဆေးရန် စောင့်နေသော ဆိုင်များနှင့် ဤလမ်းညွှန်။';
 }

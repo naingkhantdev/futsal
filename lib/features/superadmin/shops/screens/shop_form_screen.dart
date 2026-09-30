@@ -22,6 +22,8 @@ import '../../../../core/widgets/inline_banner.dart';
 import '../../../../data/requests/venue_write_requests.dart';
 import '../../../../data/vos/shop_private_vo.dart';
 import '../../../../data/vos/shop_vo.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../providers/shops_providers.dart';
 
 typedef _ShopDocs = AsyncValue<({ShopVO? shop, ShopPrivateVO? details})>;
@@ -41,7 +43,10 @@ class ShopFormScreen extends ConsumerWidget {
     final l = context.l10n;
     if (id == null) {
       return Scaffold(
-        appBar: AppBar(title: Text(l.shopNew)),
+        appBar: AppBar(
+          title: Text(l.shopNew),
+          actions: const [TourHelpButton()],
+        ),
         body: const _ShopForm(shopId: null, shop: null, details: null),
       );
     }
@@ -57,7 +62,10 @@ class ShopFormScreen extends ConsumerWidget {
       _ => const AsyncValue.loading(),
     };
     return Scaffold(
-      appBar: AppBar(title: Text(l.shopEdit)),
+      appBar: AppBar(
+        title: Text(l.shopEdit),
+        actions: const [TourHelpButton()],
+      ),
       body: AsyncValueView<({ShopVO? shop, ShopPrivateVO? details})>(
         value: both,
         onRetry: () {
@@ -293,10 +301,13 @@ class _ShopFormState extends ConsumerState<_ShopForm>
                   ),
                   const SizedBox(height: AppSpacing.xl),
                 ],
-                field(l.shopNameLabel, _name,
-                    icon: Icons.storefront_outlined,
-                    focusNode: _nameFocus,
-                    validator: _nameError),
+                TourAnchor(
+                  id: TourIds.name,
+                  child: field(l.shopNameLabel, _name,
+                      icon: Icons.storefront_outlined,
+                      focusNode: _nameFocus,
+                      validator: _nameError),
+                ),
                 field(l.phoneOptionalLabel, _phone,
                     icon: Icons.phone_outlined,
                     focusNode: _phoneFocus,
@@ -324,7 +335,10 @@ class _ShopFormState extends ConsumerState<_ShopForm>
                     maxLines: 6,
                     validator: _descriptionError),
                 const SizedBox(height: AppSpacing.sm),
-                Text(l.ownerPrivateTitle, style: context.textStyles.titleSmall),
+                TourAnchor(
+                  id: TourIds.owner,
+                  child: Text(l.ownerPrivateTitle, style: context.textStyles.titleSmall),
+                ),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
                   l.ownerPrivateNote,
@@ -344,13 +358,16 @@ class _ShopFormState extends ConsumerState<_ShopForm>
                   InlineBanner(message: error.messageIn(l)),
                   const SizedBox(height: AppSpacing.lg),
                 ],
-                PrimaryButton(
-                  label:
-                      widget.shopId == null ? l.createShop : l.commonSaveChanges,
-                  onPressed: _save,
-                  isLoading: isLoading,
-                  size: AppButtonSize.large,
-                  expand: true,
+                TourAnchor(
+                  id: TourIds.primary,
+                  child: PrimaryButton(
+                    label:
+                        widget.shopId == null ? l.createShop : l.commonSaveChanges,
+                    onPressed: _save,
+                    isLoading: isLoading,
+                    size: AppButtonSize.large,
+                    expand: true,
+                  ),
                 ),
               ],
             ),

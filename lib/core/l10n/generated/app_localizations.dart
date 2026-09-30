@@ -3092,6 +3092,1296 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Use this location'**
   String get useThisLocation;
+
+  /// No description provided for @notifBookingRequestedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New booking request'**
+  String get notifBookingRequestedTitle;
+
+  /// No description provided for @notifBookingCancelledTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking cancelled by customer'**
+  String get notifBookingCancelledTitle;
+
+  /// No description provided for @notifBookingConfirmedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking confirmed'**
+  String get notifBookingConfirmedTitle;
+
+  /// No description provided for @notifBookingRejectedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking declined'**
+  String get notifBookingRejectedTitle;
+
+  /// No description provided for @notifReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason: {reason}'**
+  String notifReason(String reason);
+
+  /// No description provided for @notificationsEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications yet'**
+  String get notificationsEmptyTitle;
+
+  /// No description provided for @notificationsEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll see here when a shop confirms or declines your booking.'**
+  String get notificationsEmptyMessage;
+
+  /// No description provided for @notificationsEmptyMessageShop.
+  ///
+  /// In en, this message translates to:
+  /// **'New booking requests and cancellations will show up here.'**
+  String get notificationsEmptyMessageShop;
+
+  /// No description provided for @notificationsOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open notifications'**
+  String get notificationsOpen;
+
+  /// No description provided for @notificationView.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get notificationView;
+
+  /// No description provided for @tourSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get tourSkip;
+
+  /// No description provided for @tourNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get tourNext;
+
+  /// No description provided for @tourBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get tourBack;
+
+  /// No description provided for @tourDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get tourDone;
+
+  /// No description provided for @tourStepOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{current} of {total}'**
+  String tourStepOf(int current, int total);
+
+  /// No description provided for @tourReplay.
+  ///
+  /// In en, this message translates to:
+  /// **'App tour'**
+  String get tourReplay;
+
+  /// No description provided for @tourReplaySub.
+  ///
+  /// In en, this message translates to:
+  /// **'See how the app works again'**
+  String get tourReplaySub;
+
+  /// No description provided for @tourCustSearchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Find a venue'**
+  String get tourCustSearchTitle;
+
+  /// No description provided for @tourCustSearchBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by venue name or township to see courts near you.'**
+  String get tourCustSearchBody;
+
+  /// No description provided for @tourCustDayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a day'**
+  String get tourCustDayTitle;
+
+  /// No description provided for @tourCustDayBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the day you want to play. The open times below follow it.'**
+  String get tourCustDayBody;
+
+  /// No description provided for @tourCustVenuesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Book in one tap'**
+  String get tourCustVenuesTitle;
+
+  /// No description provided for @tourCustVenuesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap an open time to go straight to booking that court.'**
+  String get tourCustVenuesBody;
+
+  /// No description provided for @tourCustBookingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your bookings'**
+  String get tourCustBookingsTitle;
+
+  /// No description provided for @tourCustBookingsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'See upcoming games and their status, or cancel if plans change.'**
+  String get tourCustBookingsBody;
+
+  /// No description provided for @tourCustNotifTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay updated'**
+  String get tourCustNotifTitle;
+
+  /// No description provided for @tourCustNotifBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll be told here when the shop confirms or declines your booking.'**
+  String get tourCustNotifBody;
+
+  /// No description provided for @tourCustProfileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile & language'**
+  String get tourCustProfileTitle;
+
+  /// No description provided for @tourCustProfileBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit your details, switch between Myanmar and English, or replay this tour.'**
+  String get tourCustProfileBody;
+
+  /// No description provided for @tourShopStatsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today at a glance'**
+  String get tourShopStatsTitle;
+
+  /// No description provided for @tourShopStatsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s bookings, requests waiting for you and paid revenue.'**
+  String get tourShopStatsBody;
+
+  /// No description provided for @tourShopBellTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking alerts'**
+  String get tourShopBellTitle;
+
+  /// No description provided for @tourShopBellBody.
+  ///
+  /// In en, this message translates to:
+  /// **'New requests and cancellations arrive here. The badge shows how many are unread.'**
+  String get tourShopBellBody;
+
+  /// No description provided for @tourShopBookingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage bookings'**
+  String get tourShopBookingsTitle;
+
+  /// No description provided for @tourShopBookingsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm or decline requests and record payments.'**
+  String get tourShopBookingsBody;
+
+  /// No description provided for @tourShopStadiumsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Stadiums & courts'**
+  String get tourShopStadiumsTitle;
+
+  /// No description provided for @tourShopStadiumsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add venues, opening hours, courts and hourly prices.'**
+  String get tourShopStadiumsBody;
+
+  /// No description provided for @tourShopCustomersBody.
+  ///
+  /// In en, this message translates to:
+  /// **'See who books with you and their booking history.'**
+  String get tourShopCustomersBody;
+
+  /// No description provided for @tourShopSettingsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop profile, blocked times, the blacklist and this tour.'**
+  String get tourShopSettingsBody;
+
+  /// No description provided for @tourAdminStatsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform at a glance'**
+  String get tourAdminStatsTitle;
+
+  /// No description provided for @tourAdminStatsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Shops, bookings and activity across the whole platform.'**
+  String get tourAdminStatsBody;
+
+  /// No description provided for @tourAdminShopsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Review new shops, activate or suspend them, and assign shop admins.'**
+  String get tourAdminShopsBody;
+
+  /// No description provided for @tourAdminBookingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'All bookings'**
+  String get tourAdminBookingsTitle;
+
+  /// No description provided for @tourAdminBookingsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Look up any booking on the platform.'**
+  String get tourAdminBookingsBody;
+
+  /// No description provided for @tourAdminCustomersBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Find customers and manage their account status.'**
+  String get tourAdminCustomersBody;
+
+  /// No description provided for @tourAdminSettingsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Announcements, shops waiting for review and this tour.'**
+  String get tourAdminSettingsBody;
+
+  /// No description provided for @tourHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'How to use this page'**
+  String get tourHelp;
+
+  /// No description provided for @tourSaveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get tourSaveTitle;
+
+  /// No description provided for @tourSaveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap here when you\'re done. Nothing is saved until you do.'**
+  String get tourSaveBody;
+
+  /// No description provided for @tourLoginEmailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your email'**
+  String get tourLoginEmailTitle;
+
+  /// No description provided for @tourLoginEmailBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with the email and password you registered with.'**
+  String get tourLoginEmailBody;
+
+  /// No description provided for @tourLoginForgotTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot your password?'**
+  String get tourLoginForgotTitle;
+
+  /// No description provided for @tourLoginForgotBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap here and we\'ll email you a link to set a new one.'**
+  String get tourLoginForgotBody;
+
+  /// No description provided for @tourLoginRegisterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New here?'**
+  String get tourLoginRegisterTitle;
+
+  /// No description provided for @tourLoginRegisterBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a free account in about a minute.'**
+  String get tourLoginRegisterBody;
+
+  /// No description provided for @tourLanguageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get tourLanguageTitle;
+
+  /// No description provided for @tourLanguageBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch between Myanmar and English at any time.'**
+  String get tourLanguageBody;
+
+  /// No description provided for @tourRegisterNameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name'**
+  String get tourRegisterNameTitle;
+
+  /// No description provided for @tourRegisterNameBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Shops see this name on your bookings.'**
+  String get tourRegisterNameBody;
+
+  /// No description provided for @tourRegisterPhoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone (optional)'**
+  String get tourRegisterPhoneTitle;
+
+  /// No description provided for @tourRegisterPhoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Lets the shop call you about your booking.'**
+  String get tourRegisterPhoneBody;
+
+  /// No description provided for @tourRegisterButtonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your account'**
+  String get tourRegisterButtonTitle;
+
+  /// No description provided for @tourRegisterButtonBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap when done. You can change your details later in Profile.'**
+  String get tourRegisterButtonBody;
+
+  /// No description provided for @tourForgotEmailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset your password'**
+  String get tourForgotEmailTitle;
+
+  /// No description provided for @tourForgotEmailBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your account email.'**
+  String get tourForgotEmailBody;
+
+  /// No description provided for @tourForgotButtonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Send the link'**
+  String get tourForgotButtonTitle;
+
+  /// No description provided for @tourForgotButtonBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Then check your inbox (and spam folder) and follow the link.'**
+  String get tourForgotButtonBody;
+
+  /// No description provided for @tourExploreSearchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Search venues'**
+  String get tourExploreSearchTitle;
+
+  /// No description provided for @tourExploreSearchBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a venue name or township.'**
+  String get tourExploreSearchBody;
+
+  /// No description provided for @tourExploreFiltersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by facilities'**
+  String get tourExploreFiltersTitle;
+
+  /// No description provided for @tourExploreFiltersBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap what you need, like parking or showers. Tap again to remove.'**
+  String get tourExploreFiltersBody;
+
+  /// No description provided for @tourStadiumIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Venue details'**
+  String get tourStadiumIntroTitle;
+
+  /// No description provided for @tourStadiumIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening hours, prices, facilities, location and the courts of this venue.'**
+  String get tourStadiumIntroBody;
+
+  /// No description provided for @tourStadiumCourtsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a court'**
+  String get tourStadiumCourtsTitle;
+
+  /// No description provided for @tourStadiumCourtsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a court to see its free times.'**
+  String get tourStadiumCourtsBody;
+
+  /// No description provided for @tourStadiumBookTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Book a court'**
+  String get tourStadiumBookTitle;
+
+  /// No description provided for @tourStadiumBookBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Or tap here to choose the court, day and time.'**
+  String get tourStadiumBookBody;
+
+  /// No description provided for @tourSlotsCourtTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a court'**
+  String get tourSlotsCourtTitle;
+
+  /// No description provided for @tourSlotsCourtBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Each court can have its own price.'**
+  String get tourSlotsCourtBody;
+
+  /// No description provided for @tourSlotsDayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a day'**
+  String get tourSlotsDayTitle;
+
+  /// No description provided for @tourSlotsDayBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You can book up to 30 days ahead.'**
+  String get tourSlotsDayBody;
+
+  /// No description provided for @tourSlotsGridTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick your time'**
+  String get tourSlotsGridTitle;
+
+  /// No description provided for @tourSlotsGridBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a start time, then the next free slots to play longer. Grey slots are booked or blocked.'**
+  String get tourSlotsGridBody;
+
+  /// No description provided for @tourSlotsContinueTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get tourSlotsContinueTitle;
+
+  /// No description provided for @tourSlotsContinueBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the time and price, then send your request.'**
+  String get tourSlotsContinueBody;
+
+  /// No description provided for @tourReviewIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your booking'**
+  String get tourReviewIntroTitle;
+
+  /// No description provided for @tourReviewIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Make sure the venue, date, time and price are right.'**
+  String get tourReviewIntroBody;
+
+  /// No description provided for @tourReviewSendTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Send your request'**
+  String get tourReviewSendTitle;
+
+  /// No description provided for @tourReviewSendBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The shop confirms or declines it and we notify you. You pay at the venue.'**
+  String get tourReviewSendBody;
+
+  /// No description provided for @tourConfirmIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Request sent'**
+  String get tourConfirmIntroTitle;
+
+  /// No description provided for @tourConfirmIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your booking is pending until the shop confirms it. You\'ll get a notification.'**
+  String get tourConfirmIntroBody;
+
+  /// No description provided for @tourConfirmViewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'View your booking'**
+  String get tourConfirmViewTitle;
+
+  /// No description provided for @tourConfirmViewBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Check its status and details any time.'**
+  String get tourConfirmViewBody;
+
+  /// No description provided for @tourBookingsIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking status'**
+  String get tourBookingsIntroTitle;
+
+  /// No description provided for @tourBookingsIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending: waiting for the shop. Confirmed: see you there. Declined or cancelled: the time is free again.'**
+  String get tourBookingsIntroBody;
+
+  /// No description provided for @tourBookingsTabsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming and past'**
+  String get tourBookingsTabsTitle;
+
+  /// No description provided for @tourBookingsTabsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch between games to come and games already played.'**
+  String get tourBookingsTabsBody;
+
+  /// No description provided for @tourBookingDetailIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your booking'**
+  String get tourBookingDetailIntroTitle;
+
+  /// No description provided for @tourBookingDetailIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Status, time, court and price of this booking.'**
+  String get tourBookingDetailIntroBody;
+
+  /// No description provided for @tourBookingDetailVenueTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Venue'**
+  String get tourBookingDetailVenueTitle;
+
+  /// No description provided for @tourBookingDetailVenueBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the venue page for its location and directions.'**
+  String get tourBookingDetailVenueBody;
+
+  /// No description provided for @tourBookingDetailCancelTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get tourBookingDetailCancelTitle;
+
+  /// No description provided for @tourBookingDetailCancelBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Plans changed? Cancel before the start time so someone else can play.'**
+  String get tourBookingDetailCancelBody;
+
+  /// No description provided for @tourNotifIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your notifications'**
+  String get tourNotifIntroTitle;
+
+  /// No description provided for @tourNotifIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking updates appear here. Tap one to open that booking.'**
+  String get tourNotifIntroBody;
+
+  /// No description provided for @tourNotifShopIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'New booking requests and cancellations appear here. Tap one to open that booking.'**
+  String get tourNotifShopIntroBody;
+
+  /// No description provided for @tourNotifMarkTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all read'**
+  String get tourNotifMarkTitle;
+
+  /// No description provided for @tourNotifMarkBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Clears the unread dots in one tap.'**
+  String get tourNotifMarkBody;
+
+  /// No description provided for @tourProfileIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile'**
+  String get tourProfileIntroTitle;
+
+  /// No description provided for @tourProfileIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name, email and phone, as shops see them.'**
+  String get tourProfileIntroBody;
+
+  /// No description provided for @tourProfileEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit profile'**
+  String get tourProfileEditTitle;
+
+  /// No description provided for @tourProfileEditBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Change your name or phone number.'**
+  String get tourProfileEditBody;
+
+  /// No description provided for @tourEditPhoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a number so the shop can reach you about a booking.'**
+  String get tourEditPhoneBody;
+
+  /// No description provided for @tourPasswordCurrentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Current password'**
+  String get tourPasswordCurrentTitle;
+
+  /// No description provided for @tourPasswordCurrentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'For your safety, enter the password you use now.'**
+  String get tourPasswordCurrentBody;
+
+  /// No description provided for @tourPasswordNewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get tourPasswordNewTitle;
+
+  /// No description provided for @tourPasswordNewBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Use at least 8 characters, and not one from another app.'**
+  String get tourPasswordNewBody;
+
+  /// No description provided for @tourStaffStadiumFilterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by stadium'**
+  String get tourStaffStadiumFilterTitle;
+
+  /// No description provided for @tourStaffStadiumFilterBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Show bookings of one stadium only.'**
+  String get tourStaffStadiumFilterBody;
+
+  /// No description provided for @tourStaffFiltersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter the list'**
+  String get tourStaffFiltersTitle;
+
+  /// No description provided for @tourStaffFiltersBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending means waiting for a decision. Switch to upcoming, past or all bookings.'**
+  String get tourStaffFiltersBody;
+
+  /// No description provided for @tourStaffBlockTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Block time'**
+  String get tourStaffBlockTitle;
+
+  /// No description provided for @tourStaffBlockBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Close a court for maintenance or a private event so nobody can book it.'**
+  String get tourStaffBlockBody;
+
+  /// No description provided for @tourStaffDetailIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking'**
+  String get tourStaffDetailIntroTitle;
+
+  /// No description provided for @tourStaffDetailIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer, time, court, price and payment. Tap the customer to see their history.'**
+  String get tourStaffDetailIntroBody;
+
+  /// No description provided for @tourStaffConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get tourStaffConfirmTitle;
+
+  /// No description provided for @tourStaffConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept the request. The customer gets a notification.'**
+  String get tourStaffConfirmBody;
+
+  /// No description provided for @tourStaffPaymentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get tourStaffPaymentTitle;
+
+  /// No description provided for @tourStaffPaymentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Record the payment step by step: pending, then paid.'**
+  String get tourStaffPaymentBody;
+
+  /// No description provided for @tourStaffRejectTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Decline'**
+  String get tourStaffRejectTitle;
+
+  /// No description provided for @tourStaffRejectBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Frees the time for others. The customer is notified.'**
+  String get tourStaffRejectBody;
+
+  /// No description provided for @tourShopCustomersIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone who has booked at your shop. Tap a name for details.'**
+  String get tourShopCustomersIntroBody;
+
+  /// No description provided for @tourCustomerSearchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Find a customer'**
+  String get tourCustomerSearchTitle;
+
+  /// No description provided for @tourCustomerSearchBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name or phone number.'**
+  String get tourCustomerSearchBody;
+
+  /// No description provided for @tourCustomerDetailIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer'**
+  String get tourCustomerDetailIntroTitle;
+
+  /// No description provided for @tourCustomerDetailIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact details and booking history.'**
+  String get tourCustomerDetailIntroBody;
+
+  /// No description provided for @tourBlacklistActionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Blacklist'**
+  String get tourBlacklistActionTitle;
+
+  /// No description provided for @tourBlacklistActionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Stops repeat no-shows from booking at your shop. Other shops aren\'t affected.'**
+  String get tourBlacklistActionBody;
+
+  /// No description provided for @tourShopSettingsIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get tourShopSettingsIntroTitle;
+
+  /// No description provided for @tourShopSettingsIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop profile, blocked times, blacklist and stadiums in one place.'**
+  String get tourShopSettingsIntroBody;
+
+  /// No description provided for @tourShopProfileIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop profile'**
+  String get tourShopProfileIntroTitle;
+
+  /// No description provided for @tourShopProfileIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'How your shop appears to customers.'**
+  String get tourShopProfileIntroBody;
+
+  /// No description provided for @tourShopProfileEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get tourShopProfileEditTitle;
+
+  /// No description provided for @tourShopProfileEditBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Update the name, phone and address.'**
+  String get tourShopProfileEditBody;
+
+  /// No description provided for @tourStadiumsIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your stadiums'**
+  String get tourStadiumsIntroTitle;
+
+  /// No description provided for @tourStadiumsIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Each stadium has its own opening hours and courts. Tap one to manage it.'**
+  String get tourStadiumsIntroBody;
+
+  /// No description provided for @tourStadiumsAddTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a stadium'**
+  String get tourStadiumsAddTitle;
+
+  /// No description provided for @tourStadiumsAddBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Start here: add your venue, then its courts.'**
+  String get tourStadiumsAddBody;
+
+  /// No description provided for @tourStadiumEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit stadium'**
+  String get tourStadiumEditTitle;
+
+  /// No description provided for @tourStadiumEditBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Change the name, address, opening hours and facilities.'**
+  String get tourStadiumEditBody;
+
+  /// No description provided for @tourStadiumAddCourtTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a court'**
+  String get tourStadiumAddCourtTitle;
+
+  /// No description provided for @tourStadiumAddCourtBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Each court has its own price and slot length.'**
+  String get tourStadiumAddCourtBody;
+
+  /// No description provided for @tourStadiumFormNameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Stadium name'**
+  String get tourStadiumFormNameTitle;
+
+  /// No description provided for @tourStadiumFormNameBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The name customers see and search for.'**
+  String get tourStadiumFormNameBody;
+
+  /// No description provided for @tourStadiumFormMapTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Map location'**
+  String get tourStadiumFormMapTitle;
+
+  /// No description provided for @tourStadiumFormMapBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin the venue so customers get directions.'**
+  String get tourStadiumFormMapBody;
+
+  /// No description provided for @tourStadiumFormHoursTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening hours'**
+  String get tourStadiumFormHoursTitle;
+
+  /// No description provided for @tourStadiumFormHoursBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Customers can only book inside these hours.'**
+  String get tourStadiumFormHoursBody;
+
+  /// No description provided for @tourStadiumFormFacilitiesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Facilities'**
+  String get tourStadiumFormFacilitiesTitle;
+
+  /// No description provided for @tourStadiumFormFacilitiesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tick what you offer. Customers filter venues by these.'**
+  String get tourStadiumFormFacilitiesBody;
+
+  /// No description provided for @tourCourtIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Court'**
+  String get tourCourtIntroTitle;
+
+  /// No description provided for @tourCourtIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Price, slot length and whether customers can book this court.'**
+  String get tourCourtIntroBody;
+
+  /// No description provided for @tourCourtEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit court'**
+  String get tourCourtEditTitle;
+
+  /// No description provided for @tourCourtEditBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Change the name or price, or turn bookings off.'**
+  String get tourCourtEditBody;
+
+  /// No description provided for @tourCourtFormNameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Court name'**
+  String get tourCourtFormNameTitle;
+
+  /// No description provided for @tourCourtFormNameBody.
+  ///
+  /// In en, this message translates to:
+  /// **'For example “Court A” or “Indoor pitch”.'**
+  String get tourCourtFormNameBody;
+
+  /// No description provided for @tourCourtFormPriceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hourly price'**
+  String get tourCourtFormPriceTitle;
+
+  /// No description provided for @tourCourtFormPriceBody.
+  ///
+  /// In en, this message translates to:
+  /// **'In kyat per hour. The booking price is worked out from it.'**
+  String get tourCourtFormPriceBody;
+
+  /// No description provided for @tourCourtFormSlotTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Slot length'**
+  String get tourCourtFormSlotTitle;
+
+  /// No description provided for @tourCourtFormSlotBody.
+  ///
+  /// In en, this message translates to:
+  /// **'30 or 60 minutes. It can\'t be changed later, so choose carefully.'**
+  String get tourCourtFormSlotBody;
+
+  /// No description provided for @tourBlockedIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocked times'**
+  String get tourBlockedIntroTitle;
+
+  /// No description provided for @tourBlockedIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Times you closed. Customers can\'t book them.'**
+  String get tourBlockedIntroBody;
+
+  /// No description provided for @tourBlockedAddBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Close a court for maintenance, cleaning or an event.'**
+  String get tourBlockedAddBody;
+
+  /// No description provided for @tourBlockFormWhereTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Where'**
+  String get tourBlockFormWhereTitle;
+
+  /// No description provided for @tourBlockFormWhereBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the stadium, then the court to close.'**
+  String get tourBlockFormWhereBody;
+
+  /// No description provided for @tourBlockFormButtonBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Booked times can\'t be blocked. Decline that booking first.'**
+  String get tourBlockFormButtonBody;
+
+  /// No description provided for @tourBlacklistIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Blacklist'**
+  String get tourBlacklistIntroTitle;
+
+  /// No description provided for @tourBlacklistIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Customers here can\'t make new bookings at your shop. Tap the remove icon to allow them again.'**
+  String get tourBlacklistIntroBody;
+
+  /// No description provided for @tourMapTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Move the map'**
+  String get tourMapTitle;
+
+  /// No description provided for @tourMapBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag until the pin sits on your venue. Pinch to zoom.'**
+  String get tourMapBody;
+
+  /// No description provided for @tourMapUseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this location'**
+  String get tourMapUseTitle;
+
+  /// No description provided for @tourMapUseBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Saves the pin to the stadium form.'**
+  String get tourMapUseBody;
+
+  /// No description provided for @tourShopsSegmentsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'All or pending review'**
+  String get tourShopsSegmentsTitle;
+
+  /// No description provided for @tourShopsSegmentsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'New shop sign-ups wait in Pending review until you approve them.'**
+  String get tourShopsSegmentsBody;
+
+  /// No description provided for @tourShopsAddTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a shop'**
+  String get tourShopsAddTitle;
+
+  /// No description provided for @tourShopsAddBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a shop yourself, then assign its admin.'**
+  String get tourShopsAddBody;
+
+  /// No description provided for @tourShopDetailEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit shop'**
+  String get tourShopDetailEditTitle;
+
+  /// No description provided for @tourShopDetailEditBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Change the name, contact and owner details.'**
+  String get tourShopDetailEditBody;
+
+  /// No description provided for @tourShopDetailStatusTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop status'**
+  String get tourShopDetailStatusTitle;
+
+  /// No description provided for @tourShopDetailStatusBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve, suspend or reactivate. Suspended or unlisted shops take no new bookings.'**
+  String get tourShopDetailStatusBody;
+
+  /// No description provided for @tourShopDetailAdminsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop admins'**
+  String get tourShopDetailAdminsTitle;
+
+  /// No description provided for @tourShopDetailAdminsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'See and assign who manages this shop.'**
+  String get tourShopDetailAdminsBody;
+
+  /// No description provided for @tourShopFormNameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop name'**
+  String get tourShopFormNameTitle;
+
+  /// No description provided for @tourShopFormNameBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Shown to customers on every stadium of this shop.'**
+  String get tourShopFormNameBody;
+
+  /// No description provided for @tourShopFormOwnerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner details'**
+  String get tourShopFormOwnerTitle;
+
+  /// No description provided for @tourShopFormOwnerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Private: only you and the shop\'s admins see these.'**
+  String get tourShopFormOwnerBody;
+
+  /// No description provided for @tourShopAdminsIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop admins'**
+  String get tourShopAdminsIntroTitle;
+
+  /// No description provided for @tourShopAdminsIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'People who manage this shop. They only see this shop\'s data.'**
+  String get tourShopAdminsIntroBody;
+
+  /// No description provided for @tourShopAdminsAddTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an admin'**
+  String get tourShopAdminsAddTitle;
+
+  /// No description provided for @tourShopAdminsAddBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The person must register a customer account first.'**
+  String get tourShopAdminsAddBody;
+
+  /// No description provided for @tourInviteEmailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Find the account'**
+  String get tourInviteEmailTitle;
+
+  /// No description provided for @tourInviteEmailBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the email they registered with.'**
+  String get tourInviteEmailBody;
+
+  /// No description provided for @tourInviteFindTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get tourInviteFindTitle;
+
+  /// No description provided for @tourInviteFindBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Then check the name and make them this shop\'s admin.'**
+  String get tourInviteFindBody;
+
+  /// No description provided for @tourAnnouncementsIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Announcements'**
+  String get tourAnnouncementsIntroTitle;
+
+  /// No description provided for @tourAnnouncementsIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Messages you have sent to users.'**
+  String get tourAnnouncementsIntroBody;
+
+  /// No description provided for @tourAnnouncementsAddTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New announcement'**
+  String get tourAnnouncementsAddTitle;
+
+  /// No description provided for @tourAnnouncementsAddBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a message for customers, shop admins or everyone.'**
+  String get tourAnnouncementsAddBody;
+
+  /// No description provided for @tourAnnounceAudienceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Audience'**
+  String get tourAnnounceAudienceTitle;
+
+  /// No description provided for @tourAnnounceAudienceBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose who receives it.'**
+  String get tourAnnounceAudienceBody;
+
+  /// No description provided for @tourAnnounceSendTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get tourAnnounceSendTitle;
+
+  /// No description provided for @tourAnnounceSendBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the text first: it can\'t be unsent.'**
+  String get tourAnnounceSendBody;
+
+  /// No description provided for @tourAdminCustomersIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Every customer on the platform. Tap a name for details.'**
+  String get tourAdminCustomersIntroBody;
+
+  /// No description provided for @tourAdminCustomerDetailBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact details and bookings. The button below disables or re-enables the account.'**
+  String get tourAdminCustomerDetailBody;
+
+  /// No description provided for @tourAdminSettingsIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Announcements, shops waiting for review and this tour.'**
+  String get tourAdminSettingsIntroBody;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

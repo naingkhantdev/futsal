@@ -17,6 +17,8 @@ import '../../../../core/widgets/hero_header.dart';
 import '../../../../data/demo/demo_data.dart';
 import '../../../../data/vos/court_vo.dart';
 import '../../../../data/vos/stadium_vo.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../../../shared/widgets/booking_ticket.dart';
 import '../../../shared/widgets/person_tile.dart';
 import '../../../shared/widgets/preview_body.dart';
@@ -52,15 +54,18 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
               title: l.bookACourt,
               trailing: _ProfileButton(name: me.name),
               // Tapping the search opens Explore, where filtering happens.
-              bottom: Semantics(
-                button: true,
-                label: l.homeSearchHint,
-                excludeSemantics: true,
-                onTap: () => context.go(AppRoutes.customerExplore),
-                child: GestureDetector(
+              bottom: TourAnchor(
+                id: TourIds.search,
+                child: Semantics(
+                  button: true,
+                  label: l.homeSearchHint,
+                  excludeSemantics: true,
                   onTap: () => context.go(AppRoutes.customerExplore),
-                  child: AbsorbPointer(
-                    child: SearchField(hintText: l.homeSearchHint),
+                  child: GestureDetector(
+                    onTap: () => context.go(AppRoutes.customerExplore),
+                    child: AbsorbPointer(
+                      child: SearchField(hintText: l.homeSearchHint),
+                    ),
                   ),
                 ),
               ),
@@ -88,12 +93,18 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                 child: Text(l.commonSeeAll),
               ),
             ),
-            DayStrip(
-              selected: _date,
-              onSelected: (d) => setState(() => _date = d),
+            TourAnchor(
+              id: TourIds.dayStrip,
+              child: DayStrip(
+                selected: _date,
+                onSelected: (d) => setState(() => _date = d),
+              ),
             ),
             const SizedBox(height: AppSpacing.lg),
-            _VenueCarousel(stadiums: DemoData.stadiums, date: _date),
+            TourAnchor(
+              id: TourIds.venues,
+              child: _VenueCarousel(stadiums: DemoData.stadiums, date: _date),
+            ),
           ],
         ),
       ),

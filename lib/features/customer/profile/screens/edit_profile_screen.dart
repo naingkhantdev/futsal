@@ -17,6 +17,8 @@ import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/content_constraint.dart';
 import '../../../../core/widgets/inline_banner.dart';
 import '../../../../data/vos/user_vo.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../providers/current_user_profile_provider.dart';
 import '../providers/edit_profile_controller.dart';
 import '../widgets/profile_pending_view.dart';
@@ -30,7 +32,10 @@ class EditProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profile = ref.watch(currentUserProfileProvider);
     return Scaffold(
-      appBar: AppBar(title: Text(context.l10n.editProfile)),
+      appBar: AppBar(
+        title: Text(context.l10n.editProfile),
+        actions: const [TourHelpButton()],
+      ),
       body: AsyncValueView<UserVO?>(
         value: profile,
         onRetry: () => ref.invalidate(currentUserProfileProvider),
@@ -176,33 +181,39 @@ class _EditProfileFormState extends ConsumerState<_EditProfileForm> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  AppTextField(
-                    label: l.fullNameLabel,
-                    controller: _name,
-                    focusNode: _nameFocus,
-                    prefixIcon: Icons.person_outline,
-                    keyboardType: TextInputType.name,
-                    textInputAction: TextInputAction.next,
-                    textCapitalization: TextCapitalization.words,
-                    autofillHints: const [AutofillHints.name],
-                    validator: AppValidators.name,
-                    autovalidateMode: autovalidate,
-                    readOnly: isLoading,
+                  TourAnchor(
+                    id: TourIds.name,
+                    child: AppTextField(
+                      label: l.fullNameLabel,
+                      controller: _name,
+                      focusNode: _nameFocus,
+                      prefixIcon: Icons.person_outline,
+                      keyboardType: TextInputType.name,
+                      textInputAction: TextInputAction.next,
+                      textCapitalization: TextCapitalization.words,
+                      autofillHints: const [AutofillHints.name],
+                      validator: AppValidators.name,
+                      autovalidateMode: autovalidate,
+                      readOnly: isLoading,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
-                  AppTextField(
-                    label: l.phoneOptionalLabel,
-                    controller: _phone,
-                    focusNode: _phoneFocus,
-                    prefixIcon: Icons.phone_outlined,
-                    helperText: l.phoneHelper,
-                    keyboardType: TextInputType.phone,
-                    textInputAction: TextInputAction.done,
-                    autofillHints: const [AutofillHints.telephoneNumber],
-                    validator: AppValidators.optionalPhone,
-                    autovalidateMode: autovalidate,
-                    readOnly: isLoading,
-                    onFieldSubmitted: (_) => _save(),
+                  TourAnchor(
+                    id: TourIds.phone,
+                    child: AppTextField(
+                      label: l.phoneOptionalLabel,
+                      controller: _phone,
+                      focusNode: _phoneFocus,
+                      prefixIcon: Icons.phone_outlined,
+                      helperText: l.phoneHelper,
+                      keyboardType: TextInputType.phone,
+                      textInputAction: TextInputAction.done,
+                      autofillHints: const [AutofillHints.telephoneNumber],
+                      validator: AppValidators.optionalPhone,
+                      autovalidateMode: autovalidate,
+                      readOnly: isLoading,
+                      onFieldSubmitted: (_) => _save(),
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   // Read-only (full contrast), not disabled: users should be
@@ -221,12 +232,15 @@ class _EditProfileFormState extends ConsumerState<_EditProfileForm> {
                     InlineBanner(message: error.messageIn(l)),
                     const SizedBox(height: AppSpacing.lg),
                   ],
-                  PrimaryButton(
-                    label: l.commonSaveChanges,
-                    onPressed: _save,
-                    isLoading: isLoading,
-                    size: AppButtonSize.large,
-                    expand: true,
+                  TourAnchor(
+                    id: TourIds.primary,
+                    child: PrimaryButton(
+                      label: l.commonSaveChanges,
+                      onPressed: _save,
+                      isLoading: isLoading,
+                      size: AppButtonSize.large,
+                      expand: true,
+                    ),
                   ),
                 ],
               ),

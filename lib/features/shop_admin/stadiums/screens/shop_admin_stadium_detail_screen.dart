@@ -25,6 +25,8 @@ import '../../../../core/widgets/status_badge.dart';
 import '../../../../core/widgets/venue_location_card.dart';
 import '../../../../data/vos/court_vo.dart';
 import '../../../../data/vos/stadium_vo.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../providers/shop_venue_providers.dart';
 import '../widgets/shop_visibility_banner.dart';
 import '../widgets/stadium_admin_card.dart';
@@ -45,21 +47,28 @@ class ShopAdminStadiumDetailScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(stadium.valueOrNull?.name ?? l.stadiumLabel),
         actions: [
+          const TourHelpButton(),
           if (found)
-            IconButton(
-              tooltip: l.stadiumEdit,
-              icon: const Icon(Icons.edit_outlined),
-              onPressed: () =>
-                  context.push(AppRoutes.shopAdminStadiumEdit(stadiumId)),
+            TourAnchor(
+              id: TourIds.edit,
+              child: IconButton(
+                tooltip: l.stadiumEdit,
+                icon: const Icon(Icons.edit_outlined),
+                onPressed: () =>
+                    context.push(AppRoutes.shopAdminStadiumEdit(stadiumId)),
+              ),
             ),
         ],
       ),
       floatingActionButton: found
-          ? FloatingActionButton.extended(
-              onPressed: () =>
-                  context.push(AppRoutes.shopAdminCourtNew(stadiumId)),
-              icon: const Icon(Icons.add),
-              label: Text(l.addCourt),
+          ? TourAnchor(
+              id: TourIds.fab,
+              child: FloatingActionButton.extended(
+                onPressed: () =>
+                    context.push(AppRoutes.shopAdminCourtNew(stadiumId)),
+                icon: const Icon(Icons.add),
+                label: Text(l.addCourt),
+              ),
             )
           : null,
       body: AsyncValueView<StadiumVO?>(

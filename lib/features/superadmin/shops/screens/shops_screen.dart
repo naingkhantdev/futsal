@@ -16,6 +16,8 @@ import '../../../../core/widgets/motion.dart';
 import '../../../../core/widgets/skeleton.dart';
 import '../../../../core/widgets/status_badge.dart';
 import '../../../../data/vos/shop_vo.dart';
+import '../../../shared/widgets/app_tour.dart';
+import '../../../shared/widgets/app_tours.dart';
 import '../providers/shops_providers.dart';
 
 /// `/superadmin/shops` (`?tab=onboarding` → shops pending review).
@@ -30,11 +32,17 @@ class ShopsScreen extends ConsumerWidget {
     final shops = ref.watch(allShopsProvider);
     final l = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: Text(l.navShops)),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push(AppRoutes.superadminShopNew),
-        icon: const Icon(Icons.add_business_outlined),
-        label: Text(l.shopNew),
+      appBar: AppBar(
+        title: Text(l.navShops),
+        actions: const [TourHelpButton()],
+      ),
+      floatingActionButton: TourAnchor(
+        id: TourIds.fab,
+        child: FloatingActionButton.extended(
+          onPressed: () => context.push(AppRoutes.superadminShopNew),
+          icon: const Icon(Icons.add_business_outlined),
+          label: Text(l.shopNew),
+        ),
       ),
       body: Column(
         children: [
@@ -43,24 +51,27 @@ class ShopsScreen extends ConsumerWidget {
             child: ContentConstraint(
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: SegmentedButton<bool>(
-                  segments: [
-                    ButtonSegment(value: false, label: Text(l.staffFilterAll)),
-                    ButtonSegment(
-                      value: true,
-                      label: Text(l.shopPendingReview),
+                child: TourAnchor(
+                  id: TourIds.segments,
+                  child: SegmentedButton<bool>(
+                    segments: [
+                      ButtonSegment(value: false, label: Text(l.staffFilterAll)),
+                      ButtonSegment(
+                        value: true,
+                        label: Text(l.shopPendingReview),
+                      ),
+                    ],
+                    selected: {showOnboarding},
+                    onSelectionChanged: (s) => context.go(
+                      s.first
+                          ? Uri(
+                              path: AppRoutes.superadminShops,
+                              queryParameters: {
+                                AppRoutes.tabQuery: AppRoutes.tabOnboarding,
+                              },
+                            ).toString()
+                          : AppRoutes.superadminShops,
                     ),
-                  ],
-                  selected: {showOnboarding},
-                  onSelectionChanged: (s) => context.go(
-                    s.first
-                        ? Uri(
-                            path: AppRoutes.superadminShops,
-                            queryParameters: {
-                              AppRoutes.tabQuery: AppRoutes.tabOnboarding,
-                            },
-                          ).toString()
-                        : AppRoutes.superadminShops,
                   ),
                 ),
               ),

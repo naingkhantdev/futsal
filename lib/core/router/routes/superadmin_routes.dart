@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 
+import '../../../features/shared/widgets/app_tours.dart';
 import '../../../features/superadmin/announcements/screens/announcements_screen.dart';
 import '../../../features/superadmin/announcements/screens/new_announcement_screen.dart';
 import '../../../features/superadmin/bookings/screens/superadmin_booking_detail_screen.dart';
@@ -27,49 +28,64 @@ final List<RouteBase> superadminRoutes = [
       StatefulShellBranch(routes: [
         GoRoute(
           path: AppRoutes.superadminDashboard,
-          builder: (_, __) => const SuperadminDashboardScreen(),
+          builder: (_, __) => AppTours.superadminDashboard.wrap(
+            const SuperadminDashboardScreen(),
+          ),
         ),
       ]),
       StatefulShellBranch(routes: [
         GoRoute(
           path: AppRoutes.superadminShops,
-          builder: (_, s) => ShopsScreen(
-            showOnboarding: s.uri.queryParameters[AppRoutes.tabQuery] ==
-                AppRoutes.tabOnboarding,
+          builder: (_, s) => AppTours.superadminShops.wrap(
+            ShopsScreen(
+              showOnboarding: s.uri.queryParameters[AppRoutes.tabQuery] ==
+                  AppRoutes.tabOnboarding,
+            ),
           ),
           routes: [
             // 'new' must precede ':shopId'.
             GoRoute(
               path: 'new',
               parentNavigatorKey: rootNavigatorKey,
-              builder: (_, __) => const ShopFormScreen(),
+              builder: (_, __) => AppTours.superadminShopForm.wrap(
+                const ShopFormScreen(),
+              ),
             ),
             GoRoute(
               path: ':${AppRoutes.shopIdParam}',
               parentNavigatorKey: rootNavigatorKey,
-              builder: (_, s) => ShopDetailScreen(
-                shopId: s.pathParameters[AppRoutes.shopIdParam]!,
+              builder: (_, s) => AppTours.superadminShopDetail.wrap(
+                ShopDetailScreen(
+                  shopId: s.pathParameters[AppRoutes.shopIdParam]!,
+                ),
               ),
               routes: [
                 GoRoute(
                   path: 'edit',
                   parentNavigatorKey: rootNavigatorKey,
-                  builder: (_, s) => ShopFormScreen(
-                    shopId: s.pathParameters[AppRoutes.shopIdParam],
+                  builder: (_, s) => AppTours.superadminShopForm.wrap(
+                    ShopFormScreen(
+                      shopId: s.pathParameters[AppRoutes.shopIdParam],
+                    ),
                   ),
                 ),
                 GoRoute(
                   path: 'admins',
                   parentNavigatorKey: rootNavigatorKey,
-                  builder: (_, s) => ShopAdminsScreen(
-                    shopId: s.pathParameters[AppRoutes.shopIdParam]!,
+                  builder: (_, s) => AppTours.superadminShopAdmins.wrap(
+                    ShopAdminsScreen(
+                      shopId: s.pathParameters[AppRoutes.shopIdParam]!,
+                    ),
                   ),
                   routes: [
                     GoRoute(
                       path: 'invite',
                       parentNavigatorKey: rootNavigatorKey,
-                      builder: (_, s) => InviteShopAdminScreen(
-                        shopId: s.pathParameters[AppRoutes.shopIdParam]!,
+                      builder: (_, s) =>
+                          AppTours.superadminInviteShopAdmin.wrap(
+                        InviteShopAdminScreen(
+                          shopId: s.pathParameters[AppRoutes.shopIdParam]!,
+                        ),
                       ),
                     ),
                   ],
@@ -82,13 +98,17 @@ final List<RouteBase> superadminRoutes = [
       StatefulShellBranch(routes: [
         GoRoute(
           path: AppRoutes.superadminBookings,
-          builder: (_, __) => const SuperadminBookingsScreen(),
+          builder: (_, __) => AppTours.superadminBookings.wrap(
+            const SuperadminBookingsScreen(),
+          ),
           routes: [
             GoRoute(
               path: ':${AppRoutes.bookingIdParam}',
               parentNavigatorKey: rootNavigatorKey,
-              builder: (_, s) => SuperadminBookingDetailScreen(
-                bookingId: s.pathParameters[AppRoutes.bookingIdParam]!,
+              builder: (_, s) => AppTours.superadminBookingDetail.wrap(
+                SuperadminBookingDetailScreen(
+                  bookingId: s.pathParameters[AppRoutes.bookingIdParam]!,
+                ),
               ),
             ),
           ],
@@ -97,13 +117,17 @@ final List<RouteBase> superadminRoutes = [
       StatefulShellBranch(routes: [
         GoRoute(
           path: AppRoutes.superadminCustomers,
-          builder: (_, __) => const SuperadminCustomersScreen(),
+          builder: (_, __) => AppTours.superadminCustomers.wrap(
+            const SuperadminCustomersScreen(),
+          ),
           routes: [
             GoRoute(
               path: ':${AppRoutes.customerIdParam}',
               parentNavigatorKey: rootNavigatorKey,
-              builder: (_, s) => SuperadminCustomerDetailScreen(
-                customerId: s.pathParameters[AppRoutes.customerIdParam]!,
+              builder: (_, s) => AppTours.superadminCustomerDetail.wrap(
+                SuperadminCustomerDetailScreen(
+                  customerId: s.pathParameters[AppRoutes.customerIdParam]!,
+                ),
               ),
             ),
           ],
@@ -112,17 +136,23 @@ final List<RouteBase> superadminRoutes = [
       StatefulShellBranch(routes: [
         GoRoute(
           path: AppRoutes.superadminSettings,
-          builder: (_, __) => const SuperadminSettingsScreen(),
+          builder: (_, __) => AppTours.superadminSettings.wrap(
+            const SuperadminSettingsScreen(),
+          ),
           routes: [
             GoRoute(
               path: 'announcements',
               parentNavigatorKey: rootNavigatorKey,
-              builder: (_, __) => const AnnouncementsScreen(),
+              builder: (_, __) => AppTours.superadminAnnouncements.wrap(
+                const AnnouncementsScreen(),
+              ),
               routes: [
                 GoRoute(
                   path: 'new',
                   parentNavigatorKey: rootNavigatorKey,
-                  builder: (_, __) => const NewAnnouncementScreen(),
+                  builder: (_, __) => AppTours.superadminNewAnnouncement.wrap(
+                    const NewAnnouncementScreen(),
+                  ),
                 ),
               ],
             ),
