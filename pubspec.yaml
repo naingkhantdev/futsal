@@ -52,11 +52,18 @@ dependencies:
   shared_preferences: ^2.2.3
   image_picker: ^1.1.2
   flutter_image_compress: ^2.5.1
-  # Stadium location map. 2.10.x is the newest line that supports
-  # Flutter 3.22 (2.11+ needs Flutter >= 3.27; pub picks 2.10.x here).
-  google_maps_flutter: ^2.10.1
   # "Directions" hands off to the Google Maps app / website.
   url_launcher: ^6.3.1
+  # Pin -> street / township / city via the phone's own geocoder (no key).
+  # 3.x: its Android plugin builds with AGP 7.3 (4.x+ needs newer Gradle).
+  geocoding: ^3.0.0
+  # Fallback pin -> address via OpenStreetMap Nominatim when the phone has
+  # no geocoder backend or it finds nothing (common in Myanmar / emulators).
+  http: ^1.2.0
+  # Venue maps on OpenStreetMap tiles: no API key, no billing (Google Maps
+  # needs a billing account). 7.x is the newest line for Flutter 3.22.
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
 
 dev_dependencies:
   flutter_test:

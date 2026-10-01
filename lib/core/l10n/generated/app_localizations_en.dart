@@ -1594,25 +1594,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get locationNotSet => 'No map location yet';
 
   @override
-  String get locationNote => 'Customers see this on a map and can get directions.';
-
-  @override
   String get locationPickOnMap => 'Pick on map';
 
   @override
   String get locationChangeOnMap => 'Change on map';
-
-  @override
-  String get locationPasteLabel => 'Coordinates or Google Maps link';
-
-  @override
-  String get locationPasteHelper => 'e.g. 16.84090, 96.17350';
-
-  @override
-  String get locationInvalid => 'Couldn\'t read a location. Paste coordinates like 16.84090, 96.17350.';
-
-  @override
-  String get locationShortLink => 'Short links can\'t be read. Open the link, then copy the full link or the coordinates.';
 
   @override
   String get locationClear => 'Remove location';
@@ -1746,27 +1731,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tourShopSettingsBody => 'Shop profile, blocked times, the blacklist and this tour.';
-
-  @override
-  String get tourAdminStatsTitle => 'Platform at a glance';
-
-  @override
-  String get tourAdminStatsBody => 'Shops, bookings and activity across the whole platform.';
-
-  @override
-  String get tourAdminShopsBody => 'Review new shops, activate or suspend them, and assign shop admins.';
-
-  @override
-  String get tourAdminBookingsTitle => 'All bookings';
-
-  @override
-  String get tourAdminBookingsBody => 'Look up any booking on the platform.';
-
-  @override
-  String get tourAdminCustomersBody => 'Find customers and manage their account status.';
-
-  @override
-  String get tourAdminSettingsBody => 'Announcements, shops waiting for review and this tour.';
 
   @override
   String get tourHelp => 'How to use this page';
@@ -2177,101 +2141,71 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tourMapUseBody => 'Saves the pin to the stadium form.';
 
   @override
-  String get tourShopsSegmentsTitle => 'All or pending review';
+  String get consolePlatform => 'Platform';
 
   @override
-  String get tourShopsSegmentsBody => 'New shop sign-ups wait in Pending review until you approve them.';
+  String get consoleStatus => 'Status';
 
   @override
-  String get tourShopsAddTitle => 'Add a shop';
+  String get consoleSearchShops => 'Search shops';
 
   @override
-  String get tourShopsAddBody => 'Create a shop yourself, then assign its admin.';
+  String get consoleStatusListing => 'Status & listing';
 
   @override
-  String get tourShopDetailEditTitle => 'Edit shop';
+  String get consoleActions => 'Actions';
 
   @override
-  String get tourShopDetailEditBody => 'Change the name, contact and owner details.';
+  String get consoleActivity => 'Activity';
 
   @override
-  String get tourShopDetailStatusTitle => 'Shop status';
+  String get consoleContact => 'Contact';
 
   @override
-  String get tourShopDetailStatusBody => 'Approve, suspend or reactivate. Suspended or unlisted shops take no new bookings.';
+  String get consolePayment => 'Payment';
 
   @override
-  String get tourShopDetailAdminsTitle => 'Shop admins';
+  String get consoleWhen => 'When';
 
   @override
-  String get tourShopDetailAdminsBody => 'See and assign who manages this shop.';
+  String get consolePreferences => 'Preferences';
 
   @override
-  String get tourShopFormNameTitle => 'Shop name';
+  String get consoleActive => 'Active';
 
   @override
-  String get tourShopFormNameBody => 'Shown to customers on every stadium of this shop.';
+  String get consoleUpcoming => 'Upcoming';
 
   @override
-  String get tourShopFormOwnerTitle => 'Owner details';
+  String get consoleSent => 'Sent';
 
   @override
-  String get tourShopFormOwnerBody => 'Private: only you and the shop\'s admins see these.';
+  String get consoleOverview => 'Overview';
 
   @override
-  String get tourShopAdminsIntroTitle => 'Shop admins';
+  String get consoleSearchBookings => 'Search customer or stadium';
 
   @override
-  String get tourShopAdminsIntroBody => 'People who manage this shop. They only see this shop\'s data.';
+  String get consoleAllShops => 'All shops';
 
   @override
-  String get tourShopAdminsAddTitle => 'Add an admin';
+  String get consoleRole => 'Role';
 
   @override
-  String get tourShopAdminsAddBody => 'The person must register a customer account first.';
+  String get consoleNoMatches => 'Nothing matches';
 
   @override
-  String get tourInviteEmailTitle => 'Find the account';
+  String get shopLocationHint => 'Pick the shop on Google Map. The address fills in from the pin.';
 
   @override
-  String get tourInviteEmailBody => 'Enter the email they registered with.';
+  String get shopLocationFinding => 'Finding the address…';
 
   @override
-  String get tourInviteFindTitle => 'Search';
+  String get shopLocationNoAddress => 'Couldn\'t find a street address for this pin. The pin is still saved and directions will work.';
 
   @override
-  String get tourInviteFindBody => 'Then check the name and make them this shop\'s admin.';
+  String get stadiumLocationHint => 'Pick the stadium on Google Map. The address fills in from the pin.';
 
   @override
-  String get tourAnnouncementsIntroTitle => 'Announcements';
-
-  @override
-  String get tourAnnouncementsIntroBody => 'Messages you have sent to users.';
-
-  @override
-  String get tourAnnouncementsAddTitle => 'New announcement';
-
-  @override
-  String get tourAnnouncementsAddBody => 'Write a message for customers, shop admins or everyone.';
-
-  @override
-  String get tourAnnounceAudienceTitle => 'Audience';
-
-  @override
-  String get tourAnnounceAudienceBody => 'Choose who receives it.';
-
-  @override
-  String get tourAnnounceSendTitle => 'Send';
-
-  @override
-  String get tourAnnounceSendBody => 'Check the text first: it can\'t be unsent.';
-
-  @override
-  String get tourAdminCustomersIntroBody => 'Every customer on the platform. Tap a name for details.';
-
-  @override
-  String get tourAdminCustomerDetailBody => 'Contact details and bookings. The button below disables or re-enables the account.';
-
-  @override
-  String get tourAdminSettingsIntroBody => 'Announcements, shops waiting for review and this tour.';
+  String get pickLocationNoAddress => 'No address found here — the pin still works for directions.';
 }

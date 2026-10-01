@@ -6,19 +6,14 @@ import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/status_visuals.dart';
+import '../../../../core/theme/theme_context_ext.dart';
 import '../../../../core/utils/date_key.dart';
 import '../../../../core/utils/display_format.dart';
-import '../../../../core/widgets/app_card.dart';
-import '../../../../core/widgets/content_constraint.dart';
-import '../../../../core/widgets/hero_header.dart';
-import '../../../../core/widgets/stat_card.dart';
+import '../../../../core/widgets/empty_view.dart';
 import '../../../../core/widgets/status_badge.dart';
 import '../../../../data/demo/demo_data.dart';
-import '../../../shared/widgets/app_tour.dart';
-import '../../../shared/widgets/app_tours.dart';
-import '../../../shared/widgets/booking_list_tile.dart';
-import '../../../shared/widgets/preview_body.dart';
-import '../../../shared/widgets/stat_grid.dart';
+import '../../console/widgets/console_booking_table.dart';
+import '../../console/widgets/console_kit.dart';
 
 /// `/superadmin/dashboard` — PLATFORM scope: shops, bookings and customers
 /// across every shop, plus shops waiting for review.
@@ -35,100 +30,98 @@ class SuperadminDashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final shops = DemoData.shops;
     final active = shops.where((s) => s.status == ShopStatus.active).length;
-    final pending =
-        shops.where((s) => s.status == ShopStatus.pending).toList();
+    final pending = shops.where((s) => s.status == ShopStatus.pending).toList();
     final bookings = DemoData.allBookings();
-    final recent = bookings.take(4).toList();
+    final recent = bookings.take(6).toList();
     final l = context.l10n;
+    final today = DisplayFormat.fullDate(DateKey.fromDate(DateTime.now()));
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l.navDashboard),
-        actions: const [TourHelpButton()],
-      ),
-      body: PreviewBody(
-        width: ContentWidth.dashboard,
-        children: [
-          HeroHeader(
-            eyebrow: DisplayFormat.fullDate(DateKey.fromDate(DateTime.now())),
-            title: l.shopCount(shops.length),
-            subtitle: l.platformSummary(active, pending.length),
-          ),
-          const SizedBox(height: AppSpacing.xl),
-          TourAnchor(
-            id: TourIds.stats,
-            child: StatGrid(
-              children: [
-                StatCard(
-                  icon: Icons.storefront_outlined,
-                  label: l.activeShops,
-                  value: '$active',
-                  footer: l.ofTotal(shops.length),
-                  onTap: () => context.go(AppRoutes.superadminShops),
-                ),
-                StatCard(
-                  icon: Icons.pending_actions_outlined,
-                  label: l.toReview,
-                  value: '${pending.length}',
-                  footer: l.newShopsFooter,
-                  highlight: pending.isNotEmpty,
-                  onTap: () => context.go(_onboarding),
-                ),
-                StatCard(
-                  icon: Icons.event_note_outlined,
-                  label: l.navBookings,
-                  value: '${bookings.length}',
-                  footer: l.lastTwoWeeks,
-                  onTap: () => context.go(AppRoutes.superadminBookings),
-                ),
-                StatCard(
-                  icon: Icons.people_outline,
-                  label: l.navCustomers,
-                  value: '${DemoData.customers.length}',
-                  onTap: () => context.go(AppRoutes.superadminCustomers),
-                ),
-              ],
+      appBar: ConsoleAppBar(title: l.navDashboard),
+      body: ConsoleBody(
+        demo: true,
+        header: ConsoleBand(
+          overline: '${l.consolePlatform} · $today',
+          title: l.consoleOverview,
+          subtitle: l.platformSummary(active, pending.length),
+          metrics: [
+            ConsoleMetric(
+              value: '$active',
+              label: l.activeShops,
+              onTap: () => context.go(AppRoutes.superadminShops),
             ),
-          ),
-          if (pending.isNotEmpty) ...[
-            PreviewSectionTitle(
-              l.waitingForReview,
-              action: TextButton(
-                onPressed: () => context.go(_onboarding),
-                child: Text(l.reviewAction),
-              ),
+            ConsoleMetric(
+              value: '${pending.length}',
+              label: l.toReview,
+              attention: pending.isNotEmpty,
+              onTap: () => context.go(_onboarding),
             ),
-            AppCard(
-              padding: EdgeInsets.zero,
-              child: Column(
-                children: [
-                  for (final s in pending)
-                    ListTile(
-                      leading: const Icon(Icons.storefront_outlined),
-                      title: Text(s.name),
-                      subtitle: Text(
-                        [s.township, s.city].whereType<String>().join(', '),
-                      ),
-                      trailing: StatusBadge.fromVisual(
-                        s.status.visual,
-                        semanticsPrefix: l.shopStatusPrefix,
-                      ),
-                      onTap: () => context.go(_onboarding),
-                    ),
-                ],
-              ),
+            ConsoleMetric(
+              value: '${bookings.length}',
+              label: '${l.navBookings} · ${l.lastTwoWeeks}',
+              onTap: () => context.go(AppRoutes.superadminBookings),
+            ),
+            ConsoleMetric(
+              value: '${DemoData.customers.length}',
+              label: l.navCustomers,
+              onTap: () => context.go(AppRoutes.superadminCustomers),
             ),
           ],
-          PreviewSectionTitle(
+        ),
+        children: [
+          ConsoleHeading(
+            l.waitingForReview,
+            count: pending.length,
+            action: TextButton(
+              onPressed: () => context.go(_onboarding),
+              child: Text(l.reviewAction),
+            ),
+          ),
+          if (pending.isEmpty)
+            EmptyView.inline(
+              icon: Icons.inbox_outlined,
+              title: l.nothingToReview,
+            )
+          else
+            ConsoleTable(
+              columns: [
+                ConsoleColumn(l.shopLabel, flex: 4),
+                ConsoleColumn(l.locationLabel, flex: 3, compact: false),
+                ConsoleColumn(l.consoleStatus, flex: 3),
+              ],
+              rows: [
+                for (final s in pending)
+                  ConsoleRow(
+                    onTap: () => context.push(AppRoutes.superadminShop(s.id)),
+                    cells: [
+                      ConsoleCellText(
+                        s.name,
+                        strong: true,
+                        secondary: context.isCompact ? s.city : s.phone,
+                      ),
+                      ConsoleCellText(
+                        [s.township, s.city].whereType<String>().join(', '),
+                      ),
+                      StatusBadge.fromVisual(
+                        s.status.visual,
+                        semanticsPrefix: l.shopStatusPrefix,
+                        plain: true,
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+          const SizedBox(height: AppSpacing.xl),
+          ConsoleHeading(
             l.latestBookings,
             action: TextButton(
               onPressed: () => context.go(AppRoutes.superadminBookings),
               child: Text(l.homeAllBookings),
             ),
           ),
-          BookingGroup(
+          ConsoleBookingTable(
             bookings: recent,
-            showCustomer: true,
+            shopNameOf: (b) => DemoData.shop(b.shopId).name,
             onOpen: (b) => context.push(AppRoutes.superadminBooking(b.id)),
           ),
         ],

@@ -52,7 +52,9 @@ class ShopAdminAssignmentController extends AutoDisposeAsyncNotifier<void> {
       );
 
   Future<bool> remove(String uid) => _run(
-        () => ref.read(userRepositoryProvider).setUserRole(uid, UserRole.customer),
+        () => ref
+            .read(userRepositoryProvider)
+            .setUserRole(uid, UserRole.customer),
       );
 
   Future<bool> _run(Future<void> Function() action) async {

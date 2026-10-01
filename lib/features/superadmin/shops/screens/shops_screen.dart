@@ -4,171 +4,206 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/domain_enums.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/l10n/l10n_labels.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/status_visuals.dart';
 import '../../../../core/theme/theme_context_ext.dart';
-import '../../../../core/widgets/app_card.dart';
+import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/content_constraint.dart';
 import '../../../../core/widgets/empty_view.dart';
-import '../../../../core/widgets/motion.dart';
 import '../../../../core/widgets/skeleton.dart';
 import '../../../../core/widgets/status_badge.dart';
 import '../../../../data/vos/shop_vo.dart';
-import '../../../shared/widgets/app_tour.dart';
-import '../../../shared/widgets/app_tours.dart';
+import '../../console/widgets/console_kit.dart';
 import '../providers/shops_providers.dart';
 
-/// `/superadmin/shops` (`?tab=onboarding` → shops pending review).
-/// PLATFORM scope: every shop on the platform.
-class ShopsScreen extends ConsumerWidget {
+/// `/superadmin/shops` (`?tab=onboarding` → starts on shops pending review).
+/// PLATFORM scope: every shop on the platform, as a console table with a
+/// status filter and name / place search.
+class ShopsScreen extends ConsumerStatefulWidget {
   const ShopsScreen({super.key, this.showOnboarding = false});
 
   final bool showOnboarding;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final shops = ref.watch(allShopsProvider);
-    final l = context.l10n;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l.navShops),
-        actions: const [TourHelpButton()],
-      ),
-      floatingActionButton: TourAnchor(
-        id: TourIds.fab,
-        child: FloatingActionButton.extended(
-          onPressed: () => context.push(AppRoutes.superadminShopNew),
-          icon: const Icon(Icons.add_business_outlined),
-          label: Text(l.shopNew),
-        ),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: AppSpacing.sm),
-            child: ContentConstraint(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: TourAnchor(
-                  id: TourIds.segments,
-                  child: SegmentedButton<bool>(
-                    segments: [
-                      ButtonSegment(value: false, label: Text(l.staffFilterAll)),
-                      ButtonSegment(
-                        value: true,
-                        label: Text(l.shopPendingReview),
-                      ),
-                    ],
-                    selected: {showOnboarding},
-                    onSelectionChanged: (s) => context.go(
-                      s.first
-                          ? Uri(
-                              path: AppRoutes.superadminShops,
-                              queryParameters: {
-                                AppRoutes.tabQuery: AppRoutes.tabOnboarding,
-                              },
-                            ).toString()
-                          : AppRoutes.superadminShops,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: AsyncValueView<List<ShopVO>>(
-              value: shops.whenData(
-                (list) => showOnboarding
-                    ? list.where((s) => s.status == ShopStatus.pending).toList()
-                    : list,
-              ),
-              onRetry: () => ref.invalidate(allShopsProvider),
-              loading: const _ShopsSkeleton(),
-              isEmpty: (list) => list.isEmpty,
-              empty: showOnboarding
-                  ? EmptyView(
-                      icon: Icons.inbox_outlined,
-                      title: l.nothingToReview,
-                      message: l.nothingToReviewMessage,
-                    )
-                  : EmptyView(
-                      icon: Icons.storefront_outlined,
-                      title: l.noShopsYet,
-                      message: l.noShopsMessage,
-                      actionLabel: l.shopNew,
-                      onAction: () => context.push(AppRoutes.superadminShopNew),
-                    ),
-              data: (list) => ListView.separated(
-                // Room for the FAB under the last card.
-                padding: const EdgeInsets.fromLTRB(
-                  0,
-                  AppSpacing.lg,
-                  0,
-                  AppSpacing.xxxl + AppSpacing.xxl,
-                ),
-                itemCount: list.length,
-                separatorBuilder: (_, __) =>
-                    const SizedBox(height: AppSpacing.md),
-                itemBuilder: (context, i) => FadeSlideIn(
-                  index: i,
-                  child: ContentConstraint(child: _ShopCard(shop: list[i])),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  ConsumerState<ShopsScreen> createState() => _ShopsScreenState();
 }
 
-class _ShopCard extends StatelessWidget {
-  const _ShopCard({required this.shop});
+class _ShopsScreenState extends ConsumerState<ShopsScreen> {
+  /// `null` = every status.
+  late ShopStatus? _status = _initialStatus;
+  String _query = '';
 
-  final ShopVO shop;
+  ShopStatus? get _initialStatus =>
+      widget.showOnboarding ? ShopStatus.pending : null;
+
+  @override
+  void didUpdateWidget(ShopsScreen old) {
+    super.didUpdateWidget(old);
+    // The dashboard / settings link here with `?tab=onboarding`.
+    if (old.showOnboarding != widget.showOnboarding) _status = _initialStatus;
+  }
+
+  void _newShop() => context.push(AppRoutes.superadminShopNew);
+
+  bool _matches(ShopVO s) {
+    final q = _query.trim().toLowerCase();
+    if (q.isEmpty) return true;
+    return [s.name, s.city, s.township, s.phone, s.email]
+        .whereType<String>()
+        .any((v) => v.toLowerCase().contains(q));
+  }
 
   @override
   Widget build(BuildContext context) {
-    final location = [shop.township, shop.city]
-        .whereType<String>()
-        .where((s) => s.trim().isNotEmpty)
-        .join(', ');
+    final shops = ref.watch(allShopsProvider);
     final l = context.l10n;
-    return AppCard(
-      onTap: () => context.push(AppRoutes.superadminShop(shop.id)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Scaffold(
+      appBar: ConsoleAppBar(
+        title: l.navShops,
+        actions: [
+          ConsoleBarAction(
+            icon: Icons.add_business_outlined,
+            label: l.shopNew,
+            onPressed: _newShop,
+          ),
+        ],
+      ),
+      body: AsyncValueView<List<ShopVO>>(
+        value: shops,
+        onRetry: () => ref.invalidate(allShopsProvider),
+        loading: const _ShopsSkeleton(),
+        isEmpty: (list) => list.isEmpty,
+        empty: EmptyView(
+          icon: Icons.storefront_outlined,
+          title: l.noShopsYet,
+          message: l.noShopsMessage,
+          actionLabel: l.shopNew,
+          onAction: _newShop,
+        ),
+        data: (all) => _body(context, all),
+      ),
+    );
+  }
+
+  Widget _body(BuildContext context, List<ShopVO> all) {
+    final l = context.l10n;
+    int count(ShopStatus s) => all.where((x) => x.status == s).length;
+    final pending = count(ShopStatus.pending);
+    final shown = all
+        .where((s) => _status == null || s.status == _status)
+        .where(_matches)
+        .toList();
+
+    return ConsoleBody(
+      header: Column(
         children: [
-          Text(shop.name, style: context.textStyles.titleMedium),
-          if (location.isNotEmpty) ...[
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              location,
-              style: context.textStyles.bodyMedium
-                  ?.copyWith(color: context.colors.onSurfaceVariant),
+          ConsoleBand(
+            overline: '${l.consolePlatform} · ${l.navShops}',
+            metrics: [
+              ConsoleMetric(value: '${all.length}', label: l.totalLabel),
+              ConsoleMetric(
+                value: '${count(ShopStatus.active)}',
+                label: ShopStatus.active.labelIn(l),
+                onTap: () => setState(() => _status = ShopStatus.active),
+              ),
+              ConsoleMetric(
+                value: '$pending',
+                label: l.toReview,
+                attention: pending > 0,
+                onTap: () => setState(() => _status = ShopStatus.pending),
+              ),
+              ConsoleMetric(
+                value: '${count(ShopStatus.suspended)}',
+                label: ShopStatus.suspended.labelIn(l),
+                onTap: () => setState(() => _status = ShopStatus.suspended),
+              ),
+            ],
+          ),
+          ConsoleToolbar(
+            search: SearchField(
+              hintText: l.consoleSearchShops,
+              onChanged: (v) => setState(() => _query = v),
             ),
-          ],
-          const SizedBox(height: AppSpacing.md),
-          Wrap(
-            spacing: AppSpacing.sm,
-            runSpacing: AppSpacing.sm,
-            children: [
-              StatusBadge.fromVisual(
-                shop.status.visual,
-                semanticsPrefix: l.shopStatusPrefix,
+            filters: [
+              ConsoleFilterChip(
+                label: l.staffFilterAll,
+                count: all.length,
+                selected: _status == null,
+                onSelected: () => setState(() => _status = null),
               ),
-              StatusBadge.fromVisual(
-                shopListingVisual(isListed: shop.isListed),
-                semanticsPrefix: l.listingPrefix,
-              ),
+              for (final s in ShopStatus.values)
+                ConsoleFilterChip(
+                  label: s.labelIn(l),
+                  count: count(s),
+                  selected: _status == s,
+                  onSelected: () => setState(() => _status = s),
+                ),
             ],
           ),
         ],
       ),
+      children: [
+        if (shown.isEmpty)
+          _status == ShopStatus.pending && _query.trim().isEmpty
+              ? EmptyView.inline(
+                  icon: Icons.inbox_outlined,
+                  title: l.nothingToReview,
+                  message: l.nothingToReviewMessage,
+                )
+              : EmptyView.inline(
+                  icon: Icons.search_off,
+                  title: l.consoleNoMatches,
+                  message: l.staffTryAnotherFilter,
+                )
+        else ...[
+          ConsoleHeading(
+            _status?.labelIn(l) ?? l.staffFilterAll,
+            count: shown.length,
+          ),
+          ConsoleTable(
+            columns: [
+              ConsoleColumn(l.shopLabel, flex: 4),
+              ConsoleColumn(l.locationLabel, flex: 3, compact: false),
+              ConsoleColumn(l.listingPrefix, flex: 2, compact: false),
+              ConsoleColumn(l.consoleStatus, flex: 3),
+            ],
+            rows: [
+              for (final s in shown)
+                ConsoleRow(
+                  onTap: () => context.push(AppRoutes.superadminShop(s.id)),
+                  cells: [
+                    ConsoleCellText(
+                      s.name,
+                      strong: true,
+                      secondary: context.isCompact ? _place(s) : s.phone,
+                    ),
+                    ConsoleCellText(_place(s)),
+                    StatusBadge.fromVisual(
+                      shopListingVisual(isListed: s.isListed),
+                      semanticsPrefix: l.listingPrefix,
+                      plain: true,
+                    ),
+                    StatusBadge.fromVisual(
+                      s.status.visual,
+                      semanticsPrefix: l.shopStatusPrefix,
+                      plain: true,
+                    ),
+                  ],
+                ),
+            ],
+          ),
+        ],
+      ],
     );
   }
+
+  static String _place(ShopVO s) => [s.township, s.city]
+      .whereType<String>()
+      .where((v) => v.trim().isNotEmpty)
+      .join(', ');
 }
 
 class _ShopsSkeleton extends StatelessWidget {
@@ -179,8 +214,11 @@ class _ShopsSkeleton extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
       children: [
-        for (var i = 0; i < 5; i++)
-          const ContentConstraint(child: SkeletonListTile()),
+        for (var i = 0; i < 6; i++)
+          const ContentConstraint(
+            width: ContentWidth.dashboard,
+            child: SkeletonListTile(),
+          ),
       ],
     );
   }

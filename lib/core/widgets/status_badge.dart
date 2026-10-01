@@ -24,6 +24,7 @@ class StatusBadge extends StatelessWidget {
     required this.semanticsPrefix,
     this.size = StatusBadgeSize.small,
     this.source,
+    this.plain = false,
   });
 
   StatusBadge.fromVisual(
@@ -31,6 +32,7 @@ class StatusBadge extends StatelessWidget {
     Key? key,
     required String semanticsPrefix,
     StatusBadgeSize size = StatusBadgeSize.small,
+    bool plain = false,
   }) : this(
           key: key,
           tone: visual.tone,
@@ -39,6 +41,7 @@ class StatusBadge extends StatelessWidget {
           semanticsPrefix: semanticsPrefix,
           size: size,
           source: visual.source,
+          plain: plain,
         );
 
   final StatusTone tone;
@@ -52,6 +55,9 @@ class StatusBadge extends StatelessWidget {
   /// Status the badge shows ([StatusVisual.source]); when set, the label is
   /// translated for the current locale instead of using [label].
   final Object? source;
+
+  /// Icon + label in the tone color with no pill fill (dense tables).
+  final bool plain;
 
   String _text(BuildContext context) {
     final l = context.l10n;
@@ -84,13 +90,18 @@ class StatusBadge extends StatelessWidget {
             minHeight:
                 isSmall ? AppSizes.badgeHeightSmall : AppSizes.badgeHeightMedium,
           ),
-          padding: EdgeInsets.symmetric(
-            horizontal: isSmall ? AppSpacing.sm : AppSpacing.md - AppSpacing.xxs,
-          ),
-          decoration: BoxDecoration(
-            color: colors.background,
-            borderRadius: AppRadius.fullAll,
-          ),
+          padding: plain
+              ? EdgeInsets.zero
+              : EdgeInsets.symmetric(
+                  horizontal:
+                      isSmall ? AppSpacing.sm : AppSpacing.md - AppSpacing.xxs,
+                ),
+          decoration: plain
+              ? null
+              : BoxDecoration(
+                  color: colors.background,
+                  borderRadius: AppRadius.fullAll,
+                ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [

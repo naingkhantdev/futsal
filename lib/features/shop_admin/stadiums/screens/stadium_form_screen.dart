@@ -30,8 +30,8 @@ import '../../../../data/requests/venue_write_requests.dart';
 import '../../../../data/vos/stadium_vo.dart';
 import '../../../shared/widgets/app_tour.dart';
 import '../../../shared/widgets/app_tours.dart';
+import '../../../shared/widgets/map_location_field.dart';
 import '../providers/shop_venue_providers.dart';
-import '../widgets/stadium_location_field.dart';
 
 /// `/shop-admin/stadiums/new` and `/shop-admin/stadiums/:stadiumId/edit`.
 /// SHOP scope: the stadium always belongs to the admin's own shop
@@ -86,7 +86,7 @@ class _StadiumForm extends ConsumerStatefulWidget {
 }
 
 class _StadiumFormState extends ConsumerState<_StadiumForm>
-    with FormLeaveGuard<_StadiumForm> {
+    with FormLeaveGuard<_StadiumForm>, PinAddressFiller<_StadiumForm> {
   static const int _defaultOpen = 8 * 60;
   static const int _defaultClose = 22 * 60;
 
@@ -98,8 +98,7 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
   // Seeded once; later snapshots don't overwrite in-progress edits.
   late final _name = TextEditingController(text: widget.stadium?.name);
   late final _address = TextEditingController(text: widget.stadium?.address);
-  late final _township =
-      TextEditingController(text: widget.stadium?.township);
+  late final _township = TextEditingController(text: widget.stadium?.township);
   late final _city = TextEditingController(text: widget.stadium?.city);
   late final _description =
       TextEditingController(text: widget.stadium?.description);
@@ -154,6 +153,19 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
     super.dispose();
   }
 
+  @override
+  TextEditingController get pinAddress => _address;
+  @override
+  TextEditingController get pinTownship => _township;
+  @override
+  TextEditingController get pinCity => _city;
+  @override
+  MapPoint? get pinLocation => _location;
+  @override
+  set pinLocation(MapPoint? value) => _location = value;
+  @override
+  void onPinChanged() => _onTextChanged();
+
   bool _wasDirty = false;
 
   void _onTextChanged() {
@@ -184,10 +196,6 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
         v,
         emptyMessage: context.l10n.stadiumNameRequired,
       );
-  static String? _placeError(String? v) =>
-      VenueValidators.optionalText(v, VenuePolicy.placeMaxLength);
-  static String? _addressError(String? v) =>
-      VenueValidators.optionalText(v, VenuePolicy.addressMaxLength);
   static String? _descriptionError(String? v) =>
       VenueValidators.optionalText(v, VenuePolicy.descriptionMaxLength);
 
@@ -322,19 +330,20 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
                       focusNode: _nameFocus,
                       validator: _nameError),
                 ),
-                text(l.addressOptional, _address,
-                    icon: Icons.place_outlined, validator: _addressError),
-                text(l.townshipOptional, _township,
-                    icon: Icons.map_outlined, validator: _placeError),
-                text(l.cityOptional, _city,
-                    icon: Icons.location_city_outlined,
-                    validator: _placeError),
+                // Place is picked on Google Map only; address / township /
+                // city are filled in from the pin (PinAddressFiller).
                 TourAnchor(
                   id: TourIds.location,
-                  child: StadiumLocationField(
-                    value: _location,
+                  child: MapLocationField(
+                    point: _location,
+                    addressLine: pinAddressLine,
+                    onPoint: setPin,
+                    pickerRoute: AppRoutes.shopAdminPickLocation,
+                    hint: l.stadiumLocationHint,
+                    resolving: pinResolving,
+                    addressNotFound: pinAddressNotFound,
                     enabled: !isLoading,
-                    onChanged: (p) => setState(() => _location = p),
+                    showTitle: true,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xl),
@@ -408,9 +417,8 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
                     title: Text(l.openForBookings),
                     subtitle: Text(l.stadiumOpenSubtitle),
                     value: _isActive,
-                    onChanged: isLoading
-                        ? null
-                        : (v) => setState(() => _isActive = v),
+                    onChanged:
+                        isLoading ? null : (v) => setState(() => _isActive = v),
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xl),
@@ -422,7 +430,7 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
                   id: TourIds.primary,
                   child: PrimaryButton(
                     label: _isCreate ? l.addStadium : l.commonSaveChanges,
-                    onPressed: _save,
+                    onPressed: pinResolving ? null : _save,
                     isLoading: isLoading,
                     size: AppButtonSize.large,
                     expand: true,

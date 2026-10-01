@@ -11,6 +11,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/theme_context_ext.dart';
 import '../../../../core/utils/display_format.dart';
+import '../../../../core/utils/geo_location.dart';
 import '../../../../core/utils/money.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/content_constraint.dart';
@@ -37,6 +38,9 @@ class StadiumDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = DemoData.stadium(stadiumId);
     final shop = DemoData.shop(s.shopId);
+    final MapPoint? shopPoint = shop.latitude != null && shop.longitude != null
+        ? (latitude: shop.latitude!, longitude: shop.longitude!)
+        : null;
     final courts = DemoData.courtsOf(s.id);
     final styles = context.textStyles;
     final colors = context.colors;
@@ -80,7 +84,8 @@ class StadiumDetailsScreen extends StatelessWidget {
               id: TourIds.primary,
               child: PrimaryButton(
                 label: l.bookACourt,
-                onPressed: () => context.push(AppRoutes.customerBookStadium(s.id)),
+                onPressed: () =>
+                    context.push(AppRoutes.customerBookStadium(s.id)),
               ),
             ),
           ],
@@ -117,14 +122,15 @@ class StadiumDetailsScreen extends StatelessWidget {
               ],
             ),
           ],
-          if (s.hasLocation || address.isNotEmpty) ...[
+          // Stadium pin first; otherwise the shop's address pin.
+          if (s.hasLocation || shopPoint != null || address.isNotEmpty) ...[
             PreviewSectionTitle(l.locationLabel),
             VenueLocationCard(
               name: s.name,
               address: address,
               point: s.hasLocation
                   ? (latitude: s.latitude!, longitude: s.longitude!)
-                  : null,
+                  : shopPoint,
             ),
           ],
           PreviewSectionTitle(l.courtsTitle),

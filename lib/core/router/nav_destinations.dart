@@ -23,7 +23,8 @@ abstract final class NavDestinations {
     NavDestination(label: NavLabel.settings, icon: Icons.settings_outlined, selectedIcon: Icons.settings),
   ];
 
-  /// Onboarding requests live in the Shops tab.
+  /// Onboarding requests live in the Shops tab. Shown in the superadmin side
+  /// menu (`SuperadminShell`), not a bottom bar.
   static const List<NavDestination> superadmin = [
     NavDestination(label: NavLabel.dashboard, icon: Icons.space_dashboard_outlined, selectedIcon: Icons.space_dashboard),
     NavDestination(label: NavLabel.shops, icon: Icons.storefront_outlined, selectedIcon: Icons.storefront),

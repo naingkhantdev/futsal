@@ -28,6 +28,8 @@ class ShopProfileRequest {
     this.address,
     this.township,
     this.city,
+    this.latitude,
+    this.longitude,
     this.ownerName,
     this.ownerPhone,
   });
@@ -39,6 +41,11 @@ class ShopProfileRequest {
   final String? address;
   final String? township;
   final String? city;
+
+  /// Map pin for directions (both or neither, see
+  /// `VenuePolicy.isValidLocation`). `null` clears a saved location.
+  final double? latitude;
+  final double? longitude;
   final String? ownerName;
   final String? ownerPhone;
 
@@ -51,6 +58,8 @@ class ShopProfileRequest {
         ShopFields.address: _text(address),
         ShopFields.township: _text(township),
         ShopFields.city: _text(city),
+        ShopFields.latitude: latitude,
+        ShopFields.longitude: longitude,
       };
 
   /// Admin-only `shops/{shopId}/private/details` fields.

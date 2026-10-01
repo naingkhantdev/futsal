@@ -40,11 +40,6 @@ abstract final class TourIds {
   static const String slotLength = 'slotLength';
   static const String where = 'where';
   static const String map = 'map';
-  static const String segments = 'segments';
-  static const String status = 'status';
-  static const String admins = 'admins';
-  static const String owner = 'owner';
-  static const String audience = 'audience';
 }
 
 /// Every page's first-visit tour. Tab indexes follow `NavDestinations`.
@@ -380,105 +375,4 @@ abstract final class AppTours {
             AppTourStep.anchor(TourIds.primary,
                 title: l.tourMapUseTitle, body: l.tourMapUseBody),
           ]);
-
-  // --- Superadmin -------------------------------------------------------------
-
-  static final superadminDashboard = AppTourDef('admin.dashboard', (l) => [
-        AppTourStep.anchor(TourIds.stats,
-            title: l.tourAdminStatsTitle, body: l.tourAdminStatsBody),
-        AppTourStep.tab(1, title: l.navShops, body: l.tourAdminShopsBody),
-        AppTourStep.tab(2,
-            title: l.tourAdminBookingsTitle, body: l.tourAdminBookingsBody),
-        AppTourStep.tab(3,
-            title: l.navCustomers, body: l.tourAdminCustomersBody),
-        AppTourStep.tab(4,
-            title: l.navSettings, body: l.tourAdminSettingsBody),
-      ]);
-
-  static final superadminShops = AppTourDef('admin.shops', (l) => [
-        AppTourStep.anchor(TourIds.segments,
-            title: l.tourShopsSegmentsTitle, body: l.tourShopsSegmentsBody),
-        AppTourStep.anchor(TourIds.fab,
-            title: l.tourShopsAddTitle, body: l.tourShopsAddBody),
-      ]);
-
-  static final superadminShopDetail = AppTourDef('admin.shopDetail', (l) => [
-        AppTourStep.anchor(TourIds.edit,
-            title: l.tourShopDetailEditTitle,
-            body: l.tourShopDetailEditBody),
-        AppTourStep.anchor(TourIds.status,
-            title: l.tourShopDetailStatusTitle,
-            body: l.tourShopDetailStatusBody),
-        AppTourStep.anchor(TourIds.admins,
-            title: l.tourShopDetailAdminsTitle,
-            body: l.tourShopDetailAdminsBody),
-      ]);
-
-  static final superadminShopForm = AppTourDef('admin.shopForm', (l) => [
-        AppTourStep.anchor(TourIds.name,
-            title: l.tourShopFormNameTitle, body: l.tourShopFormNameBody),
-        AppTourStep.anchor(TourIds.owner,
-            title: l.tourShopFormOwnerTitle, body: l.tourShopFormOwnerBody),
-        _save(l),
-      ]);
-
-  static final superadminShopAdmins = AppTourDef('admin.shopAdmins', (l) => [
-        AppTourStep.intro(
-            title: l.tourShopAdminsIntroTitle,
-            body: l.tourShopAdminsIntroBody),
-        AppTourStep.anchor(TourIds.fab,
-            title: l.tourShopAdminsAddTitle, body: l.tourShopAdminsAddBody),
-      ]);
-
-  static final superadminInviteShopAdmin =
-      AppTourDef('admin.inviteShopAdmin', (l) => [
-            AppTourStep.anchor(TourIds.email,
-                title: l.tourInviteEmailTitle, body: l.tourInviteEmailBody),
-            AppTourStep.anchor(TourIds.secondary,
-                title: l.tourInviteFindTitle, body: l.tourInviteFindBody),
-          ]);
-
-  static final superadminAnnouncements =
-      AppTourDef('admin.announcements', (l) => [
-            AppTourStep.intro(
-                title: l.tourAnnouncementsIntroTitle,
-                body: l.tourAnnouncementsIntroBody),
-            AppTourStep.anchor(TourIds.fab,
-                title: l.tourAnnouncementsAddTitle,
-                body: l.tourAnnouncementsAddBody),
-          ]);
-
-  static final superadminNewAnnouncement =
-      AppTourDef('admin.newAnnouncement', (l) => [
-            AppTourStep.anchor(TourIds.audience,
-                title: l.tourAnnounceAudienceTitle,
-                body: l.tourAnnounceAudienceBody),
-            AppTourStep.anchor(TourIds.primary,
-                title: l.tourAnnounceSendTitle,
-                body: l.tourAnnounceSendBody),
-          ]);
-
-  static final superadminBookings =
-      AppTourDef('admin.bookings', _staffBookings);
-
-  static final superadminBookingDetail =
-      AppTourDef('admin.bookingDetail', _staffBookingDetail);
-
-  static final superadminCustomers = AppTourDef('admin.customers', (l) => [
-        AppTourStep.intro(
-            title: l.navCustomers, body: l.tourAdminCustomersIntroBody),
-        _customerSearch(l),
-      ]);
-
-  static final superadminCustomerDetail =
-      AppTourDef('admin.customerDetail', (l) => [
-            AppTourStep.intro(
-                title: l.tourCustomerDetailIntroTitle,
-                body: l.tourAdminCustomerDetailBody),
-          ]);
-
-  static final superadminSettings = AppTourDef('admin.settings', (l) => [
-        AppTourStep.intro(
-            title: l.navSettings, body: l.tourAdminSettingsIntroBody),
-      ]);
 }

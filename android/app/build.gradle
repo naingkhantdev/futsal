@@ -26,11 +26,6 @@ if (flutterVersionName == null) {
     flutterVersionName = "1.0"
 }
 
-// Google Maps SDK key: `MAPS_API_KEY=...` in android/local.properties
-// (gitignored, never committed). Empty when unset; the app then shows the
-// map-free location card (see lib/core/constants/maps_config.dart).
-def mapsApiKey = localProperties.getProperty("MAPS_API_KEY") ?: ""
-
 android {
     namespace = "com.futsalbooking.futsal_booking"
     compileSdk = flutter.compileSdkVersion
@@ -51,7 +46,6 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
-        manifestPlaceholders += [MAPS_API_KEY: mapsApiKey]
     }
 
     buildTypes {

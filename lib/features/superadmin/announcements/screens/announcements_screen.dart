@@ -3,76 +3,69 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
-import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/theme/status_tone.dart';
-import '../../../../core/theme/theme_context_ext.dart';
 import '../../../../core/utils/display_format.dart';
-import '../../../../core/widgets/app_card.dart';
-import '../../../../core/widgets/status_badge.dart';
 import '../../../../data/demo/demo_data.dart';
-import '../../../shared/widgets/app_tour.dart';
-import '../../../shared/widgets/app_tours.dart';
-import '../../../shared/widgets/preview_body.dart';
+import '../../console/widgets/console_kit.dart';
 
 /// `/superadmin/settings/announcements` — PLATFORM scope: sent
 /// announcements, newest first. PREVIEW: sample data until Phase 12.
 class AnnouncementsScreen extends StatelessWidget {
   const AnnouncementsScreen({super.key});
 
+  static String audienceText(AppLocalizations l, DemoAudience a) => switch (a) {
+        DemoAudience.everyone => l.audienceEveryone,
+        DemoAudience.customers => l.audienceCustomers,
+        DemoAudience.shopAdmins => l.audienceShopAdmins,
+      };
+
   @override
   Widget build(BuildContext context) {
-    final styles = context.textStyles;
-    final muted = context.colors.onSurfaceVariant;
     final l = context.l10n;
+    final sent = DemoData.announcements;
+    int to(DemoAudience a) => sent.where((x) => x.audience == a).length;
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l.announcementsTitle),
-        actions: const [TourHelpButton()],
+      appBar: ConsoleAppBar(
+        title: l.announcementsTitle,
+        actions: [
+          ConsoleBarAction(
+            icon: Icons.edit_outlined,
+            label: l.newAnnouncementTitle,
+            onPressed: () => context.push(AppRoutes.superadminAnnouncementNew),
+          ),
+        ],
       ),
-      floatingActionButton: TourAnchor(
-        id: TourIds.fab,
-        child: FloatingActionButton.extended(
-          onPressed: () => context.push(AppRoutes.superadminAnnouncementNew),
-          icon: const Icon(Icons.edit_outlined),
-          label: Text(l.newShort),
-        ),
-      ),
-      body: PreviewBody(
-        bottomPadding: 96,
-        children: [
-          for (final a in DemoData.announcements) ...[
-            AppCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      StatusBadge(
-                        tone: StatusTone.brand,
-                        icon: Icons.group_outlined,
-                        label: switch (a.audience) {
-                          DemoAudience.everyone => l.audienceEveryone,
-                          DemoAudience.customers => l.audienceCustomers,
-                          DemoAudience.shopAdmins => l.audienceShopAdmins,
-                        },
-                        semanticsPrefix: l.sentToPrefix,
-                      ),
-                      const Spacer(),
-                      Text(
-                        DisplayFormat.timeAgo(a.sentAt, l),
-                        style: styles.labelSmall?.copyWith(color: muted),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  Text(a.title, style: styles.titleMedium),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(a.body, style: styles.bodyMedium?.copyWith(color: muted)),
-                ],
-              ),
-            ),
-            const SizedBox(height: AppSpacing.md),
+      body: ConsoleBody(
+        demo: true,
+        header: ConsoleBand(
+          overline: '${l.consolePlatform} · ${l.announcementsTitle}',
+          metrics: [
+            ConsoleMetric(value: '${sent.length}', label: l.consoleSent),
+            for (final a in DemoAudience.values)
+              ConsoleMetric(value: '${to(a)}', label: audienceText(l, a)),
           ],
+        ),
+        children: [
+          ConsoleTable(
+            columns: [
+              ConsoleColumn(l.messageLabel, flex: 6),
+              ConsoleColumn(l.audienceLabel, flex: 2, compact: false),
+              ConsoleColumn(l.consoleSent, flex: 2, alignEnd: true),
+            ],
+            rows: [
+              for (final a in sent)
+                ConsoleRow(
+                  cells: [
+                    ConsoleCellText(a.title, strong: true, secondary: a.body),
+                    ConsoleCellText(audienceText(l, a.audience)),
+                    Text(
+                      DisplayFormat.timeAgo(a.sentAt, l),
+                      textAlign: TextAlign.end,
+                    ),
+                  ],
+                ),
+            ],
+          ),
         ],
       ),
     );

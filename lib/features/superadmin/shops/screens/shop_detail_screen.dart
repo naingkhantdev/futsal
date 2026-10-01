@@ -7,23 +7,19 @@ import '../../../../core/extensions/async_value_ext.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/l10n/l10n_labels.dart';
 import '../../../../core/router/app_routes.dart';
-import '../../../../core/theme/app_sizes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/status_visuals.dart';
 import '../../../../core/theme/theme_context_ext.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/app_dialogs.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../core/widgets/async_value_view.dart';
-import '../../../../core/widgets/content_constraint.dart';
-import '../../../../core/widgets/detail_row.dart';
 import '../../../../core/widgets/empty_view.dart';
 import '../../../../core/widgets/status_badge.dart';
+import '../../../../core/widgets/venue_location_card.dart';
 import '../../../../data/vos/shop_private_vo.dart';
 import '../../../../data/vos/shop_vo.dart';
-import '../../../shared/widgets/app_tour.dart';
-import '../../../shared/widgets/app_tours.dart';
+import '../../console/widgets/console_kit.dart';
 import '../providers/shops_providers.dart';
 
 /// `/superadmin/shops/:shopId` — PLATFORM scope: shop profile, status
@@ -52,19 +48,15 @@ class ShopDetailScreen extends ConsumerWidget {
     });
     final l = context.l10n;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(shop.valueOrNull?.name ?? l.shopLabel),
+      appBar: ConsoleAppBar(
+        title: shop.valueOrNull?.name ?? l.shopLabel,
         actions: [
-          const TourHelpButton(),
           if (shop.valueOrNull != null)
-            TourAnchor(
-              id: TourIds.edit,
-              child: IconButton(
-                tooltip: l.shopEdit,
-                icon: const Icon(Icons.edit_outlined),
-                onPressed: () =>
-                    context.push(AppRoutes.superadminShopEdit(shopId)),
-              ),
+            IconButton(
+              tooltip: l.shopEdit,
+              icon: const Icon(Icons.edit_outlined),
+              onPressed: () =>
+                  context.push(AppRoutes.superadminShopEdit(shopId)),
             ),
         ],
       ),
@@ -91,98 +83,93 @@ class _ShopDetailBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final details = ref.watch(shopPrivateProvider(shop.id)).valueOrNull;
-    final muted = context.colors.onSurfaceVariant;
-    final location = [shop.address, shop.township, shop.city]
+    final place = [shop.township, shop.city]
+        .whereType<String>()
+        .where((s) => s.trim().isNotEmpty)
+        .join(', ');
+    final fullAddress = [shop.address, place]
         .whereType<String>()
         .where((s) => s.trim().isNotEmpty)
         .join(', ');
     final l = context.l10n;
 
-    return ListView(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
+    return ConsoleBody(
+      header: ConsoleBand(
+        overline: '${l.consolePlatform} · ${l.shopLabel}',
+        title: shop.name,
+        subtitle: place.isEmpty ? null : place,
+        badges: [
+          StatusBadge.fromVisual(
+            shop.status.visual,
+            semanticsPrefix: l.shopStatusPrefix,
+            size: StatusBadgeSize.medium,
+          ),
+          StatusBadge.fromVisual(
+            shopListingVisual(isListed: shop.isListed),
+            semanticsPrefix: l.listingPrefix,
+            size: StatusBadgeSize.medium,
+          ),
+        ],
+      ),
       children: [
-        ContentConstraint(
-          width: ContentWidth.form,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Wrap(
-                spacing: AppSpacing.sm,
-                runSpacing: AppSpacing.sm,
+        ConsoleColumns(
+          children: [
+            ConsolePanel(
+              title: l.consoleStatusListing,
+              padded: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  StatusBadge.fromVisual(
-                    shop.status.visual,
-                    semanticsPrefix: l.shopStatusPrefix,
-                    size: StatusBadgeSize.medium,
+                  Text(
+                    _statusExplainer(shop, l),
+                    style: context.textStyles.bodyMedium
+                        ?.copyWith(color: context.colors.onSurfaceVariant),
                   ),
-                  StatusBadge.fromVisual(
-                    shopListingVisual(isListed: shop.isListed),
-                    semanticsPrefix: l.listingPrefix,
-                    size: StatusBadgeSize.medium,
+                  const SizedBox(height: AppSpacing.lg),
+                  _StatusActions(shop: shop),
+                ],
+              ),
+            ),
+            ConsolePanel(
+              title: l.consoleContact,
+              child: Column(
+                children: [
+                  ConsoleField(label: l.profilePhone, value: shop.phone),
+                  ConsoleField(label: l.emailLabel, value: shop.email),
+                  ConsoleField(
+                    label: l.locationLabel,
+                    value: fullAddress,
+                  ),
+                  ConsoleField(
+                    label: l.descriptionLabel,
+                    value: shop.description,
+                    last: true,
                   ),
                 ],
               ),
-              const SizedBox(height: AppSpacing.sm),
-              Text(
-                _statusExplainer(shop, l),
-                style: context.textStyles.bodyMedium?.copyWith(color: muted),
+            ),
+            // Map + "Directions" (opens Google Maps); falls back to an
+            // address search when no pin is set.
+            VenueLocationCard(
+              name: shop.name,
+              address: fullAddress,
+              point: shop.latitude != null && shop.longitude != null
+                  ? (latitude: shop.latitude!, longitude: shop.longitude!)
+                  : null,
+            ),
+            _OwnerPanel(details: details),
+            ConsolePanel(
+              title: l.audienceShopAdmins,
+              child: ConsoleLinkRow(
+                icon: Icons.admin_panel_settings_outlined,
+                label: l.audienceShopAdmins,
+                detail: l.shopAdminsSub,
+                last: true,
+                onTap: () =>
+                    context.push(AppRoutes.superadminShopAdmins(shop.id)),
               ),
-              const SizedBox(height: AppSpacing.lg),
-              TourAnchor(
-                id: TourIds.status,
-                child: _StatusActions(shop: shop),
-              ),
-              const SizedBox(height: AppSpacing.xl),
-              AppCard(
-                padding: EdgeInsets.zero,
-                child: Column(
-                  children: [
-                    DetailRow(
-                      icon: Icons.phone_outlined,
-                      label: l.profilePhone,
-                      value: shop.phone,
-                    ),
-                    DetailRow(
-                      icon: Icons.mail_outline,
-                      label: l.emailLabel,
-                      value: shop.email,
-                    ),
-                    DetailRow(
-                      icon: Icons.place_outlined,
-                      label: l.locationLabel,
-                      value: location,
-                    ),
-                    if ((shop.description ?? '').trim().isNotEmpty)
-                      DetailRow(
-                        icon: Icons.notes,
-                        label: l.descriptionLabel,
-                        value: shop.description,
-                      ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              _OwnerCard(details: details),
-              const SizedBox(height: AppSpacing.lg),
-              AppCard(
-                padding: EdgeInsets.zero,
-                child: TourAnchor(
-                  id: TourIds.admins,
-                  child: ListTile(
-                    leading: const Icon(
-                      Icons.admin_panel_settings_outlined,
-                      size: AppSizes.iconLg,
-                    ),
-                    title: Text(l.audienceShopAdmins),
-                    subtitle: Text(l.shopAdminsSub),
-                    trailing: Icon(Icons.chevron_right, color: muted),
-                    onTap: () =>
-                        context.push(AppRoutes.superadminShopAdmins(shop.id)),
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );
@@ -191,8 +178,7 @@ class _ShopDetailBody extends ConsumerWidget {
   static String _statusExplainer(ShopVO shop, AppLocalizations l) =>
       switch (shop.status) {
         ShopStatus.pending => l.explainPending,
-        ShopStatus.active =>
-          shop.isListed ? l.explainLive : l.explainUnlisted,
+        ShopStatus.active => shop.isListed ? l.explainLive : l.explainUnlisted,
         ShopStatus.suspended => l.explainSuspended,
         ShopStatus.rejected => l.explainRejected,
         ShopStatus.inactive => l.explainInactive,
@@ -228,8 +214,8 @@ class _StatusActions extends ConsumerWidget {
         );
         if (!ok) return;
       }
-      final saved =
-          await controller.setStatus(shop.id, status: status, isListed: isListed);
+      final saved = await controller.setStatus(shop.id,
+          status: status, isListed: isListed);
       if (saved && context.mounted) {
         showAppSnackBar(context, done, tone: SnackTone.success);
       }
@@ -297,21 +283,18 @@ class _StatusActions extends ConsumerWidget {
           ),
         ],
       ShopStatus.active => [
-          AppCard(
-            padding: EdgeInsets.zero,
-            child: SwitchListTile(
-              title: Text(l.listedForCustomers),
-              subtitle: Text(l.listedForCustomersSub),
-              value: shop.isListed,
-              onChanged: busy
-                  ? null
-                  : (listed) => change(
-                        ShopStatus.active,
-                        isListed: listed,
-                        done:
-                            listed ? l.shopListedDone : l.shopUnlistedDone,
-                      ),
-            ),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(l.listedForCustomers),
+            subtitle: Text(l.listedForCustomersSub),
+            value: shop.isListed,
+            onChanged: busy
+                ? null
+                : (listed) => change(
+                      ShopStatus.active,
+                      isListed: listed,
+                      done: listed ? l.shopListedDone : l.shopUnlistedDone,
+                    ),
           ),
           const SizedBox(height: AppSpacing.md),
           DestructiveButton(
@@ -345,46 +328,30 @@ class _StatusActions extends ConsumerWidget {
   }
 }
 
-class _OwnerCard extends StatelessWidget {
-  const _OwnerCard({required this.details});
+class _OwnerPanel extends StatelessWidget {
+  const _OwnerPanel({required this.details});
 
   final ShopPrivateVO? details;
 
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    return AppCard(
-      padding: EdgeInsets.zero,
+    final reason = details?.suspendedReason ?? '';
+    return ConsolePanel(
+      title: l.ownerPrivateTitle,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.lg,
-              AppSpacing.lg,
-              AppSpacing.lg,
-              0,
-            ),
-            child: Text(
-              l.ownerPrivateTitle,
-              style: context.textStyles.titleSmall,
-            ),
-          ),
-          DetailRow(
-            icon: Icons.person_outline,
-            label: l.ownerNameLabel,
-            value: details?.ownerName,
-          ),
-          DetailRow(
-            icon: Icons.phone_outlined,
+          ConsoleField(label: l.ownerNameLabel, value: details?.ownerName),
+          ConsoleField(
             label: l.ownerPhoneLabel,
             value: details?.ownerPhone,
+            last: reason.isEmpty,
           ),
-          if ((details?.suspendedReason ?? '').isNotEmpty)
-            DetailRow(
-              icon: Icons.info_outline,
+          if (reason.isNotEmpty)
+            ConsoleField(
               label: l.suspensionReason,
-              value: details?.suspendedReason,
+              value: reason,
+              last: true,
             ),
         ],
       ),

@@ -119,9 +119,8 @@ class _StaffBookingListState extends State<StaffBookingList> {
   }
 }
 
-/// Booking detail for staff: sections + the status / payment actions that
-/// [BookingPolicy] allows from the current state. PREVIEW: actions save
-/// nothing.
+/// Booking detail for staff: sections + [StaffBookingActions]. PREVIEW:
+/// actions save nothing.
 class StaffBookingDetail extends StatelessWidget {
   const StaffBookingDetail({
     super.key,
@@ -138,6 +137,46 @@ class StaffBookingDetail extends StatelessWidget {
   /// Role-specific actions under the standard ones (shop admin: blacklist
   /// a no-show).
   final List<Widget> extraActions;
+
+  @override
+  Widget build(BuildContext context) {
+    return PreviewBody(
+      children: [
+        BookingDetailSections(
+          booking: booking,
+          showCustomer: true,
+          shopName: shopName,
+          onCustomerTap: onCustomerTap,
+        ),
+        const SizedBox(height: AppSpacing.xl),
+        StaffBookingActions(booking: booking, extraActions: extraActions),
+      ],
+    );
+  }
+}
+
+/// The status / payment actions that [BookingPolicy] allows from the
+/// booking's current state, stacked full width. PREVIEW: they save nothing.
+class StaffBookingActions extends StatelessWidget {
+  const StaffBookingActions({
+    super.key,
+    required this.booking,
+    this.extraActions = const [],
+  });
+
+  final BookingVO booking;
+  final List<Widget> extraActions;
+
+  /// Whether any standard action applies (callers can hide an empty panel).
+  static bool hasAny(BookingVO b) {
+    final paymentOpen = b.status != BookingStatus.rejected &&
+        b.status != BookingStatus.cancelled;
+    return BookingPolicy.canStaffChangeStatus(b.status, BookingStatus.confirmed) ||
+        BookingPolicy.canStaffChangeStatus(b.status, BookingStatus.rejected) ||
+        (BookingPolicy.canStaffChangeStatus(b.status, BookingStatus.completed) &&
+            !b.isUpcoming(DateTime.now())) ||
+        (paymentOpen && b.paymentStatus != PaymentStatus.refunded);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -159,15 +198,9 @@ class StaffBookingDetail extends StatelessWidget {
     final paymentOpen = b.status != BookingStatus.rejected &&
         b.status != BookingStatus.cancelled;
 
-    return PreviewBody(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        BookingDetailSections(
-          booking: b,
-          showCustomer: true,
-          shopName: shopName,
-          onCustomerTap: onCustomerTap,
-        ),
-        const SizedBox(height: AppSpacing.xl),
         if (canConfirm) ...[
           TourAnchor(
             id: TourIds.confirm,

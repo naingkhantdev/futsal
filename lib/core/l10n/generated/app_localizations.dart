@@ -3027,12 +3027,6 @@ abstract class AppLocalizations {
   /// **'No map location yet'**
   String get locationNotSet;
 
-  /// No description provided for @locationNote.
-  ///
-  /// In en, this message translates to:
-  /// **'Customers see this on a map and can get directions.'**
-  String get locationNote;
-
   /// No description provided for @locationPickOnMap.
   ///
   /// In en, this message translates to:
@@ -3044,30 +3038,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Change on map'**
   String get locationChangeOnMap;
-
-  /// No description provided for @locationPasteLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Coordinates or Google Maps link'**
-  String get locationPasteLabel;
-
-  /// No description provided for @locationPasteHelper.
-  ///
-  /// In en, this message translates to:
-  /// **'e.g. 16.84090, 96.17350'**
-  String get locationPasteHelper;
-
-  /// No description provided for @locationInvalid.
-  ///
-  /// In en, this message translates to:
-  /// **'Couldn\'t read a location. Paste coordinates like 16.84090, 96.17350.'**
-  String get locationInvalid;
-
-  /// No description provided for @locationShortLink.
-  ///
-  /// In en, this message translates to:
-  /// **'Short links can\'t be read. Open the link, then copy the full link or the coordinates.'**
-  String get locationShortLink;
 
   /// No description provided for @locationClear.
   ///
@@ -3326,48 +3296,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Shop profile, blocked times, the blacklist and this tour.'**
   String get tourShopSettingsBody;
-
-  /// No description provided for @tourAdminStatsTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Platform at a glance'**
-  String get tourAdminStatsTitle;
-
-  /// No description provided for @tourAdminStatsBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Shops, bookings and activity across the whole platform.'**
-  String get tourAdminStatsBody;
-
-  /// No description provided for @tourAdminShopsBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Review new shops, activate or suspend them, and assign shop admins.'**
-  String get tourAdminShopsBody;
-
-  /// No description provided for @tourAdminBookingsTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'All bookings'**
-  String get tourAdminBookingsTitle;
-
-  /// No description provided for @tourAdminBookingsBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Look up any booking on the platform.'**
-  String get tourAdminBookingsBody;
-
-  /// No description provided for @tourAdminCustomersBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Find customers and manage their account status.'**
-  String get tourAdminCustomersBody;
-
-  /// No description provided for @tourAdminSettingsBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Announcements, shops waiting for review and this tour.'**
-  String get tourAdminSettingsBody;
 
   /// No description provided for @tourHelp.
   ///
@@ -4185,203 +4113,143 @@ abstract class AppLocalizations {
   /// **'Saves the pin to the stadium form.'**
   String get tourMapUseBody;
 
-  /// No description provided for @tourShopsSegmentsTitle.
+  /// No description provided for @consolePlatform.
   ///
   /// In en, this message translates to:
-  /// **'All or pending review'**
-  String get tourShopsSegmentsTitle;
+  /// **'Platform'**
+  String get consolePlatform;
 
-  /// No description provided for @tourShopsSegmentsBody.
+  /// No description provided for @consoleStatus.
   ///
   /// In en, this message translates to:
-  /// **'New shop sign-ups wait in Pending review until you approve them.'**
-  String get tourShopsSegmentsBody;
+  /// **'Status'**
+  String get consoleStatus;
 
-  /// No description provided for @tourShopsAddTitle.
+  /// No description provided for @consoleSearchShops.
   ///
   /// In en, this message translates to:
-  /// **'Add a shop'**
-  String get tourShopsAddTitle;
+  /// **'Search shops'**
+  String get consoleSearchShops;
 
-  /// No description provided for @tourShopsAddBody.
+  /// No description provided for @consoleStatusListing.
   ///
   /// In en, this message translates to:
-  /// **'Create a shop yourself, then assign its admin.'**
-  String get tourShopsAddBody;
+  /// **'Status & listing'**
+  String get consoleStatusListing;
 
-  /// No description provided for @tourShopDetailEditTitle.
+  /// No description provided for @consoleActions.
   ///
   /// In en, this message translates to:
-  /// **'Edit shop'**
-  String get tourShopDetailEditTitle;
+  /// **'Actions'**
+  String get consoleActions;
 
-  /// No description provided for @tourShopDetailEditBody.
+  /// No description provided for @consoleActivity.
   ///
   /// In en, this message translates to:
-  /// **'Change the name, contact and owner details.'**
-  String get tourShopDetailEditBody;
+  /// **'Activity'**
+  String get consoleActivity;
 
-  /// No description provided for @tourShopDetailStatusTitle.
+  /// No description provided for @consoleContact.
   ///
   /// In en, this message translates to:
-  /// **'Shop status'**
-  String get tourShopDetailStatusTitle;
+  /// **'Contact'**
+  String get consoleContact;
 
-  /// No description provided for @tourShopDetailStatusBody.
+  /// No description provided for @consolePayment.
   ///
   /// In en, this message translates to:
-  /// **'Approve, suspend or reactivate. Suspended or unlisted shops take no new bookings.'**
-  String get tourShopDetailStatusBody;
+  /// **'Payment'**
+  String get consolePayment;
 
-  /// No description provided for @tourShopDetailAdminsTitle.
+  /// No description provided for @consoleWhen.
   ///
   /// In en, this message translates to:
-  /// **'Shop admins'**
-  String get tourShopDetailAdminsTitle;
+  /// **'When'**
+  String get consoleWhen;
 
-  /// No description provided for @tourShopDetailAdminsBody.
+  /// No description provided for @consolePreferences.
   ///
   /// In en, this message translates to:
-  /// **'See and assign who manages this shop.'**
-  String get tourShopDetailAdminsBody;
+  /// **'Preferences'**
+  String get consolePreferences;
 
-  /// No description provided for @tourShopFormNameTitle.
+  /// No description provided for @consoleActive.
   ///
   /// In en, this message translates to:
-  /// **'Shop name'**
-  String get tourShopFormNameTitle;
+  /// **'Active'**
+  String get consoleActive;
 
-  /// No description provided for @tourShopFormNameBody.
+  /// No description provided for @consoleUpcoming.
   ///
   /// In en, this message translates to:
-  /// **'Shown to customers on every stadium of this shop.'**
-  String get tourShopFormNameBody;
+  /// **'Upcoming'**
+  String get consoleUpcoming;
 
-  /// No description provided for @tourShopFormOwnerTitle.
+  /// No description provided for @consoleSent.
   ///
   /// In en, this message translates to:
-  /// **'Owner details'**
-  String get tourShopFormOwnerTitle;
+  /// **'Sent'**
+  String get consoleSent;
 
-  /// No description provided for @tourShopFormOwnerBody.
+  /// No description provided for @consoleOverview.
   ///
   /// In en, this message translates to:
-  /// **'Private: only you and the shop\'s admins see these.'**
-  String get tourShopFormOwnerBody;
+  /// **'Overview'**
+  String get consoleOverview;
 
-  /// No description provided for @tourShopAdminsIntroTitle.
+  /// No description provided for @consoleSearchBookings.
   ///
   /// In en, this message translates to:
-  /// **'Shop admins'**
-  String get tourShopAdminsIntroTitle;
+  /// **'Search customer or stadium'**
+  String get consoleSearchBookings;
 
-  /// No description provided for @tourShopAdminsIntroBody.
+  /// No description provided for @consoleAllShops.
   ///
   /// In en, this message translates to:
-  /// **'People who manage this shop. They only see this shop\'s data.'**
-  String get tourShopAdminsIntroBody;
+  /// **'All shops'**
+  String get consoleAllShops;
 
-  /// No description provided for @tourShopAdminsAddTitle.
+  /// No description provided for @consoleRole.
   ///
   /// In en, this message translates to:
-  /// **'Add an admin'**
-  String get tourShopAdminsAddTitle;
+  /// **'Role'**
+  String get consoleRole;
 
-  /// No description provided for @tourShopAdminsAddBody.
+  /// No description provided for @consoleNoMatches.
   ///
   /// In en, this message translates to:
-  /// **'The person must register a customer account first.'**
-  String get tourShopAdminsAddBody;
+  /// **'Nothing matches'**
+  String get consoleNoMatches;
 
-  /// No description provided for @tourInviteEmailTitle.
+  /// No description provided for @shopLocationHint.
   ///
   /// In en, this message translates to:
-  /// **'Find the account'**
-  String get tourInviteEmailTitle;
+  /// **'Pick the shop on Google Map. The address fills in from the pin.'**
+  String get shopLocationHint;
 
-  /// No description provided for @tourInviteEmailBody.
+  /// No description provided for @shopLocationFinding.
   ///
   /// In en, this message translates to:
-  /// **'Enter the email they registered with.'**
-  String get tourInviteEmailBody;
+  /// **'Finding the address…'**
+  String get shopLocationFinding;
 
-  /// No description provided for @tourInviteFindTitle.
+  /// No description provided for @shopLocationNoAddress.
   ///
   /// In en, this message translates to:
-  /// **'Search'**
-  String get tourInviteFindTitle;
+  /// **'Couldn\'t find a street address for this pin. The pin is still saved and directions will work.'**
+  String get shopLocationNoAddress;
 
-  /// No description provided for @tourInviteFindBody.
+  /// No description provided for @stadiumLocationHint.
   ///
   /// In en, this message translates to:
-  /// **'Then check the name and make them this shop\'s admin.'**
-  String get tourInviteFindBody;
+  /// **'Pick the stadium on Google Map. The address fills in from the pin.'**
+  String get stadiumLocationHint;
 
-  /// No description provided for @tourAnnouncementsIntroTitle.
+  /// No description provided for @pickLocationNoAddress.
   ///
   /// In en, this message translates to:
-  /// **'Announcements'**
-  String get tourAnnouncementsIntroTitle;
-
-  /// No description provided for @tourAnnouncementsIntroBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Messages you have sent to users.'**
-  String get tourAnnouncementsIntroBody;
-
-  /// No description provided for @tourAnnouncementsAddTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'New announcement'**
-  String get tourAnnouncementsAddTitle;
-
-  /// No description provided for @tourAnnouncementsAddBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Write a message for customers, shop admins or everyone.'**
-  String get tourAnnouncementsAddBody;
-
-  /// No description provided for @tourAnnounceAudienceTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Audience'**
-  String get tourAnnounceAudienceTitle;
-
-  /// No description provided for @tourAnnounceAudienceBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Choose who receives it.'**
-  String get tourAnnounceAudienceBody;
-
-  /// No description provided for @tourAnnounceSendTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Send'**
-  String get tourAnnounceSendTitle;
-
-  /// No description provided for @tourAnnounceSendBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Check the text first: it can\'t be unsent.'**
-  String get tourAnnounceSendBody;
-
-  /// No description provided for @tourAdminCustomersIntroBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Every customer on the platform. Tap a name for details.'**
-  String get tourAdminCustomersIntroBody;
-
-  /// No description provided for @tourAdminCustomerDetailBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Contact details and bookings. The button below disables or re-enables the account.'**
-  String get tourAdminCustomerDetailBody;
-
-  /// No description provided for @tourAdminSettingsIntroBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Announcements, shops waiting for review and this tour.'**
-  String get tourAdminSettingsIntroBody;
+  /// **'No address found here — the pin still works for directions.'**
+  String get pickLocationNoAddress;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

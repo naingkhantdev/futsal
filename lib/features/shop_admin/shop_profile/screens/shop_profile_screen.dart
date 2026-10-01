@@ -10,6 +10,7 @@ import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/content_constraint.dart';
 import '../../../../core/widgets/detail_row.dart';
 import '../../../../core/widgets/status_badge.dart';
+import '../../../../core/widgets/venue_location_card.dart';
 import '../../../../data/demo/demo_data.dart';
 import '../../../shared/widgets/app_tour.dart';
 import '../../../shared/widgets/app_tours.dart';
@@ -114,6 +115,17 @@ class ShopProfileScreen extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          // Where customers come to; the pin is set by the superadmin.
+          VenueLocationCard(
+            name: shop.name,
+            address: [shop.address, shop.township, shop.city]
+                .whereType<String>()
+                .join(', '),
+            point: shop.latitude != null && shop.longitude != null
+                ? (latitude: shop.latitude!, longitude: shop.longitude!)
+                : null,
           ),
           const SizedBox(height: AppSpacing.lg),
           Text(

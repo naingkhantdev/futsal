@@ -35,6 +35,8 @@ abstract final class DemoData {
       address: 'No. 12, Parami Road',
       township: 'Hlaing',
       city: 'Yangon',
+      latitude: 16.8525,
+      longitude: 96.1235,
       status: ShopStatus.active,
       isListed: true,
       approvedAt: _daysAgo(120),

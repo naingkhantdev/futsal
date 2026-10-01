@@ -63,6 +63,15 @@ abstract final class AppSizes {
   static const double avatarLarge = 64;
   static const double railLogo = 32;
 
+  /// Superadmin side menu (drawer / permanent sidebar) and its
+  /// selected-item bar.
+  static const double adminSidebarWidth = 288;
+  static const double navIndicatorWidth = 3;
+
+  /// Label column of superadmin console record fields.
+  static const double consoleLabelCompact = 112;
+  static const double consoleLabelWide = 168;
+
   // Breakpoints (logical width)
   static const double mediumBreakpoint = 600;
   static const double expandedBreakpoint = 840;

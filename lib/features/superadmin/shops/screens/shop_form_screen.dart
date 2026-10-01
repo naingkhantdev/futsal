@@ -11,6 +11,7 @@ import '../../../../core/l10n/l10n_labels.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/theme_context_ext.dart';
+import '../../../../core/utils/geo_location.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_snackbar.dart';
@@ -22,8 +23,8 @@ import '../../../../core/widgets/inline_banner.dart';
 import '../../../../data/requests/venue_write_requests.dart';
 import '../../../../data/vos/shop_private_vo.dart';
 import '../../../../data/vos/shop_vo.dart';
-import '../../../shared/widgets/app_tour.dart';
-import '../../../shared/widgets/app_tours.dart';
+import '../../../shared/widgets/map_location_field.dart';
+import '../../console/widgets/console_kit.dart';
 import '../providers/shops_providers.dart';
 
 typedef _ShopDocs = AsyncValue<({ShopVO? shop, ShopPrivateVO? details})>;
@@ -43,10 +44,7 @@ class ShopFormScreen extends ConsumerWidget {
     final l = context.l10n;
     if (id == null) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text(l.shopNew),
-          actions: const [TourHelpButton()],
-        ),
+        appBar: ConsoleAppBar(title: l.shopNew),
         body: const _ShopForm(shopId: null, shop: null, details: null),
       );
     }
@@ -62,10 +60,7 @@ class ShopFormScreen extends ConsumerWidget {
       _ => const AsyncValue.loading(),
     };
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l.shopEdit),
-        actions: const [TourHelpButton()],
-      ),
+      appBar: ConsoleAppBar(title: l.shopEdit),
       body: AsyncValueView<({ShopVO? shop, ShopPrivateVO? details})>(
         value: both,
         onRetry: () {
@@ -100,7 +95,7 @@ class _ShopForm extends ConsumerStatefulWidget {
 }
 
 class _ShopFormState extends ConsumerState<_ShopForm>
-    with FormLeaveGuard<_ShopForm> {
+    with FormLeaveGuard<_ShopForm>, PinAddressFiller<_ShopForm> {
   final _formKey = GlobalKey<FormState>();
   // Seeded once; later snapshots don't overwrite in-progress edits.
   late final _name = TextEditingController(text: widget.shop?.name);
@@ -116,6 +111,9 @@ class _ShopFormState extends ConsumerState<_ShopForm>
   late final _ownerPhone =
       TextEditingController(text: widget.details?.ownerPhone);
   late final Map<TextEditingController, String> _initial;
+  // Map pin for directions; compared by value (records) for hasChanges.
+  late final MapPoint? _initialLocation = _seedLocation(widget.shop);
+  late MapPoint? _location = _initialLocation;
   final _nameFocus = FocusNode();
   final _phoneFocus = FocusNode();
   final _emailFocus = FocusNode();
@@ -155,6 +153,25 @@ class _ShopFormState extends ConsumerState<_ShopForm>
     super.dispose();
   }
 
+  static MapPoint? _seedLocation(ShopVO? s) {
+    final lat = s?.latitude;
+    final lng = s?.longitude;
+    return lat != null && lng != null ? (latitude: lat, longitude: lng) : null;
+  }
+
+  @override
+  TextEditingController get pinAddress => _address;
+  @override
+  TextEditingController get pinTownship => _township;
+  @override
+  TextEditingController get pinCity => _city;
+  @override
+  MapPoint? get pinLocation => _location;
+  @override
+  set pinLocation(MapPoint? value) => _location = value;
+  @override
+  void onPinChanged() => _onChanged();
+
   bool _wasDirty = false;
 
   void _onChanged() {
@@ -163,7 +180,9 @@ class _ShopFormState extends ConsumerState<_ShopForm>
   }
 
   @override
-  bool get hasChanges => _fields.any((c) => c.text.trim() != _initial[c]);
+  bool get hasChanges =>
+      _location != _initialLocation ||
+      _fields.any((c) => c.text.trim() != _initial[c]);
 
   @override
   String get fallbackRoute => widget.shopId == null
@@ -172,8 +191,6 @@ class _ShopFormState extends ConsumerState<_ShopForm>
 
   String? _descriptionError(String? v) =>
       VenueValidators.optionalText(v, VenuePolicy.descriptionMaxLength);
-  String? _addressError(String? v) =>
-      VenueValidators.optionalText(v, VenuePolicy.addressMaxLength);
   String? _placeError(String? v) =>
       VenueValidators.optionalText(v, VenuePolicy.placeMaxLength);
   String? _nameError(String? v) => VenueValidators.title(
@@ -217,6 +234,8 @@ class _ShopFormState extends ConsumerState<_ShopForm>
             address: _address.text,
             township: _township.text,
             city: _city.text,
+            latitude: _location?.latitude,
+            longitude: _location?.longitude,
             description: _description.text,
             ownerName: _ownerName.text,
             ownerPhone: _ownerPhone.text,
@@ -268,9 +287,8 @@ class _ShopFormState extends ConsumerState<_ShopForm>
           prefixIcon: icon,
           helperText: helperText,
           keyboardType: keyboardType,
-          textInputAction: maxLines == 1
-              ? TextInputAction.next
-              : TextInputAction.newline,
+          textInputAction:
+              maxLines == 1 ? TextInputAction.next : TextInputAction.newline,
           textCapitalization: caps,
           validator: validator,
           autovalidateMode: autovalidate,
@@ -285,93 +303,121 @@ class _ShopFormState extends ConsumerState<_ShopForm>
       canPop: canLeave,
       onPopInvoked: onPopBlocked,
       child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
-        child: ContentConstraint(
-          width: ContentWidth.form,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (widget.shopId == null) ...[
-                  Text(
-                    l.shopNewNote,
-                    style: context.textStyles.bodyMedium
-                        ?.copyWith(color: context.colors.onSurfaceVariant),
-                  ),
-                  const SizedBox(height: AppSpacing.xl),
-                ],
-                TourAnchor(
-                  id: TourIds.name,
-                  child: field(l.shopNameLabel, _name,
-                      icon: Icons.storefront_outlined,
-                      focusNode: _nameFocus,
-                      validator: _nameError),
-                ),
-                field(l.phoneOptionalLabel, _phone,
-                    icon: Icons.phone_outlined,
-                    focusNode: _phoneFocus,
-                    keyboardType: TextInputType.phone,
-                    helperText: l.shopPhoneHelper,
-                    validator: AppValidators.optionalPhone),
-                field(l.emailOptional, _email,
-                    icon: Icons.mail_outline,
-                    focusNode: _emailFocus,
-                    keyboardType: TextInputType.emailAddress,
-                    caps: TextCapitalization.none,
-                    validator: VenueValidators.optionalEmail),
-                field(l.addressOptional, _address,
-                    icon: Icons.place_outlined, validator: _addressError),
-                field(l.townshipOptional, _township,
-                    icon: Icons.map_outlined, validator: _placeError),
-                field(l.cityOptional, _city,
-                    icon: Icons.location_city_outlined,
-                    validator: _placeError),
-                field(l.descriptionOptional, _description,
-                    icon: Icons.notes,
-                    keyboardType: TextInputType.multiline,
-                    caps: TextCapitalization.sentences,
-                    minLines: 3,
-                    maxLines: 6,
-                    validator: _descriptionError),
-                const SizedBox(height: AppSpacing.sm),
-                TourAnchor(
-                  id: TourIds.owner,
-                  child: Text(l.ownerPrivateTitle, style: context.textStyles.titleSmall),
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  l.ownerPrivateNote,
-                  style: context.textStyles.bodySmall
-                      ?.copyWith(color: context.colors.onSurfaceVariant),
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                field(l.ownerNameOptional, _ownerName,
-                    icon: Icons.person_outline, validator: _placeError),
-                field(l.ownerPhoneOptional, _ownerPhone,
-                    icon: Icons.phone_outlined,
-                    focusNode: _ownerPhoneFocus,
-                    keyboardType: TextInputType.phone,
-                    validator: AppValidators.optionalPhone),
-                const SizedBox(height: AppSpacing.sm),
-                if (error != null) ...[
-                  InlineBanner(message: error.messageIn(l)),
-                  const SizedBox(height: AppSpacing.lg),
-                ],
-                TourAnchor(
-                  id: TourIds.primary,
-                  child: PrimaryButton(
-                    label:
-                        widget.shopId == null ? l.createShop : l.commonSaveChanges,
-                    onPressed: _save,
-                    isLoading: isLoading,
-                    size: AppButtonSize.large,
-                    expand: true,
-                  ),
-                ),
-              ],
+        padding: const EdgeInsets.only(bottom: AppSpacing.xxxl),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ConsoleBand(
+              overline: '${l.consolePlatform} · ${l.navShops}',
+              title: widget.shopId == null
+                  ? l.shopNew
+                  : (widget.shop?.name ?? l.shopEdit),
+              subtitle: widget.shopId == null ? l.shopNewNote : null,
+              width: ContentWidth.form,
             ),
-          ),
+            const SizedBox(height: AppSpacing.xl),
+            ContentConstraint(
+              width: ContentWidth.form,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    ConsolePanel(
+                      title: l.shopLabel,
+                      padded: true,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          field(l.shopNameLabel, _name,
+                              icon: Icons.storefront_outlined,
+                              focusNode: _nameFocus,
+                              validator: _nameError),
+                          field(l.phoneOptionalLabel, _phone,
+                              icon: Icons.phone_outlined,
+                              focusNode: _phoneFocus,
+                              keyboardType: TextInputType.phone,
+                              helperText: l.shopPhoneHelper,
+                              validator: AppValidators.optionalPhone),
+                          field(l.emailOptional, _email,
+                              icon: Icons.mail_outline,
+                              focusNode: _emailFocus,
+                              keyboardType: TextInputType.emailAddress,
+                              caps: TextCapitalization.none,
+                              validator: VenueValidators.optionalEmail),
+                          field(l.descriptionOptional, _description,
+                              icon: Icons.notes,
+                              keyboardType: TextInputType.multiline,
+                              caps: TextCapitalization.sentences,
+                              minLines: 3,
+                              maxLines: 6,
+                              validator: _descriptionError),
+                        ],
+                      ),
+                    ),
+                    consoleGap,
+                    ConsolePanel(
+                      title: l.locationLabel,
+                      padded: true,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          MapLocationField(
+                            point: _location,
+                            addressLine: pinAddressLine,
+                            onPoint: setPin,
+                            pickerRoute: AppRoutes.superadminPickLocation,
+                            hint: l.shopLocationHint,
+                            resolving: pinResolving,
+                            addressNotFound: pinAddressNotFound,
+                            enabled: !isLoading,
+                          ),
+                        ],
+                      ),
+                    ),
+                    consoleGap,
+                    ConsolePanel(
+                      title: l.ownerPrivateTitle,
+                      padded: true,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            l.ownerPrivateNote,
+                            style: context.textStyles.bodySmall?.copyWith(
+                                color: context.colors.onSurfaceVariant),
+                          ),
+                          const SizedBox(height: AppSpacing.lg),
+                          field(l.ownerNameOptional, _ownerName,
+                              icon: Icons.person_outline,
+                              validator: _placeError),
+                          field(l.ownerPhoneOptional, _ownerPhone,
+                              icon: Icons.phone_outlined,
+                              focusNode: _ownerPhoneFocus,
+                              keyboardType: TextInputType.phone,
+                              validator: AppValidators.optionalPhone),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.xl),
+                    if (error != null) ...[
+                      InlineBanner(message: error.messageIn(l)),
+                      const SizedBox(height: AppSpacing.lg),
+                    ],
+                    PrimaryButton(
+                      label: widget.shopId == null
+                          ? l.createShop
+                          : l.commonSaveChanges,
+                      onPressed: pinResolving ? null : _save,
+                      isLoading: isLoading,
+                      size: AppButtonSize.large,
+                      expand: true,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -10,10 +10,8 @@ import '../../../../core/l10n/l10n_labels.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/status_tone.dart';
-import '../../../../core/theme/theme_context_ext.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/content_constraint.dart';
@@ -21,8 +19,7 @@ import '../../../../core/widgets/inline_banner.dart';
 import '../../../../data/vos/auth_session.dart';
 import '../../../../data/vos/user_vo.dart';
 import '../../../auth/providers/auth_session_provider.dart';
-import '../../../shared/widgets/app_tour.dart';
-import '../../../shared/widgets/app_tours.dart';
+import '../../console/widgets/console_kit.dart';
 import '../providers/shop_admins_providers.dart';
 
 /// `/superadmin/shops/:shopId/admins/invite` — PLATFORM scope.
@@ -102,27 +99,24 @@ class _InviteShopAdminScreenState extends ConsumerState<InviteShopAdminScreen> {
     final l = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l.addShopAdminTitle),
-        actions: const [TourHelpButton()],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
-        child: ContentConstraint(
+      appBar: ConsoleAppBar(title: l.addShopAdminTitle),
+      body: ConsoleBody(
+        width: ContentWidth.form,
+        header: ConsoleBand(
+          overline: '${l.consolePlatform} · ${l.audienceShopAdmins}',
+          title: l.addShopAdminTitle,
+          subtitle: l.inviteIntro,
           width: ContentWidth.form,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                l.inviteIntro,
-                style: context.textStyles.bodyMedium
-                    ?.copyWith(color: context.colors.onSurfaceVariant),
-              ),
-              const SizedBox(height: AppSpacing.xl),
-              Form(
-                key: _formKey,
-                child: TourAnchor(
-                  id: TourIds.email,
+        ),
+        children: [
+          ConsolePanel(
+            title: l.findAccount,
+            padded: true,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Form(
+                  key: _formKey,
                   child: AppTextField(
                     label: l.accountEmailLabel,
                     controller: _email,
@@ -144,40 +138,37 @@ class _InviteShopAdminScreenState extends ConsumerState<InviteShopAdminScreen> {
                     onFieldSubmitted: (_) => _search(),
                   ),
                 ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              TourAnchor(
-                id: TourIds.secondary,
-                child: SecondaryButton(
+                const SizedBox(height: AppSpacing.lg),
+                SecondaryButton(
                   label: l.findAccount,
                   icon: Icons.search,
                   isLoading: lookup.isLoading,
                   expand: true,
                   onPressed: _search,
                 ),
-              ),
-              const SizedBox(height: AppSpacing.xl),
-              if (error != null) ...[
-                InlineBanner(message: error.messageIn(l)),
-                const SizedBox(height: AppSpacing.lg),
               ],
-              if (lookup.valueOrNull case final result?)
-                result.user == null
-                    ? InlineBanner(
-                        tone: StatusTone.info,
-                        icon: Icons.person_search_outlined,
-                        message: l.noAccountForEmail(result.email),
-                      )
-                    : _CandidateCard(
-                        user: result.user!,
-                        shopId: widget.shopId,
-                        isMe: result.user!.id == myUid,
-                        isAssigning: assigning.isLoading,
-                        onAssign: () => _assign(result.user!),
-                      ),
-            ],
+            ),
           ),
-        ),
+          const SizedBox(height: AppSpacing.lg),
+          if (error != null) ...[
+            InlineBanner(message: error.messageIn(l)),
+            const SizedBox(height: AppSpacing.lg),
+          ],
+          if (lookup.valueOrNull case final result?)
+            result.user == null
+                ? InlineBanner(
+                    tone: StatusTone.info,
+                    icon: Icons.person_search_outlined,
+                    message: l.noAccountForEmail(result.email),
+                  )
+                : _CandidateCard(
+                    user: result.user!,
+                    shopId: widget.shopId,
+                    isMe: result.user!.id == myUid,
+                    isAssigning: assigning.isLoading,
+                    onAssign: () => _assign(result.user!),
+                  ),
+        ],
       ),
     );
   }
@@ -215,46 +206,44 @@ class _CandidateCard extends StatelessWidget {
       UserRole.customer => (null, null),
     };
 
-    return AppCard(
+    return ConsolePanel(
+      title: l.accountPrefix,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            user.hasName ? user.name : user.email,
-            style: context.textStyles.titleMedium,
-          ),
-          if (user.hasName) ...[
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              user.email,
-              style: context.textStyles.bodyMedium
-                  ?.copyWith(color: context.colors.onSurfaceVariant),
-            ),
-          ],
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            l.currentRole(role?.labelIn(l) ?? l.roleUnknown) +
+          ConsoleField(
+              label: l.fullNameLabel, value: user.hasName ? user.name : null),
+          ConsoleField(label: l.emailLabel, value: user.email),
+          ConsoleField(
+            label: l.consoleRole,
+            value: (role?.labelIn(l) ?? l.roleUnknown) +
                 (user.isActive ? '' : ' · ${l.accountDisabledTag}'),
-            style: context.textStyles.bodySmall
-                ?.copyWith(color: context.colors.onSurfaceVariant),
+            last: blocker == null && warning == null,
           ),
-          if (blocker != null || warning != null) ...[
-            const SizedBox(height: AppSpacing.lg),
-            InlineBanner(
-              tone: blocker != null ? StatusTone.neutral : StatusTone.warning,
-              message: blocker ?? warning!,
+          if (blocker != null || warning != null)
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: InlineBanner(
+                tone: blocker != null ? StatusTone.neutral : StatusTone.warning,
+                message: blocker ?? warning!,
+              ),
             ),
-          ],
-          if (blocker == null) ...[
-            const SizedBox(height: AppSpacing.lg),
-            PrimaryButton(
-              label: l.makeShopAdmin,
-              icon: Icons.admin_panel_settings_outlined,
-              isLoading: isAssigning,
-              expand: true,
-              onPressed: onAssign,
+          if (blocker == null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                0,
+                AppSpacing.lg,
+                AppSpacing.lg,
+              ),
+              child: PrimaryButton(
+                label: l.makeShopAdmin,
+                icon: Icons.admin_panel_settings_outlined,
+                isLoading: isAssigning,
+                expand: true,
+                onPressed: onAssign,
+              ),
             ),
-          ],
         ],
       ),
     );

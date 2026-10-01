@@ -141,7 +141,8 @@ class ShopRepositoryImpl implements ShopRepository {
         VenueValidators.optionalText(r.city, VenuePolicy.placeMaxLength) ==
             null &&
         VenueValidators.optionalText(r.ownerName, VenuePolicy.placeMaxLength) ==
-            null;
+            null &&
+        VenuePolicy.isValidLocation(r.latitude, r.longitude);
     if (!ok) throw const InvalidVenueDetailsException();
   }
 }

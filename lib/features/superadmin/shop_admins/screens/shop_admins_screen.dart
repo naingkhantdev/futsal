@@ -6,19 +6,14 @@ import '../../../../core/extensions/async_value_ext.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/l10n/l10n_labels.dart';
 import '../../../../core/router/app_routes.dart';
-import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/status_tone.dart';
-import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/app_dialogs.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../core/widgets/async_value_view.dart';
-import '../../../../core/widgets/content_constraint.dart';
 import '../../../../core/widgets/empty_view.dart';
-import '../../../../core/widgets/motion.dart';
 import '../../../../core/widgets/status_badge.dart';
 import '../../../../data/vos/user_vo.dart';
-import '../../../shared/widgets/app_tour.dart';
-import '../../../shared/widgets/app_tours.dart';
+import '../../console/widgets/console_kit.dart';
 import '../../shops/providers/shops_providers.dart';
 import '../providers/shop_admins_providers.dart';
 
@@ -49,19 +44,15 @@ class ShopAdminsScreen extends ConsumerWidget {
         context.push(AppRoutes.superadminShopAdminInvite(shopId));
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          shopName == null ? l.audienceShopAdmins : l.shopAdminsOf(shopName),
-        ),
-        actions: const [TourHelpButton()],
-      ),
-      floatingActionButton: TourAnchor(
-        id: TourIds.fab,
-        child: FloatingActionButton.extended(
-          onPressed: addAdmin,
-          icon: const Icon(Icons.person_add_alt_outlined),
-          label: Text(l.addAdmin),
-        ),
+      appBar: ConsoleAppBar(
+        title: l.audienceShopAdmins,
+        actions: [
+          ConsoleBarAction(
+            icon: Icons.person_add_alt_outlined,
+            label: l.addAdmin,
+            onPressed: addAdmin,
+          ),
+        ],
       ),
       body: AsyncValueView<List<UserVO>>(
         value: admins,
@@ -74,27 +65,65 @@ class ShopAdminsScreen extends ConsumerWidget {
           actionLabel: l.addAdmin,
           onAction: addAdmin,
         ),
-        data: (list) => ListView.separated(
-          padding: const EdgeInsets.fromLTRB(
-            0,
-            AppSpacing.lg,
-            0,
-            AppSpacing.xxxl + AppSpacing.xxl,
+        data: (list) => ConsoleBody(
+          header: ConsoleBand(
+            overline: '${l.consolePlatform} · ${shopName ?? l.shopLabel}',
+            title: shopName == null
+                ? l.audienceShopAdmins
+                : l.shopAdminsOf(shopName),
+            subtitle: l.shopAdminsSub,
+            metrics: [
+              ConsoleMetric(value: '${list.length}', label: l.totalLabel),
+              ConsoleMetric(
+                value: '${list.where((a) => !a.isActive).length}',
+                label: l.statusDisabled,
+              ),
+            ],
           ),
-          itemCount: list.length,
-          separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.md),
-          itemBuilder: (context, i) => FadeSlideIn(
-            index: i,
-            child: ContentConstraint(child: _AdminCard(admin: list[i])),
-          ),
+          children: [
+            ConsoleTable(
+              columns: [
+                ConsoleColumn(l.audienceShopAdmins, flex: 5),
+                ConsoleColumn(l.consoleStatus, flex: 3),
+              ],
+              rows: [
+                for (final a in list)
+                  ConsoleRow(
+                    trailing: _RemoveAdminButton(admin: a),
+                    cells: [
+                      ConsoleCellText(
+                        a.hasName ? a.name : a.email,
+                        strong: true,
+                        secondary: a.hasName ? a.email : null,
+                      ),
+                      a.isActive
+                          ? StatusBadge(
+                              tone: StatusTone.success,
+                              icon: Icons.check_circle,
+                              label: l.consoleActive,
+                              semanticsPrefix: l.accountPrefix,
+                              plain: true,
+                            )
+                          : StatusBadge(
+                              tone: StatusTone.danger,
+                              icon: Icons.block,
+                              label: l.accountDisabledBadge,
+                              semanticsPrefix: l.accountPrefix,
+                              plain: true,
+                            ),
+                    ],
+                  ),
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _AdminCard extends ConsumerWidget {
-  const _AdminCard({required this.admin});
+class _RemoveAdminButton extends ConsumerWidget {
+  const _RemoveAdminButton({required this.admin});
 
   final UserVO admin;
 
@@ -102,56 +131,31 @@ class _AdminCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final busy = ref.watch(shopAdminAssignmentControllerProvider).isLoading;
     final l = context.l10n;
-    return AppCard(
-      padding: EdgeInsets.zero,
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.lg,
-          vertical: AppSpacing.xs,
-        ),
-        title: Text(admin.hasName ? admin.name : admin.email),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (admin.hasName) Text(admin.email),
-            if (!admin.isActive) ...[
-              const SizedBox(height: AppSpacing.xs),
-              StatusBadge(
-                tone: StatusTone.danger,
-                icon: Icons.block,
-                label: l.accountDisabledBadge,
-                semanticsPrefix: l.accountPrefix,
-              ),
-            ],
-          ],
-        ),
-        trailing: IconButton(
-          tooltip: l.removeAdmin,
-          icon: const Icon(Icons.person_remove_outlined),
-          onPressed: busy
-              ? null
-              : () async {
-                  final ok = await showConfirmDialog(
-                    context,
-                    title: l.removeAdminTitle,
-                    message: l.removeAdminMessage(
-                      admin.hasName ? admin.name : admin.email,
-                    ),
-                    confirmLabel: l.commonRemove,
-                    dismissLabel: l.commonCancel,
-                    destructive: true,
-                  );
-                  if (!ok) return;
-                  final removed = await ref
-                      .read(shopAdminAssignmentControllerProvider.notifier)
-                      .remove(admin.id);
-                  if (removed && context.mounted) {
-                    showAppSnackBar(context, l.adminRemoved,
-                        tone: SnackTone.success);
-                  }
-                },
-        ),
-      ),
+    return IconButton(
+      tooltip: l.removeAdmin,
+      icon: const Icon(Icons.person_remove_outlined),
+      onPressed: busy
+          ? null
+          : () async {
+              final ok = await showConfirmDialog(
+                context,
+                title: l.removeAdminTitle,
+                message: l.removeAdminMessage(
+                  admin.hasName ? admin.name : admin.email,
+                ),
+                confirmLabel: l.commonRemove,
+                dismissLabel: l.commonCancel,
+                destructive: true,
+              );
+              if (!ok) return;
+              final removed = await ref
+                  .read(shopAdminAssignmentControllerProvider.notifier)
+                  .remove(admin.id);
+              if (removed && context.mounted) {
+                showAppSnackBar(context, l.adminRemoved,
+                    tone: SnackTone.success);
+              }
+            },
     );
   }
 }

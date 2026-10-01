@@ -1582,25 +1582,10 @@ class AppLocalizationsMy extends AppLocalizations {
   String get locationNotSet => 'မြေပုံ တည်နေရာ မထည့်ရသေးပါ';
 
   @override
-  String get locationNote => 'ဖောက်သည်များ မြေပုံပေါ်တွင် မြင်ရပြီး လမ်းညွှန် ရယူနိုင်ပါသည်။';
-
-  @override
   String get locationPickOnMap => 'မြေပုံပေါ်တွင် ရွေးရန်';
 
   @override
   String get locationChangeOnMap => 'မြေပုံပေါ်တွင် ပြောင်းရန်';
-
-  @override
-  String get locationPasteLabel => 'ကိုဩဒိနိတ် သို့မဟုတ် Google Maps လင့်ခ်';
-
-  @override
-  String get locationPasteHelper => 'ဥပမာ 16.84090, 96.17350';
-
-  @override
-  String get locationInvalid => 'တည်နေရာကို ဖတ်၍ မရပါ။ 16.84090, 96.17350 ကဲ့သို့ ကိုဩဒိနိတ်ကို ထည့်ပါ။';
-
-  @override
-  String get locationShortLink => 'လင့်ခ်အတိုကို ဖတ်၍ မရပါ။ လင့်ခ်ကို ဖွင့်ပြီး လင့်ခ်အပြည့် သို့မဟုတ် ကိုဩဒိနိတ်ကို ကူးယူပါ။';
 
   @override
   String get locationClear => 'တည်နေရာ ဖယ်ရန်';
@@ -1734,27 +1719,6 @@ class AppLocalizationsMy extends AppLocalizations {
 
   @override
   String get tourShopSettingsBody => 'ဆိုင်ပရိုဖိုင်၊ ပိတ်ထားသော အချိန်များ၊ အမည်ပျက်စာရင်းနှင့် ဤလမ်းညွှန်။';
-
-  @override
-  String get tourAdminStatsTitle => 'ပလက်ဖောင်း အခြေအနေ';
-
-  @override
-  String get tourAdminStatsBody => 'ပလက်ဖောင်းတစ်ခုလုံးရှိ ဆိုင်များ၊ ဘိုကင်များနှင့် လှုပ်ရှားမှုများ။';
-
-  @override
-  String get tourAdminShopsBody => 'ဆိုင်အသစ်များကို စစ်ဆေးပါ၊ ဖွင့်ပါ သို့မဟုတ် ဆိုင်းငံ့ပါ၊ ဆိုင်စီမံသူများကို သတ်မှတ်ပါ။';
-
-  @override
-  String get tourAdminBookingsTitle => 'ဘိုကင်အားလုံး';
-
-  @override
-  String get tourAdminBookingsBody => 'ပလက်ဖောင်းပေါ်ရှိ မည်သည့်ဘိုကင်ကိုမဆို ရှာကြည့်ပါ။';
-
-  @override
-  String get tourAdminCustomersBody => 'ဖောက်သည်များကို ရှာပြီး အကောင့်အခြေအနေကို စီမံပါ။';
-
-  @override
-  String get tourAdminSettingsBody => 'ကြေညာချက်များ၊ စစ်ဆေးရန် စောင့်နေသော ဆိုင်များနှင့် ဤလမ်းညွှန်။';
 
   @override
   String get tourHelp => 'ဤစာမျက်နှာ အသုံးပြုပုံ';
@@ -2165,101 +2129,71 @@ class AppLocalizationsMy extends AppLocalizations {
   String get tourMapUseBody => 'ပင်ကို အားကစားကွင်း ဖောင်တွင် သိမ်းပါသည်။';
 
   @override
-  String get tourShopsSegmentsTitle => 'အားလုံး သို့မဟုတ် စစ်ဆေးရန် ကျန်';
+  String get consolePlatform => 'ပလက်ဖောင်း';
 
   @override
-  String get tourShopsSegmentsBody => 'ဆိုင်အသစ် လျှောက်ထားမှုများ သင် အတည်ပြုသည်အထိ စစ်ဆေးရန် ကျန်တွင် စောင့်ပါသည်။';
+  String get consoleStatus => 'အခြေအနေ';
 
   @override
-  String get tourShopsAddTitle => 'ဆိုင် ထည့်ရန်';
+  String get consoleSearchShops => 'ဆိုင် ရှာရန်';
 
   @override
-  String get tourShopsAddBody => 'ဆိုင်ကို ကိုယ်တိုင် ဖန်တီးပြီး ဆိုင်စီမံသူကို သတ်မှတ်ပါ။';
+  String get consoleStatusListing => 'အခြေအနေနှင့် စာရင်းပြသမှု';
 
   @override
-  String get tourShopDetailEditTitle => 'ဆိုင် ပြင်ရန်';
+  String get consoleActions => 'လုပ်ဆောင်ချက်များ';
 
   @override
-  String get tourShopDetailEditBody => 'အမည်၊ ဆက်သွယ်ရန်နှင့် ပိုင်ရှင် အချက်အလက်ကို ပြင်ပါ။';
+  String get consoleActivity => 'လှုပ်ရှားမှု';
 
   @override
-  String get tourShopDetailStatusTitle => 'ဆိုင် အခြေအနေ';
+  String get consoleContact => 'ဆက်သွယ်ရန်';
 
   @override
-  String get tourShopDetailStatusBody => 'အတည်ပြု၊ ဆိုင်းငံ့ သို့မဟုတ် ပြန်ဖွင့်ပါ။ ဆိုင်းငံ့ထားသော သို့မဟုတ် စာရင်းမပြသော ဆိုင်များ ဘိုကင်အသစ် မရပါ။';
+  String get consolePayment => 'ငွေပေးချေမှု';
 
   @override
-  String get tourShopDetailAdminsTitle => 'ဆိုင်စီမံသူများ';
+  String get consoleWhen => 'အချိန်';
 
   @override
-  String get tourShopDetailAdminsBody => 'ဤဆိုင်ကို စီမံသူများကို ကြည့်ပြီး သတ်မှတ်ပါ။';
+  String get consolePreferences => 'စိတ်ကြိုက်ဆက်တင်များ';
 
   @override
-  String get tourShopFormNameTitle => 'ဆိုင် အမည်';
+  String get consoleActive => 'အသုံးပြုနေသည်';
 
   @override
-  String get tourShopFormNameBody => 'ဤဆိုင်၏ အားကစားကွင်းတိုင်းတွင် ဖောက်သည်များကို ပြပါသည်။';
+  String get consoleUpcoming => 'လာမည့်';
 
   @override
-  String get tourShopFormOwnerTitle => 'ပိုင်ရှင် အချက်အလက်';
+  String get consoleSent => 'ပို့ပြီး';
 
   @override
-  String get tourShopFormOwnerBody => 'သီးသန့် - သင်နှင့် ဆိုင်စီမံသူများသာ မြင်ရပါသည်။';
+  String get consoleOverview => 'အနှစ်ချုပ်';
 
   @override
-  String get tourShopAdminsIntroTitle => 'ဆိုင်စီမံသူများ';
+  String get consoleSearchBookings => 'ဖောက်သည် သို့မဟုတ် အားကစားကွင်း ရှာရန်';
 
   @override
-  String get tourShopAdminsIntroBody => 'ဤဆိုင်ကို စီမံသူများ။ ၎င်းတို့ ဤဆိုင်၏ အချက်အလက်ကိုသာ မြင်ရပါသည်။';
+  String get consoleAllShops => 'ဆိုင်အားလုံး';
 
   @override
-  String get tourShopAdminsAddTitle => 'စီမံသူ ထည့်ရန်';
+  String get consoleRole => 'အခန်းကဏ္ဍ';
 
   @override
-  String get tourShopAdminsAddBody => 'ထိုသူသည် ဖောက်သည်အကောင့်ကို အရင် ဖွင့်ထားရပါမည်။';
+  String get consoleNoMatches => 'ကိုက်ညီသည့် ရလဒ် မရှိပါ';
 
   @override
-  String get tourInviteEmailTitle => 'အကောင့် ရှာရန်';
+  String get shopLocationHint => 'Google Map ပေါ်တွင် ဆိုင်နေရာကို ရွေးပါ။ လိပ်စာကို ပင်မှ အလိုအလျောက် ဖြည့်ပေးပါမည်။';
 
   @override
-  String get tourInviteEmailBody => '၎င်းတို့ စာရင်းသွင်းခဲ့သော အီးမေးလ်ကို ထည့်ပါ။';
+  String get shopLocationFinding => 'လိပ်စာ ရှာနေသည်…';
 
   @override
-  String get tourInviteFindTitle => 'ရှာရန်';
+  String get shopLocationNoAddress => 'ဤပင်အတွက် လမ်းလိပ်စာ ရှာမတွေ့ပါ။ ပင်ကို သိမ်းထားဆဲဖြစ်ပြီး လမ်းညွှန်ချက် အသုံးပြုနိုင်ပါသည်။';
 
   @override
-  String get tourInviteFindBody => 'ထို့နောက် အမည်ကို စစ်ပြီး ဤဆိုင်၏ စီမံသူ အဖြစ် သတ်မှတ်ပါ။';
+  String get stadiumLocationHint => 'Google Map ပေါ်တွင် အားကစားကွင်း နေရာကို ရွေးပါ။ လိပ်စာကို ပင်မှ အလိုအလျောက် ဖြည့်ပေးပါမည်။';
 
   @override
-  String get tourAnnouncementsIntroTitle => 'ကြေညာချက်များ';
-
-  @override
-  String get tourAnnouncementsIntroBody => 'အသုံးပြုသူများထံ သင် ပို့ခဲ့သော စာများ။';
-
-  @override
-  String get tourAnnouncementsAddTitle => 'ကြေညာချက် အသစ်';
-
-  @override
-  String get tourAnnouncementsAddBody => 'ဖောက်သည်၊ ဆိုင်စီမံသူ သို့မဟုတ် အားလုံးအတွက် စာ ရေးပါ။';
-
-  @override
-  String get tourAnnounceAudienceTitle => 'ပို့မည့်သူ';
-
-  @override
-  String get tourAnnounceAudienceBody => 'မည်သူ လက်ခံမည်ကို ရွေးပါ။';
-
-  @override
-  String get tourAnnounceSendTitle => 'ပို့ရန်';
-
-  @override
-  String get tourAnnounceSendBody => 'စာသားကို အရင် စစ်ပါ - ပို့ပြီးလျှင် ပြန်ရုပ်သိမ်း၍ မရပါ။';
-
-  @override
-  String get tourAdminCustomersIntroBody => 'ပလက်ဖောင်းရှိ ဖောက်သည် အားလုံး။ အသေးစိတ်အတွက် အမည်ကို နှိပ်ပါ။';
-
-  @override
-  String get tourAdminCustomerDetailBody => 'ဆက်သွယ်ရန် အချက်အလက်နှင့် ဘိုကင်များ။ အောက်ရှိ ခလုတ်ဖြင့် အကောင့်ကို ပိတ် သို့မဟုတ် ပြန်ဖွင့်ပါ။';
-
-  @override
-  String get tourAdminSettingsIntroBody => 'ကြေညာချက်များ၊ စစ်ဆေးရန် စောင့်နေသော ဆိုင်များနှင့် ဤလမ်းညွှန်။';
+  String get pickLocationNoAddress => 'ဤနေရာအတွက် လိပ်စာ မတွေ့ပါ — ပင်ဖြင့် လမ်းညွှန်ချက် ရနိုင်ပါသည်။';
 }
