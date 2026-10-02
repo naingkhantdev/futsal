@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-/// Gradient tokens for the "Premium" look (design_system.md §0): deep navy
-/// surfaces with a thin gold accent. Tonal only; no multi-color gradients.
-/// Widgets read these via `context.gradients`; never build gradients inline.
+/// Gradient tokens for the "Sand + Terracotta" look (2026-10-02): warm
+/// espresso surfaces with a thin clay accent. Tonal only; no multi-color
+/// gradients. Widgets read these via `context.gradients`; never build
+/// gradients inline.
 ///
-/// [hero] is the one navy fill (brand mark, booking ticket); [scrim] makes
+/// [hero] is the one espresso fill (brand mark, booking ticket); [scrim] makes
 /// text readable over venue photos. Nothing else is a gradient.
 @immutable
 class AppGradients extends ThemeExtension<AppGradients> {
@@ -19,7 +20,7 @@ class AppGradients extends ThemeExtension<AppGradients> {
     required this.scrim,
   });
 
-  /// Deep navy: headers on home / dashboards, the brand mark.
+  /// Deep espresso: headers on home / dashboards, the brand mark.
   final LinearGradient hero;
 
   /// Text and icons on [hero].
@@ -27,7 +28,8 @@ class AppGradients extends ThemeExtension<AppGradients> {
   final Color onHeroMuted;
 
   /// The single accent: eyebrow text on [hero], rule lines, section bars,
-  /// the selected-slot ring. Never a large fill.
+  /// the selected-slot ring. Never a large fill. (Named `gold` from the old
+  /// palette; it is now a light clay.)
   final Color gold;
 
   /// Filled primary buttons and the selected slot (subtle tonal sheen).
@@ -39,7 +41,7 @@ class AppGradients extends ThemeExtension<AppGradients> {
   /// Stadium image placeholder.
   final LinearGradient pitch;
 
-  /// Navy veil over a venue photo: clear at the top, near-opaque at the
+  /// Espresso veil over a venue photo: clear at the top, near-opaque at the
   /// bottom so [onHero] / [onHeroMuted] / [gold] text on it passes AA.
   final LinearGradient scrim;
 
@@ -47,31 +49,31 @@ class AppGradients extends ThemeExtension<AppGradients> {
     hero: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF1B2C50), Color(0xFF0F1B33), Color(0xFF081226)],
+      colors: [Color(0xFF3A2A20), Color(0xFF2A1E17), Color(0xFF1C140F)],
       stops: [0, 0.6, 1],
     ),
     onHero: Color(0xFFFFFFFF),
-    onHeroMuted: Color(0xFFB9C2D3),
-    gold: Color(0xFFC9A355),
+    onHeroMuted: Color(0xFFD8C9BC),
+    gold: Color(0xFFE9A27E),
     primary: LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
-      colors: [Color(0xFF1A2A4A), Color(0xFF0F1B33)],
+      colors: [Color(0xFFC85A35), Color(0xFFB84A27)],
     ),
-    primaryGlow: Color(0x330F1B33),
+    primaryGlow: Color(0x33C2532F),
     pitch: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF22365F), Color(0xFF0F1B33)],
+      colors: [Color(0xFF4A362A), Color(0xFF2A1E17)],
     ),
     scrim: LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
-        Color(0x330A1020),
-        Color(0x000A1020),
-        Color(0x990A1020),
-        Color(0xE60A1020),
+        Color(0x33140E0B),
+        Color(0x00140E0B),
+        Color(0x99140E0B),
+        Color(0xE6140E0B),
       ],
       stops: [0, 0.25, 0.6, 1],
     ),
@@ -81,31 +83,31 @@ class AppGradients extends ThemeExtension<AppGradients> {
     hero: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF1A2745), Color(0xFF111A2E), Color(0xFF0A1020)],
+      colors: [Color(0xFF33261E), Color(0xFF241C17), Color(0xFF15110E)],
       stops: [0, 0.6, 1],
     ),
     onHero: Color(0xFFFFFFFF),
-    onHeroMuted: Color(0xFFA3ABBD),
-    gold: Color(0xFFD9B46A),
+    onHeroMuted: Color(0xFFB5AAA0),
+    gold: Color(0xFFF0A483),
     primary: LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
-      colors: [Color(0xFFE6C47F), Color(0xFFCFA85C)],
+      colors: [Color(0xFFF08F6C), Color(0xFFE07550)],
     ),
-    primaryGlow: Color(0x33D9B46A),
+    primaryGlow: Color(0x33E9805C),
     pitch: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF1A2745), Color(0xFF0A1020)],
+      colors: [Color(0xFF33261E), Color(0xFF15110E)],
     ),
     scrim: LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
-        Color(0x4D060A16),
-        Color(0x00060A16),
-        Color(0xA6060A16),
-        Color(0xF0060A16),
+        Color(0x4D0D0907),
+        Color(0x000D0907),
+        Color(0xA60D0907),
+        Color(0xF00D0907),
       ],
       stops: [0, 0.25, 0.6, 1],
     ),

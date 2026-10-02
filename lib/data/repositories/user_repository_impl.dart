@@ -3,6 +3,7 @@ import '../../core/errors/app_exception.dart';
 import '../../core/errors/error_guard.dart';
 import '../data_agents/auth_data_agent.dart';
 import '../data_agents/user_data_agent.dart';
+import '../responses/user_response.dart';
 import '../vos/user_vo.dart';
 import 'mappers/user_mapper.dart';
 import 'user_repository.dart';
@@ -18,15 +19,25 @@ class UserRepositoryImpl implements UserRepository {
   final UserDataAgent _users;
 
   @override
-  Stream<List<UserVO>> watchShopAdmins(String shopId) {
+  Stream<List<UserVO>> watchCustomers() {
     return mapStreamErrors(
-      _users.watchShopAdmins(shopId).map(
-            (list) => [for (final r in list) r.toVO()]
-              ..sort((a, b) =>
-                  a.name.toLowerCase().compareTo(b.name.toLowerCase())),
-          ),
+      _users.watchUsersByRole(UserRole.customer).map(_byName),
     );
   }
+
+  @override
+  Stream<UserVO?> watchUser(String uid) {
+    return mapStreamErrors(_users.watchUser(uid).map((r) => r?.toVO()));
+  }
+
+  @override
+  Stream<List<UserVO>> watchShopAdmins(String shopId) {
+    return mapStreamErrors(_users.watchShopAdmins(shopId).map(_byName));
+  }
+
+  static List<UserVO> _byName(List<UserResponse> list) =>
+      [for (final r in list) r.toVO()]
+        ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
 
   @override
   Future<UserVO?> findUserByEmail(String email) {

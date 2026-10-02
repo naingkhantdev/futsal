@@ -6,6 +6,7 @@ import '../data_agents/blacklist_data_agent_impl.dart';
 import '../data_agents/booking_data_agent_impl.dart';
 import '../data_agents/notification_data_agent_impl.dart';
 import '../data_agents/user_data_agent_impl.dart';
+import '../vos/blocked_slot_vo.dart';
 import '../vos/booking_draft.dart';
 import '../vos/booking_vo.dart';
 import '../vos/court_vo.dart';
@@ -33,6 +34,18 @@ abstract interface class BookingRepository {
     required DateTime from,
     required DateTime to,
   });
+
+  /// PLATFORM scope: the latest bookings of every shop, newest first
+  /// (capped until pagination lands).
+  Stream<List<BookingVO>> watchAllBookings();
+
+  /// One booking; `null` while it does not exist. Rules: its customer, the
+  /// shop's admins or the superadmin.
+  Stream<BookingVO?> watchBooking(String bookingId);
+
+  /// SHOP / PLATFORM scope: blocks of [shopId] that have not ended yet,
+  /// earliest first.
+  Stream<List<BlockedSlotVO>> watchUpcomingBlockedSlots(String shopId);
 
   /// CUSTOMER scope: creates a pending, unpaid booking for the signed-in
   /// user and returns its id.

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/domain_enums.dart';
@@ -7,40 +8,29 @@ import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/date_key.dart';
 import '../../../../core/utils/display_format.dart';
+import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/content_constraint.dart';
 import '../../../../core/widgets/empty_view.dart';
 import '../../../../core/widgets/hero_header.dart';
 import '../../../../core/widgets/stat_card.dart';
-import '../../../../data/demo/demo_data.dart';
+import '../../../../data/vos/booking_vo.dart';
 import '../../../shared/widgets/app_tour.dart';
 import '../../../shared/widgets/app_tours.dart';
 import '../../../shared/widgets/booking_list_tile.dart';
 import '../../../shared/widgets/notification_bell_button.dart';
-import '../../../shared/widgets/preview_body.dart';
+import '../../../shared/widgets/page_body.dart';
 import '../../../shared/widgets/stat_grid.dart';
+import '../../bookings/providers/shop_bookings_providers.dart';
+import '../../stadiums/providers/shop_venue_providers.dart';
 
 /// `/shop-admin/dashboard` — SHOP scope (own `shopId` only): today's
 /// numbers, requests to answer and today's schedule.
-/// PREVIEW: sample data (`DemoData`) until Phase 14.
-class ShopAdminDashboardScreen extends StatelessWidget {
+class ShopAdminDashboardScreen extends ConsumerWidget {
   const ShopAdminDashboardScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final shop = DemoData.shop(DemoData.myShopId);
-    final all = DemoData.bookingsOfShop(shop.id);
-    final today = DateKey.fromDate(DateTime.now());
-    final todays = all.where((b) => b.bookingDate == today).toList()
-      ..sort((a, b) => a.startMinute.compareTo(b.startMinute));
-    final pending =
-        all.where((b) => b.status == BookingStatus.pending).toList();
-    final revenue = all
-        .where((b) => b.paymentStatus == PaymentStatus.paid)
-        .fold<int>(0, (sum, b) => sum + b.totalPrice);
-    final courtCount =
-        DemoData.courts.where((c) => c.shopId == shop.id).length;
+  Widget build(BuildContext context, WidgetRef ref) {
     final l = context.l10n;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(l.navDashboard),
@@ -55,16 +45,48 @@ class ShopAdminDashboardScreen extends StatelessWidget {
           SizedBox(width: AppSpacing.xs),
         ],
       ),
-      body: PreviewBody(
+      body: AsyncValueView<List<BookingVO>>(
+        value: ref.watch(shopBookingsProvider),
+        onRetry: () => ref.invalidate(shopBookingsProvider),
+        data: (all) => _Dashboard(bookings: all),
+      ),
+    );
+  }
+}
+
+class _Dashboard extends ConsumerWidget {
+  const _Dashboard({required this.bookings});
+
+  final List<BookingVO> bookings;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final all = bookings;
+    final shopName = ref.watch(myShopProvider).valueOrNull?.name ?? '';
+    final stadiums = ref.watch(myStadiumsProvider).valueOrNull ?? const [];
+    var courtCount = 0;
+    for (final s in stadiums) {
+      courtCount += ref.watch(adminCourtsProvider(s.id)).valueOrNull?.length ?? 0;
+    }
+    final customerCount =
+        ref.watch(shopCustomersProvider).valueOrNull?.length ?? 0;
+    final today = DateKey.fromDate(DateTime.now());
+    final todays = all.where((b) => b.bookingDate == today).toList()
+      ..sort((a, b) => a.startMinute.compareTo(b.startMinute));
+    final pending =
+        all.where((b) => b.status == BookingStatus.pending).toList();
+    final revenue = all
+        .where((b) => b.paymentStatus == PaymentStatus.paid)
+        .fold<int>(0, (sum, b) => sum + b.totalPrice);
+    final l = context.l10n;
+
+    return PageBody(
         width: ContentWidth.dashboard,
         children: [
           HeroHeader(
             eyebrow: DisplayFormat.fullDate(today),
-            title: shop.name,
-            subtitle: l.venueCounts(
-              DemoData.stadiumsOf(shop.id).length,
-              courtCount,
-            ),
+            title: shopName,
+            subtitle: l.venueCounts(stadiums.length, courtCount),
           ),
           const SizedBox(height: AppSpacing.xl),
           TourAnchor(
@@ -96,14 +118,14 @@ class ShopAdminDashboardScreen extends StatelessWidget {
                 StatCard(
                   icon: Icons.people_outline,
                   label: l.navCustomers,
-                  value: '${DemoData.customersOf(shop.id).length}',
+                  value: '$customerCount',
                   footer: l.statBookedWithYou,
                   onTap: () => context.go(AppRoutes.shopAdminCustomers),
                 ),
               ],
             ),
           ),
-          PreviewSectionTitle(
+          PageSectionTitle(
             l.needsYourReply,
             action: TextButton(
               onPressed: () => context.go(AppRoutes.shopAdminBookings),
@@ -122,7 +144,7 @@ class ShopAdminDashboardScreen extends StatelessWidget {
               showCustomer: true,
               onOpen: (b) => context.push(AppRoutes.shopAdminBooking(b.id)),
             ),
-          PreviewSectionTitle(l.todaysSchedule),
+          PageSectionTitle(l.todaysSchedule),
           if (todays.isEmpty)
             EmptyView.inline(
               icon: Icons.event_available_outlined,
@@ -135,7 +157,6 @@ class ShopAdminDashboardScreen extends StatelessWidget {
               onOpen: (b) => context.push(AppRoutes.shopAdminBooking(b.id)),
             ),
         ],
-      ),
     );
   }
 }

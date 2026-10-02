@@ -35,6 +35,15 @@ class UsersCollection {
         .snapshots();
   }
 
+  /// PLATFORM scope (superadmin only): every account with [role].
+  /// Equality-only filter, so no composite index is needed.
+  Stream<QuerySnapshot<JsonMap>> watchByRole(String role) {
+    return _firestore
+        .collection(FirestoreCollections.users)
+        .where(UserFields.role, isEqualTo: role)
+        .snapshots();
+  }
+
   /// PLATFORM scope (superadmin only): accounts with exactly [email].
   Future<QuerySnapshot<JsonMap>> findByEmail(String email) {
     return _firestore

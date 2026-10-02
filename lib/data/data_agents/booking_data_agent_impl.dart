@@ -44,11 +44,35 @@ class BookingDataAgentImpl implements BookingDataAgent {
   }
 
   @override
-  Future<BookingResponse?> getBooking(String bookingId) async {
-    final snapshot = await _bookings.get(bookingId);
+  Stream<List<BookingResponse>> watchAllBookings() {
+    return _bookings.watchAll().map(_toList);
+  }
+
+  @override
+  Future<BookingResponse?> getBooking(String bookingId) async =>
+      _bookingOf(await _bookings.get(bookingId));
+
+  @override
+  Stream<BookingResponse?> watchBooking(String bookingId) =>
+      _bookings.watch(bookingId).map(_bookingOf);
+
+  static BookingResponse? _bookingOf(DocumentSnapshot<JsonMap> snapshot) {
     final data = snapshot.data();
     if (!snapshot.exists || data == null) return null;
     return BookingResponse.fromFirestore(snapshot.id, data);
+  }
+
+  @override
+  Stream<List<BlockedSlotResponse>> watchShopBlockedSlots(
+    String shopId, {
+    required DateTime from,
+  }) {
+    return _blocked.watchShop(shopId, from: from).map(
+          (query) => [
+            for (final doc in query.docs)
+              BlockedSlotResponse.fromFirestore(doc.id, doc.data()),
+          ],
+        );
   }
 
   @override

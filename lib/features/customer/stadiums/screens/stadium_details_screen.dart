@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/domain_labels.dart';
@@ -14,34 +15,69 @@ import '../../../../core/utils/display_format.dart';
 import '../../../../core/utils/geo_location.dart';
 import '../../../../core/utils/money.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/content_constraint.dart';
+import '../../../../core/widgets/empty_view.dart';
 import '../../../../core/widgets/grouped_list.dart';
 import '../../../../core/widgets/stadium_photo.dart';
 import '../../../../core/widgets/sticky_bottom_bar.dart';
 import '../../../../core/widgets/venue_location_card.dart';
-import '../../../../data/demo/demo_data.dart';
+import '../../../../data/vos/court_vo.dart';
 import '../../../../data/vos/shop_vo.dart';
 import '../../../../data/vos/stadium_vo.dart';
 import '../../../shared/widgets/app_tour.dart';
 import '../../../shared/widgets/app_tours.dart';
-import '../../../shared/widgets/preview_body.dart';
+import '../../../shared/widgets/page_body.dart';
+import '../providers/customer_venue_providers.dart';
 
 /// `/customer/stadiums/:stadiumId` — CUSTOMER scope: venue photo and info,
-/// courts and the "Book a court" CTA. PREVIEW: sample data (`DemoData`)
-/// until Phase 7.
-class StadiumDetailsScreen extends StatelessWidget {
+/// courts and the "Book a court" CTA. Only published stadiums are readable
+/// (firestore.rules); anything else shows "not found".
+class StadiumDetailsScreen extends ConsumerWidget {
   const StadiumDetailsScreen({super.key, required this.stadiumId});
 
   final String stadiumId;
 
   @override
-  Widget build(BuildContext context) {
-    final s = DemoData.stadium(stadiumId);
-    final shop = DemoData.shop(s.shopId);
-    final MapPoint? shopPoint = shop.latitude != null && shop.longitude != null
-        ? (latitude: shop.latitude!, longitude: shop.longitude!)
-        : null;
-    final courts = DemoData.courtsOf(s.id);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final stadium = ref.watch(customerStadiumProvider(stadiumId));
+    final s = stadium.valueOrNull;
+    if (s != null) return _StadiumDetails(stadium: s);
+    final l = context.l10n;
+    return Scaffold(
+      appBar: AppBar(),
+      body: AsyncValueView<StadiumVO?>(
+        value: stadium,
+        onRetry: () => ref.invalidate(customerStadiumProvider(stadiumId)),
+        isEmpty: (s) => s == null,
+        empty: EmptyView(
+          icon: Icons.stadium_outlined,
+          title: l.stadiumNotFound,
+          message: l.notFoundRemoved,
+        ),
+        data: (_) => const SizedBox.shrink(),
+      ),
+    );
+  }
+}
+
+class _StadiumDetails extends ConsumerWidget {
+  const _StadiumDetails({required this.stadium});
+
+  final StadiumVO stadium;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = stadium;
+    final shop = ref.watch(publicShopProvider(s.shopId)).valueOrNull;
+    final MapPoint? shopPoint =
+        shop?.latitude != null && shop?.longitude != null
+            ? (latitude: shop!.latitude!, longitude: shop.longitude!)
+            : null;
+    final courtsValue = ref.watch(customerCourtsProvider(s.id));
+    final courts = (courtsValue.valueOrNull ?? const <CourtVO>[])
+        .where((c) => c.hasPrice)
+        .toList();
     final styles = context.textStyles;
     final colors = context.colors;
     final muted = colors.onSurfaceVariant;
@@ -49,6 +85,7 @@ class StadiumDetailsScreen extends StatelessWidget {
     final address =
         [s.address, s.township, s.city].whereType<String>().join(', ');
     final fromPrice = Money.formatMmk(s.minHourlyPrice ?? 0);
+    final canBook = courts.isNotEmpty;
 
     return Scaffold(
       // The photo runs under the status bar and the floating back button.
@@ -84,14 +121,15 @@ class StadiumDetailsScreen extends StatelessWidget {
               id: TourIds.primary,
               child: PrimaryButton(
                 label: l.bookACourt,
-                onPressed: () =>
-                    context.push(AppRoutes.customerBookStadium(s.id)),
+                onPressed: canBook
+                    ? () => context.push(AppRoutes.customerBookStadium(s.id))
+                    : null,
               ),
             ),
           ],
         ),
       ),
-      body: PreviewBody(
+      body: PageBody(
         header: _PhotoHeader(stadium: s, shop: shop),
         children: [
           _FactStrip(
@@ -106,16 +144,16 @@ class StadiumDetailsScreen extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.xl),
           _InfoLine(icon: Icons.place_outlined, text: address),
-          if (shop.phone != null) ...[
+          if (shop?.phone != null) ...[
             const SizedBox(height: AppSpacing.sm),
-            _InfoLine(icon: Icons.phone_outlined, text: shop.phone!),
+            _InfoLine(icon: Icons.phone_outlined, text: shop!.phone!),
           ],
           if (s.description != null) ...[
             const SizedBox(height: AppSpacing.lg),
             Text(s.description!, style: styles.bodyLarge),
           ],
           if (s.facilities.isNotEmpty) ...[
-            PreviewSectionTitle(l.facilitiesTitle),
+            PageSectionTitle(l.facilitiesTitle),
             _FacilityGrid(
               items: [
                 for (final f in s.facilities) (f.icon, f.labelIn(l)),
@@ -124,7 +162,7 @@ class StadiumDetailsScreen extends StatelessWidget {
           ],
           // Stadium pin first; otherwise the shop's address pin.
           if (s.hasLocation || shopPoint != null || address.isNotEmpty) ...[
-            PreviewSectionTitle(l.locationLabel),
+            PageSectionTitle(l.locationLabel),
             VenueLocationCard(
               name: s.name,
               address: address,
@@ -133,7 +171,13 @@ class StadiumDetailsScreen extends StatelessWidget {
                   : shopPoint,
             ),
           ],
-          PreviewSectionTitle(l.courtsTitle),
+          PageSectionTitle(l.courtsTitle),
+          if (courtsValue.hasValue && courts.isEmpty)
+            EmptyView.inline(
+              icon: Icons.sports_soccer,
+              title: l.noCourtsYet,
+            )
+          else
           TourAnchor(
             id: TourIds.courts,
             child: GroupedList(
@@ -180,7 +224,7 @@ class _PhotoHeader extends StatelessWidget {
   const _PhotoHeader({required this.stadium, required this.shop});
 
   final StadiumVO stadium;
-  final ShopVO shop;
+  final ShopVO? shop;
 
   @override
   Widget build(BuildContext context) {
@@ -207,11 +251,13 @@ class _PhotoHeader extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    context.l10n.byShop(shop.name),
-                    style: styles.labelLarge?.copyWith(color: g.gold),
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
+                  if (shop != null) ...[
+                    Text(
+                      context.l10n.byShop(shop!.name),
+                      style: styles.labelLarge?.copyWith(color: g.gold),
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                  ],
                   Semantics(
                     header: true,
                     child: Text(

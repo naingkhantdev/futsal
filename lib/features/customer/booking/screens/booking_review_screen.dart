@@ -2,30 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/errors/app_exception.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/l10n/l10n_labels.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/status_tone.dart';
 import '../../../../core/theme/theme_context_ext.dart';
 import '../../../../core/utils/display_format.dart';
 import '../../../../core/utils/money.dart';
+import '../../../../core/widgets/app_bottom_sheet.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_card.dart';
+import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../core/widgets/content_constraint.dart';
 import '../../../../core/widgets/detail_row.dart';
 import '../../../../core/widgets/empty_view.dart';
 import '../../../../core/widgets/inline_banner.dart';
 import '../../../../core/widgets/sticky_bottom_bar.dart';
-import '../../../../data/demo/demo_data.dart';
+import '../../../../data/vos/booking_draft.dart';
 import '../../../shared/widgets/app_tour.dart';
 import '../../../shared/widgets/app_tours.dart';
-import '../../../shared/widgets/preview_body.dart';
+import '../../../shared/widgets/page_body.dart';
+import '../../bookings/providers/customer_bookings_providers.dart';
 import '../providers/booking_draft_provider.dart';
 
 /// `/customer/stadiums/:stadiumId/book/review` — CUSTOMER scope: check the
-/// picked court/time/price, then request the booking. PREVIEW: nothing is
-/// written; "Request booking" opens the confirmation screen with a sample
-/// booking.
+/// picked court/time/price, then request the booking. The booking and its
+/// slot lock docs are written in one transaction; firestore.rules re-check
+/// everything (price, hours, slots, shop status).
 class BookingReviewScreen extends ConsumerWidget {
   const BookingReviewScreen({super.key, required this.stadiumId});
 
@@ -51,6 +56,7 @@ class BookingReviewScreen extends ConsumerWidget {
       );
     }
 
+    final submitting = ref.watch(createBookingControllerProvider).isLoading;
     final minutes = draft.range.durationMinutes;
     final total = draft.court.previewPrice(minutes) ?? 0;
     final styles = context.textStyles;
@@ -68,22 +74,12 @@ class BookingReviewScreen extends ConsumerWidget {
             label: l.requestBookingButton(Money.formatMmk(total)),
             size: AppButtonSize.large,
             expand: true,
-            onPressed: () {
-              ref.read(bookingDraftProvider.notifier).clear();
-              showPreviewOnly(context, l.bookingRequestAction);
-              // Sample pending booking stands in for the one just requested.
-              context.go(
-                AppRoutes.customerBookingConfirmation(
-                  DemoData.bookingsOfCustomer(DemoData.meId)
-                      .firstWhere((b) => b.blocksAvailability)
-                      .id,
-                ),
-              );
-            },
+            isLoading: submitting,
+            onPressed: submitting ? null : () => _submit(context, ref, draft),
           ),
         ),
       ),
-      body: PreviewBody(
+      body: PageBody(
         width: ContentWidth.form,
         children: [
           Text(draft.stadium.name, style: styles.headlineSmall),
@@ -145,5 +141,40 @@ class BookingReviewScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _submit(
+    BuildContext context,
+    WidgetRef ref,
+    BookingDraft draft,
+  ) async {
+    final id =
+        await ref.read(createBookingControllerProvider.notifier).submit(draft);
+    if (!context.mounted) return;
+    if (id != null) {
+      ref.read(bookingDraftProvider.notifier).clear();
+      context.go(AppRoutes.customerBookingConfirmation(id));
+      return;
+    }
+    final error = ref.read(createBookingControllerProvider).error;
+    final l = context.l10n;
+    final failure =
+        error is AppException ? error : UnknownException(cause: error);
+    if (failure is BookingConflictException) {
+      // The slot went to someone else: back to the grid to pick again.
+      await showAppBottomSheet<void>(
+        context,
+        title: l.slotTakenTitle,
+        content: Text(failure.messageIn(l)),
+        actions: PrimaryButton(
+          label: l.reviewPickTime,
+          expand: true,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      );
+      if (context.mounted) context.pop();
+      return;
+    }
+    showAppSnackBar(context, failure.messageIn(l), tone: SnackTone.error);
   }
 }

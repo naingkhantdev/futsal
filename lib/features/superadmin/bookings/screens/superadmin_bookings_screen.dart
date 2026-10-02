@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/domain_enums.dart';
@@ -6,25 +7,44 @@ import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/empty_view.dart';
-import '../../../../data/demo/demo_data.dart';
 import '../../../../data/vos/booking_vo.dart';
 import '../../../shared/widgets/staff_booking_views.dart';
 import '../../console/widgets/console_booking_table.dart';
 import '../../console/widgets/console_kit.dart';
+import '../../shared/providers/platform_providers.dart';
+import '../../shops/providers/shops_providers.dart';
 
 /// `/superadmin/bookings` — PLATFORM scope: bookings across all shops, with
 /// status / shop filters and a customer / stadium search.
-/// PREVIEW: sample data until Phase 11.
-class SuperadminBookingsScreen extends StatefulWidget {
+class SuperadminBookingsScreen extends ConsumerWidget {
   const SuperadminBookingsScreen({super.key});
 
   @override
-  State<SuperadminBookingsScreen> createState() =>
-      _SuperadminBookingsScreenState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      appBar: ConsoleAppBar(title: context.l10n.navBookings),
+      body: AsyncValueView<List<BookingVO>>(
+        value: ref.watch(allBookingsProvider),
+        onRetry: () => ref.invalidate(allBookingsProvider),
+        data: (all) => _Bookings(all: all),
+      ),
+    );
+  }
 }
 
-class _SuperadminBookingsScreenState extends State<SuperadminBookingsScreen> {
+class _Bookings extends ConsumerStatefulWidget {
+  const _Bookings({required this.all});
+
+  /// Newest first.
+  final List<BookingVO> all;
+
+  @override
+  ConsumerState<_Bookings> createState() => _BookingsState();
+}
+
+class _BookingsState extends ConsumerState<_Bookings> {
   StaffBookingFilter _filter = StaffBookingFilter.all;
 
   /// `null` = every shop.
@@ -54,17 +74,18 @@ class _SuperadminBookingsScreenState extends State<SuperadminBookingsScreen> {
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    final all = DemoData.allBookings();
+    final all = widget.all;
+    final shopNames = {
+      for (final s in ref.watch(allShopsProvider).valueOrNull ?? const [])
+        s.id: s.name,
+    };
     final now = DateTime.now();
     final pending = all.where((b) => b.status == BookingStatus.pending).length;
     final upcoming = all.where((b) => b.isUpcoming(now)).length;
     final shopIds = {for (final b in all) b.shopId}.toList();
     final shown = _apply(all, _filter);
 
-    return Scaffold(
-      appBar: ConsoleAppBar(title: l.navBookings),
-      body: ConsoleBody(
-        demo: true,
+    return ConsoleBody(
         header: Column(
           children: [
             ConsoleBand(
@@ -102,6 +123,7 @@ class _SuperadminBookingsScreenState extends State<SuperadminBookingsScreen> {
                 const SizedBox(width: AppSpacing.md),
                 _ShopFilter(
                   shopIds: shopIds,
+                  shopNames: shopNames,
                   selected: _shopId,
                   onChanged: (id) => setState(() => _shopId = id),
                 ),
@@ -120,12 +142,11 @@ class _SuperadminBookingsScreenState extends State<SuperadminBookingsScreen> {
             ConsoleHeading(_filter.labelIn(l), count: shown.length),
             ConsoleBookingTable(
               bookings: shown,
-              shopNameOf: (b) => DemoData.shop(b.shopId).name,
+              shopNameOf: (b) => shopNames[b.shopId] ?? '',
               onOpen: (b) => context.push(AppRoutes.superadminBooking(b.id)),
             ),
           ],
         ],
-      ),
     );
   }
 }
@@ -134,11 +155,13 @@ class _SuperadminBookingsScreenState extends State<SuperadminBookingsScreen> {
 class _ShopFilter extends StatelessWidget {
   const _ShopFilter({
     required this.shopIds,
+    required this.shopNames,
     required this.selected,
     required this.onChanged,
   });
 
   final List<String> shopIds;
+  final Map<String, String> shopNames;
   final String? selected;
   final ValueChanged<String?> onChanged;
 
@@ -146,7 +169,7 @@ class _ShopFilter extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = context.l10n;
     final label =
-        selected == null ? l.consoleAllShops : DemoData.shop(selected!).name;
+        selected == null ? l.consoleAllShops : shopNames[selected!] ?? '';
     return MenuAnchor(
       menuChildren: [
         MenuItemButton(
@@ -158,7 +181,7 @@ class _ShopFilter extends StatelessWidget {
           MenuItemButton(
             onPressed: () => onChanged(id),
             leadingIcon: selected == id ? const Icon(Icons.check) : null,
-            child: Text(DemoData.shop(id).name),
+            child: Text(shopNames[id] ?? id),
           ),
       ],
       builder: (context, controller, _) => ConsoleFilterChip(

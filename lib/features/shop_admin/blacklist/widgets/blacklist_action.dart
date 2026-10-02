@@ -15,16 +15,12 @@ import '../../../../core/widgets/app_dialogs.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../core/widgets/inline_banner.dart';
 import '../../../../core/widgets/status_badge.dart';
-import '../../../../data/demo/demo_data.dart';
 import '../../../../data/requests/blacklist_requests.dart';
-import '../../../shared/widgets/preview_body.dart';
 import '../providers/blacklist_providers.dart';
 
 /// "Add to blacklist" / "Blacklisted · Remove" for one customer at the
 /// admin's shop. SHOP scope. With [noShow] the button reads "Didn't show up
 /// · blacklist" (booking detail); the sheet starts on the no-show reason.
-///
-/// Sample (demo) customers only preview the action: nothing is written.
 class BlacklistCustomerAction extends ConsumerWidget {
   const BlacklistCustomerAction({
     super.key,
@@ -72,14 +68,12 @@ class BlacklistCustomerAction extends ConsumerWidget {
       // Wait for the entry so an existing one is never re-added.
       onPressed: entry.isLoading
           ? null
-          : () => DemoData.isDemoId(customerId)
-              ? showPreviewOnly(context, l.blacklistAdd)
-              : showBlacklistSheet(
-                  context,
-                  customerId: customerId,
-                  customerName: customerName,
-                  customerPhone: customerPhone,
-                ),
+          : () => showBlacklistSheet(
+                context,
+                customerId: customerId,
+                customerName: customerName,
+                customerPhone: customerPhone,
+              ),
     );
   }
 

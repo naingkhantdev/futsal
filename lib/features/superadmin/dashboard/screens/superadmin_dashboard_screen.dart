@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/domain_enums.dart';
@@ -9,16 +10,18 @@ import '../../../../core/theme/status_visuals.dart';
 import '../../../../core/theme/theme_context_ext.dart';
 import '../../../../core/utils/date_key.dart';
 import '../../../../core/utils/display_format.dart';
+import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/empty_view.dart';
 import '../../../../core/widgets/status_badge.dart';
-import '../../../../data/demo/demo_data.dart';
+import '../../../../data/vos/shop_vo.dart';
 import '../../console/widgets/console_booking_table.dart';
 import '../../console/widgets/console_kit.dart';
+import '../../shared/providers/platform_providers.dart';
+import '../../shops/providers/shops_providers.dart';
 
 /// `/superadmin/dashboard` — PLATFORM scope: shops, bookings and customers
 /// across every shop, plus shops waiting for review.
-/// PREVIEW: sample data (`DemoData`) until Phase 14.
-class SuperadminDashboardScreen extends StatelessWidget {
+class SuperadminDashboardScreen extends ConsumerWidget {
   const SuperadminDashboardScreen({super.key});
 
   static String get _onboarding => Uri(
@@ -27,19 +30,42 @@ class SuperadminDashboardScreen extends StatelessWidget {
       ).toString();
 
   @override
-  Widget build(BuildContext context) {
-    final shops = DemoData.shops;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
+    return Scaffold(
+      appBar: ConsoleAppBar(title: l.navDashboard),
+      body: AsyncValueView<List<ShopVO>>(
+        value: ref.watch(allShopsProvider),
+        onRetry: () => ref.invalidate(allShopsProvider),
+        data: (shops) => _Dashboard(shops: shops),
+      ),
+    );
+  }
+}
+
+class _Dashboard extends ConsumerWidget {
+  const _Dashboard({required this.shops});
+
+  final List<ShopVO> shops;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     final active = shops.where((s) => s.status == ShopStatus.active).length;
     final pending = shops.where((s) => s.status == ShopStatus.pending).toList();
-    final bookings = DemoData.allBookings();
+    final shopNames = {for (final s in shops) s.id: s.name};
+    final bookingsValue = ref.watch(allBookingsProvider);
+    final bookings = bookingsValue.valueOrNull ?? const [];
+    final twoWeeksAgo = DateTime.now().subtract(const Duration(days: 14));
+    final recentCount = bookings
+        .where((b) => b.startAt != null && b.startAt!.isAfter(twoWeeksAgo))
+        .length;
     final recent = bookings.take(6).toList();
+    final customerCount =
+        ref.watch(allCustomersProvider).valueOrNull?.length ?? 0;
     final l = context.l10n;
     final today = DisplayFormat.fullDate(DateKey.fromDate(DateTime.now()));
 
-    return Scaffold(
-      appBar: ConsoleAppBar(title: l.navDashboard),
-      body: ConsoleBody(
-        demo: true,
+    return ConsoleBody(
         header: ConsoleBand(
           overline: '${l.consolePlatform} · $today',
           title: l.consoleOverview,
@@ -57,12 +83,12 @@ class SuperadminDashboardScreen extends StatelessWidget {
               onTap: () => context.go(_onboarding),
             ),
             ConsoleMetric(
-              value: '${bookings.length}',
+              value: '$recentCount',
               label: '${l.navBookings} · ${l.lastTwoWeeks}',
               onTap: () => context.go(AppRoutes.superadminBookings),
             ),
             ConsoleMetric(
-              value: '${DemoData.customers.length}',
+              value: '$customerCount',
               label: l.navCustomers,
               onTap: () => context.go(AppRoutes.superadminCustomers),
             ),
@@ -119,13 +145,18 @@ class SuperadminDashboardScreen extends StatelessWidget {
               child: Text(l.homeAllBookings),
             ),
           ),
-          ConsoleBookingTable(
-            bookings: recent,
-            shopNameOf: (b) => DemoData.shop(b.shopId).name,
-            onOpen: (b) => context.push(AppRoutes.superadminBooking(b.id)),
-          ),
+          if (bookingsValue.hasValue && recent.isEmpty)
+            EmptyView.inline(
+              icon: Icons.event_note_outlined,
+              title: l.noBookingsYet,
+            )
+          else
+            ConsoleBookingTable(
+              bookings: recent,
+              shopNameOf: (b) => shopNames[b.shopId] ?? '',
+              onOpen: (b) => context.push(AppRoutes.superadminBooking(b.id)),
+            ),
         ],
-      ),
     );
   }
 }

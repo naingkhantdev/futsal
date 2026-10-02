@@ -7,7 +7,6 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/theme_context_ext.dart';
 import '../../../../core/widgets/content_constraint.dart';
-import '../../../../core/widgets/demo_data_banner.dart';
 import '../../../../core/widgets/motion.dart';
 import '../../shell/widgets/superadmin_shell.dart';
 
@@ -748,21 +747,19 @@ class ConsoleLinkRow extends StatelessWidget {
   }
 }
 
-/// Scrolling page body under a band/toolbar: centered column, entrance
-/// motion, and the sample-data note when [demo].
+/// Scrolling page body under a band/toolbar: centered column and entrance
+/// motion.
 class ConsoleBody extends StatelessWidget {
   const ConsoleBody({
     super.key,
     required this.children,
     this.width = ContentWidth.dashboard,
-    this.demo = false,
     this.header,
     this.bottomPadding = AppSpacing.xxxl,
   });
 
   final List<Widget> children;
   final ContentWidth width;
-  final bool demo;
 
   /// Full-width widget scrolled with the content (e.g. a [ConsoleBand] on
   /// record pages, so it doesn't eat a phone screen).
@@ -784,10 +781,6 @@ class ConsoleBody extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   ...children,
-                  if (demo) ...[
-                    const SizedBox(height: AppSpacing.xxl),
-                    const DemoDataBanner(),
-                  ],
                 ],
               ),
             ),

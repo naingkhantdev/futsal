@@ -201,18 +201,6 @@ abstract class AppLocalizations {
   /// **'English'**
   String get languageEnglish;
 
-  /// No description provided for @demoBanner.
-  ///
-  /// In en, this message translates to:
-  /// **'Sample data · preview only, changes are not saved'**
-  String get demoBanner;
-
-  /// No description provided for @previewOnly.
-  ///
-  /// In en, this message translates to:
-  /// **'{action} · preview only, nothing was saved'**
-  String previewOnly(String action);
-
   /// No description provided for @logOut.
   ///
   /// In en, this message translates to:
@@ -4250,6 +4238,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No address found here — the pin still works for directions.'**
   String get pickLocationNoAddress;
+
+  /// No description provided for @homeNoVenuesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No venues yet'**
+  String get homeNoVenuesTitle;
+
+  /// No description provided for @homeNoVenuesMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Courts appear here once shops publish them.'**
+  String get homeNoVenuesMessage;
+
+  /// No description provided for @slotTakenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Time no longer free'**
+  String get slotTakenTitle;
+
+  /// No description provided for @bookingNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking not found'**
+  String get bookingNotFound;
+
+  /// No description provided for @bookingCancelledToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking cancelled'**
+  String get bookingCancelledToast;
+
+  /// No description provided for @changesSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get changesSaved;
+
+  /// No description provided for @customerNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer not found'**
+  String get customerNotFound;
+
+  /// No description provided for @noBlockedTimesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No blocked times'**
+  String get noBlockedTimesTitle;
+
+  /// No description provided for @removeBlockMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Customers will be able to book this time again.'**
+  String get removeBlockMessage;
+
+  /// No description provided for @noAnnouncementsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No announcements sent yet'**
+  String get noAnnouncementsYet;
+
+  /// No description provided for @announcementSentToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Announcement sent'**
+  String get announcementSentToast;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

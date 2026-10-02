@@ -61,14 +61,6 @@ class AppLocalizationsMy extends AppLocalizations {
   String get languageEnglish => 'English';
 
   @override
-  String get demoBanner => 'နမူနာဒေတာ · အစမ်းကြည့်ရန်သာ၊ ပြောင်းလဲမှုများ မသိမ်းပါ';
-
-  @override
-  String previewOnly(String action) {
-    return '$action · အစမ်းကြည့်ရန်သာ၊ ဘာမှမသိမ်းထားပါ';
-  }
-
-  @override
   String get logOut => 'ထွက်ရန်';
 
   @override
@@ -2196,4 +2188,37 @@ class AppLocalizationsMy extends AppLocalizations {
 
   @override
   String get pickLocationNoAddress => 'ဤနေရာအတွက် လိပ်စာ မတွေ့ပါ — ပင်ဖြင့် လမ်းညွှန်ချက် ရနိုင်ပါသည်။';
+
+  @override
+  String get homeNoVenuesTitle => 'ကွင်းများ မရှိသေးပါ';
+
+  @override
+  String get homeNoVenuesMessage => 'ဆိုင်များက ထုတ်ပြန်ပြီးသည်နှင့် ကွင်းများ ဤနေရာတွင် ပေါ်လာပါမည်။';
+
+  @override
+  String get slotTakenTitle => 'ဤအချိန် မအားတော့ပါ';
+
+  @override
+  String get bookingNotFound => 'ဘိုကင် မတွေ့ပါ';
+
+  @override
+  String get bookingCancelledToast => 'ဘိုကင် ပယ်ဖျက်ပြီးပါပြီ';
+
+  @override
+  String get changesSaved => 'သိမ်းဆည်းပြီးပါပြီ';
+
+  @override
+  String get customerNotFound => 'ဖောက်သည် မတွေ့ပါ';
+
+  @override
+  String get noBlockedTimesTitle => 'ပိတ်ထားသော အချိန် မရှိပါ';
+
+  @override
+  String get removeBlockMessage => 'ဖောက်သည်များ ဤအချိန်ကို ပြန်လည် ဘိုကင်လုပ်နိုင်ပါမည်။';
+
+  @override
+  String get noAnnouncementsYet => 'ကြေညာချက် မပို့ရသေးပါ';
+
+  @override
+  String get announcementSentToast => 'ကြေညာချက် ပို့ပြီးပါပြီ';
 }

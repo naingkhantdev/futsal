@@ -18,8 +18,6 @@
   "languageSubtitle": "အက်ပ်ဘာသာစကား ရွေးပါ",
   "languageMyanmar": "မြန်မာ",
   "languageEnglish": "English",
-  "demoBanner": "နမူနာဒေတာ · အစမ်းကြည့်ရန်သာ၊ ပြောင်းလဲမှုများ မသိမ်းပါ",
-  "previewOnly": "{action} · အစမ်းကြည့်ရန်သာ၊ ဘာမှမသိမ်းထားပါ",
   "logOut": "ထွက်ရန်",
   "logOutConfirmTitle": "အကောင့်မှ ထွက်မလား?",
   "logOutConfirmMessage": "အက်ပ်ကို ပြန်သုံးရန် ထပ်မံဝင်ရောက်ရပါမည်။",
@@ -692,5 +690,16 @@
   "shopLocationFinding": "လိပ်စာ ရှာနေသည်…",
   "shopLocationNoAddress": "ဤပင်အတွက် လမ်းလိပ်စာ ရှာမတွေ့ပါ။ ပင်ကို သိမ်းထားဆဲဖြစ်ပြီး လမ်းညွှန်ချက် အသုံးပြုနိုင်ပါသည်။",
   "stadiumLocationHint": "Google Map ပေါ်တွင် အားကစားကွင်း နေရာကို ရွေးပါ။ လိပ်စာကို ပင်မှ အလိုအလျောက် ဖြည့်ပေးပါမည်။",
-  "pickLocationNoAddress": "ဤနေရာအတွက် လိပ်စာ မတွေ့ပါ — ပင်ဖြင့် လမ်းညွှန်ချက် ရနိုင်ပါသည်။"
+  "pickLocationNoAddress": "ဤနေရာအတွက် လိပ်စာ မတွေ့ပါ — ပင်ဖြင့် လမ်းညွှန်ချက် ရနိုင်ပါသည်။",
+  "homeNoVenuesTitle": "ကွင်းများ မရှိသေးပါ",
+  "homeNoVenuesMessage": "ဆိုင်များက ထုတ်ပြန်ပြီးသည်နှင့် ကွင်းများ ဤနေရာတွင် ပေါ်လာပါမည်။",
+  "slotTakenTitle": "ဤအချိန် မအားတော့ပါ",
+  "bookingNotFound": "ဘိုကင် မတွေ့ပါ",
+  "bookingCancelledToast": "ဘိုကင် ပယ်ဖျက်ပြီးပါပြီ",
+  "changesSaved": "သိမ်းဆည်းပြီးပါပြီ",
+  "customerNotFound": "ဖောက်သည် မတွေ့ပါ",
+  "noBlockedTimesTitle": "ပိတ်ထားသော အချိန် မရှိပါ",
+  "removeBlockMessage": "ဖောက်သည်များ ဤအချိန်ကို ပြန်လည် ဘိုကင်လုပ်နိုင်ပါမည်။",
+  "noAnnouncementsYet": "ကြေညာချက် မပို့ရသေးပါ",
+  "announcementSentToast": "ကြေညာချက် ပို့ပြီးပါပြီ"
 }

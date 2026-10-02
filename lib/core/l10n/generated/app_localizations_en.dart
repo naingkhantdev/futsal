@@ -61,14 +61,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get languageEnglish => 'English';
 
   @override
-  String get demoBanner => 'Sample data · preview only, changes are not saved';
-
-  @override
-  String previewOnly(String action) {
-    return '$action · preview only, nothing was saved';
-  }
-
-  @override
   String get logOut => 'Log out';
 
   @override
@@ -2208,4 +2200,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pickLocationNoAddress => 'No address found here — the pin still works for directions.';
+
+  @override
+  String get homeNoVenuesTitle => 'No venues yet';
+
+  @override
+  String get homeNoVenuesMessage => 'Courts appear here once shops publish them.';
+
+  @override
+  String get slotTakenTitle => 'Time no longer free';
+
+  @override
+  String get bookingNotFound => 'Booking not found';
+
+  @override
+  String get bookingCancelledToast => 'Booking cancelled';
+
+  @override
+  String get changesSaved => 'Saved';
+
+  @override
+  String get customerNotFound => 'Customer not found';
+
+  @override
+  String get noBlockedTimesTitle => 'No blocked times';
+
+  @override
+  String get removeBlockMessage => 'Customers will be able to book this time again.';
+
+  @override
+  String get noAnnouncementsYet => 'No announcements sent yet';
+
+  @override
+  String get announcementSentToast => 'Announcement sent';
 }

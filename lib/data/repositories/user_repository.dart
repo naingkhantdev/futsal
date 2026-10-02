@@ -18,6 +18,12 @@ import 'user_repository_impl.dart';
 /// customers/superadmins get `shopId = null`. Superadmin bootstrap: set
 /// `users/{uid}.role = 'superadmin'` in the Firebase console.
 abstract interface class UserRepository {
+  /// Every customer account, by name.
+  Stream<List<UserVO>> watchCustomers();
+
+  /// One account; `null` while the doc does not exist.
+  Stream<UserVO?> watchUser(String uid);
+
   /// Admins currently assigned to [shopId].
   Stream<List<UserVO>> watchShopAdmins(String shopId);
 

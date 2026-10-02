@@ -13,6 +13,7 @@ import '../data_agents/user_data_agent.dart';
 import '../requests/booking_request_builder.dart';
 import '../requests/booking_write_requests.dart';
 import '../requests/notification_requests.dart';
+import '../vos/blocked_slot_vo.dart';
 import '../vos/booking_draft.dart';
 import '../vos/booking_vo.dart';
 import '../vos/court_vo.dart';
@@ -64,6 +65,31 @@ class BookingRepositoryImpl implements BookingRepository {
     return mapStreamErrors(
       _bookings
           .watchShopBookings(shopId, from: from, to: to)
+          .map((list) => [for (final r in list) r.toVO()]),
+    );
+  }
+
+  @override
+  Stream<List<BookingVO>> watchAllBookings() {
+    return mapStreamErrors(
+      _bookings
+          .watchAllBookings()
+          .map((list) => [for (final r in list) r.toVO()]),
+    );
+  }
+
+  @override
+  Stream<BookingVO?> watchBooking(String bookingId) {
+    return mapStreamErrors(
+      _bookings.watchBooking(bookingId).map((r) => r?.toVO()),
+    );
+  }
+
+  @override
+  Stream<List<BlockedSlotVO>> watchUpcomingBlockedSlots(String shopId) {
+    return mapStreamErrors(
+      _bookings
+          .watchShopBlockedSlots(shopId, from: _clock().toUtc())
           .map((list) => [for (final r in list) r.toVO()]),
     );
   }

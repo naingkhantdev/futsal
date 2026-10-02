@@ -123,6 +123,17 @@ enum NotificationType {
       };
 }
 
+/// Who a platform announcement is for (`announcements/{id}.audience`).
+/// Mirror: firestore.rules `validNewAnnouncement` / `canReadAnnouncement`.
+enum AnnouncementAudience {
+  everyone,
+  customers,
+  shopAdmins;
+
+  static AnnouncementAudience? tryParse(String? value) =>
+      _parse(values, value);
+}
+
 /// Visual state of a bookable time slot (UI only, never persisted).
 enum SlotState { available, selected, booked, blocked, unavailable }
 

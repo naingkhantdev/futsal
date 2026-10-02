@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/booking_policy.dart';
 import '../../../core/constants/domain_enums.dart';
+import '../../../core/errors/app_exception.dart';
 import '../../../core/l10n/l10n.dart';
+import '../../../core/l10n/l10n_labels.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_dialogs.dart';
+import '../../../core/widgets/app_snackbar.dart';
 import '../../../core/widgets/empty_view.dart';
 import '../../../data/vos/booking_vo.dart';
+import '../providers/booking_providers.dart';
 import './app_tour.dart';
 import './app_tours.dart';
 import 'booking_detail_view.dart';
 import 'booking_list_tile.dart';
-import 'preview_body.dart';
+import 'page_body.dart';
 import 'stadium_filter_bar.dart';
 
 enum StaffBookingFilter {
@@ -30,7 +35,6 @@ enum StaffBookingFilter {
 }
 
 /// Bookings list for shop admins and the superadmin, with status filters.
-/// PREVIEW: callers pass `DemoData` bookings.
 class StaffBookingList extends StatefulWidget {
   const StaffBookingList({
     super.key,
@@ -76,7 +80,7 @@ class _StaffBookingListState extends State<StaffBookingList> {
   Widget build(BuildContext context) {
     final shown = _apply(_filter);
     final l = context.l10n;
-    return PreviewBody(
+    return PageBody(
       children: [
         TourAnchor(
           id: TourIds.stadiumFilter,
@@ -119,8 +123,7 @@ class _StaffBookingListState extends State<StaffBookingList> {
   }
 }
 
-/// Booking detail for staff: sections + [StaffBookingActions]. PREVIEW:
-/// actions save nothing.
+/// Booking detail for staff: sections + [StaffBookingActions].
 class StaffBookingDetail extends StatelessWidget {
   const StaffBookingDetail({
     super.key,
@@ -140,7 +143,7 @@ class StaffBookingDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PreviewBody(
+    return PageBody(
       children: [
         BookingDetailSections(
           booking: booking,
@@ -156,8 +159,9 @@ class StaffBookingDetail extends StatelessWidget {
 }
 
 /// The status / payment actions that [BookingPolicy] allows from the
-/// booking's current state, stacked full width. PREVIEW: they save nothing.
-class StaffBookingActions extends StatelessWidget {
+/// booking's current state, stacked full width. Each writes through
+/// `BookingRepository`; firestore.rules check the role and the transition.
+class StaffBookingActions extends ConsumerWidget {
   const StaffBookingActions({
     super.key,
     required this.booking,
@@ -179,9 +183,24 @@ class StaffBookingActions extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final b = booking;
     final l = context.l10n;
+    final busy = ref.watch(bookingActionsControllerProvider).isLoading;
+    final actions = ref.read(bookingActionsControllerProvider.notifier);
+    Future<void> run(Future<bool> Function() action) async {
+      final ok = await action();
+      if (!context.mounted) return;
+      if (ok) {
+        showAppSnackBar(context, l.changesSaved, tone: SnackTone.success);
+        return;
+      }
+      final error = ref.read(bookingActionsControllerProvider).error;
+      final failure =
+          error is AppException ? error : UnknownException(cause: error);
+      showAppSnackBar(context, failure.messageIn(l), tone: SnackTone.error);
+    }
+
     final canConfirm =
         BookingPolicy.canStaffChangeStatus(b.status, BookingStatus.confirmed);
     final canReject =
@@ -208,7 +227,11 @@ class StaffBookingActions extends StatelessWidget {
               label: l.confirmBooking,
               icon: Icons.check,
               expand: true,
-              onPressed: () => showPreviewOnly(context, l.confirmBooking),
+              onPressed: busy
+                  ? null
+                  : () => run(
+                        () => actions.setStatus(b.id, BookingStatus.confirmed),
+                      ),
             ),
           ),
           const SizedBox(height: AppSpacing.md),
@@ -218,7 +241,11 @@ class StaffBookingActions extends StatelessWidget {
             label: l.markAsCompleted,
             icon: Icons.task_alt,
             expand: true,
-            onPressed: () => showPreviewOnly(context, l.markAsCompleted),
+            onPressed: busy
+                ? null
+                : () => run(
+                      () => actions.setStatus(b.id, BookingStatus.completed),
+                    ),
           ),
           const SizedBox(height: AppSpacing.md),
         ],
@@ -229,7 +256,9 @@ class StaffBookingActions extends StatelessWidget {
               label: nextPayment.$2,
               icon: Icons.payments_outlined,
               expand: true,
-              onPressed: () => showPreviewOnly(context, nextPayment.$2),
+              onPressed: busy
+                  ? null
+                  : () => run(() => actions.setPayment(b.id, nextPayment.$1)),
             ),
           ),
           const SizedBox(height: AppSpacing.md),
@@ -239,19 +268,23 @@ class StaffBookingActions extends StatelessWidget {
             id: TourIds.reject,
             child: AppTextButton(
               label: l.rejectBooking,
-              onPressed: () async {
-                final ok = await showConfirmDialog(
-                  context,
-                  title: l.rejectBookingTitle,
-                  message: l.rejectBookingMessage,
-                  confirmLabel: l.rejectAction,
-                  dismissLabel: l.keepBooking,
-                  destructive: true,
-                );
-                if (ok && context.mounted) {
-                  showPreviewOnly(context, l.rejectBooking);
-                }
-              },
+              onPressed: busy
+                  ? null
+                  : () async {
+                      final ok = await showConfirmDialog(
+                        context,
+                        title: l.rejectBookingTitle,
+                        message: l.rejectBookingMessage,
+                        confirmLabel: l.rejectAction,
+                        dismissLabel: l.keepBooking,
+                        destructive: true,
+                      );
+                      if (ok && context.mounted) {
+                        await run(
+                          () => actions.setStatus(b.id, BookingStatus.rejected),
+                        );
+                      }
+                    },
             ),
           ),
         for (final action in extraActions) ...[

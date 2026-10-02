@@ -18,15 +18,6 @@
   "languageSubtitle": "Choose the app language",
   "languageMyanmar": "မြန်မာ",
   "languageEnglish": "English",
-  "demoBanner": "Sample data · preview only, changes are not saved",
-  "previewOnly": "{action} · preview only, nothing was saved",
-  "@previewOnly": {
-    "placeholders": {
-      "action": {
-        "type": "String"
-      }
-    }
-  },
   "logOut": "Log out",
   "logOutConfirmTitle": "Log out?",
   "logOutConfirmMessage": "You'll need to log in again to use the app.",
@@ -1105,5 +1096,16 @@
   "shopLocationFinding": "Finding the address…",
   "shopLocationNoAddress": "Couldn't find a street address for this pin. The pin is still saved and directions will work.",
   "stadiumLocationHint": "Pick the stadium on Google Map. The address fills in from the pin.",
-  "pickLocationNoAddress": "No address found here — the pin still works for directions."
+  "pickLocationNoAddress": "No address found here — the pin still works for directions.",
+  "homeNoVenuesTitle": "No venues yet",
+  "homeNoVenuesMessage": "Courts appear here once shops publish them.",
+  "slotTakenTitle": "Time no longer free",
+  "bookingNotFound": "Booking not found",
+  "bookingCancelledToast": "Booking cancelled",
+  "changesSaved": "Saved",
+  "customerNotFound": "Customer not found",
+  "noBlockedTimesTitle": "No blocked times",
+  "removeBlockMessage": "Customers will be able to book this time again.",
+  "noAnnouncementsYet": "No announcements sent yet",
+  "announcementSentToast": "Announcement sent"
 }

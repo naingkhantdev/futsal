@@ -1,27 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/domain_enums.dart';
+import '../../../../core/errors/app_exception.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/l10n/l10n_labels.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/empty_view.dart';
-import '../../../../data/demo/demo_data.dart';
+import '../../../../core/widgets/error_view.dart';
+import '../../../../core/widgets/loading_view.dart';
+import '../../../../data/vos/stadium_vo.dart';
 import '../../../shared/widgets/app_tour.dart';
 import '../../../shared/widgets/app_tours.dart';
-import '../../../shared/widgets/preview_body.dart';
+import '../../../shared/widgets/page_body.dart';
+import '../providers/customer_venue_providers.dart';
 import '../widgets/stadium_list_card.dart';
 
 /// `/customer/explore` — CUSTOMER scope: search and filter published
-/// stadiums. PREVIEW: sample data (`DemoData`) until Phase 6.
-class CustomerExploreScreen extends StatefulWidget {
+/// stadiums.
+class CustomerExploreScreen extends ConsumerStatefulWidget {
   const CustomerExploreScreen({super.key});
 
   @override
-  State<CustomerExploreScreen> createState() => _CustomerExploreScreenState();
+  ConsumerState<CustomerExploreScreen> createState() =>
+      _CustomerExploreScreenState();
 }
 
-class _CustomerExploreScreenState extends State<CustomerExploreScreen> {
+class _CustomerExploreScreenState extends ConsumerState<CustomerExploreScreen> {
   static const List<Facility> _filters = [
     Facility.floodLights,
     Facility.parking,
@@ -33,20 +39,14 @@ class _CustomerExploreScreenState extends State<CustomerExploreScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final q = _query.trim().toLowerCase();
-    final results = DemoData.stadiums.where((s) {
-      final text = '${s.name} ${s.township ?? ''} ${s.city ?? ''}'.toLowerCase();
-      return (q.isEmpty || text.contains(q)) &&
-          _selected.every(s.facilities.contains);
-    }).toList();
-
+    final stadiums = ref.watch(publishedStadiumsProvider);
     final l = context.l10n;
     return Scaffold(
       appBar: AppBar(
         title: Text(l.navExplore),
         actions: const [TourHelpButton()],
       ),
-      body: PreviewBody(
+      body: PageBody(
         children: [
           TourAnchor(
             id: TourIds.search,
@@ -74,19 +74,59 @@ class _CustomerExploreScreenState extends State<CustomerExploreScreen> {
             ),
           ),
           const SizedBox(height: AppSpacing.lg),
-          if (results.isEmpty)
-            EmptyView.inline(
-              icon: Icons.search_off,
-              title: l.exploreEmptyTitle,
-              message: l.exploreEmptyMessage,
-            )
-          else
-            for (final stadium in results) ...[
-              StadiumListCard(stadium: stadium),
-              const SizedBox(height: AppSpacing.md),
-            ],
+          switch (stadiums) {
+            AsyncValue(:final valueOrNull?) => _Results(
+                stadiums: _filter(valueOrNull),
+              ),
+            AsyncValue(:final error?) => ErrorView.inline(
+                error: error is AppException
+                    ? error
+                    : UnknownException(cause: error),
+                onRetry: () => ref.invalidate(publishedStadiumsProvider),
+              ),
+            _ => const Padding(
+                padding: EdgeInsets.all(AppSpacing.xl),
+                child: LoadingView(),
+              ),
+          },
         ],
       ),
+    );
+  }
+
+  List<StadiumVO> _filter(List<StadiumVO> all) {
+    final q = _query.trim().toLowerCase();
+    return all.where((s) {
+      final text = '${s.name} ${s.township ?? ''} ${s.city ?? ''}'.toLowerCase();
+      return (q.isEmpty || text.contains(q)) &&
+          _selected.every(s.facilities.contains);
+    }).toList();
+  }
+}
+
+class _Results extends StatelessWidget {
+  const _Results({required this.stadiums});
+
+  final List<StadiumVO> stadiums;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    if (stadiums.isEmpty) {
+      return EmptyView.inline(
+        icon: Icons.search_off,
+        title: l.exploreEmptyTitle,
+        message: l.exploreEmptyMessage,
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        for (final stadium in stadiums) ...[
+          StadiumListCard(stadium: stadium),
+          const SizedBox(height: AppSpacing.md),
+        ],
+      ],
     );
   }
 }

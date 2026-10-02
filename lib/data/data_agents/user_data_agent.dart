@@ -32,6 +32,9 @@ abstract interface class UserDataAgent {
   /// [shopId].
   Stream<List<UserResponse>> watchShopAdmins(String shopId);
 
+  /// PLATFORM scope (superadmin): every account with [role].
+  Stream<List<UserResponse>> watchUsersByRole(UserRole role);
+
   /// PLATFORM scope (superadmin): accounts whose stored email is exactly
   /// [email].
   Future<List<UserResponse>> findUsersByEmail(String email);

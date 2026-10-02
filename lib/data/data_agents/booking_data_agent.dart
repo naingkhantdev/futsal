@@ -26,8 +26,20 @@ abstract interface class BookingDataAgent {
     required DateTime to,
   });
 
+  /// PLATFORM scope: latest bookings of every shop, newest first.
+  Stream<List<BookingResponse>> watchAllBookings();
+
   /// `null` when the doc does not exist.
   Future<BookingResponse?> getBooking(String bookingId);
+
+  /// Emits `null` while the doc does not exist.
+  Stream<BookingResponse?> watchBooking(String bookingId);
+
+  /// SHOP scope: blocks of [shopId] that end after [from], earliest first.
+  Stream<List<BlockedSlotResponse>> watchShopBlockedSlots(
+    String shopId, {
+    required DateTime from,
+  });
 
   /// Client-generated id for a new booking (no network call).
   String newBookingId();

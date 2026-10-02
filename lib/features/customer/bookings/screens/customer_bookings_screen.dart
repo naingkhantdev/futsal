@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
+import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/empty_view.dart';
-import '../../../../data/demo/demo_data.dart';
 import '../../../../data/vos/booking_vo.dart';
+import '../../../shared/providers/booking_providers.dart';
 import '../../../shared/widgets/app_tour.dart';
 import '../../../shared/widgets/app_tours.dart';
 import '../../../shared/widgets/booking_list_tile.dart';
-import '../../../shared/widgets/preview_body.dart';
+import '../../../shared/widgets/page_body.dart';
 import '../../../shared/widgets/stadium_filter_bar.dart';
+import '../providers/customer_bookings_providers.dart';
 
 /// `/customer/bookings` — CUSTOMER scope: own bookings, Upcoming / Past.
-/// PREVIEW: sample data (`DemoData`) until Phase 10.
-class CustomerBookingsScreen extends StatelessWidget {
+class CustomerBookingsScreen extends ConsumerWidget {
   const CustomerBookingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final mine = DemoData.bookingsOfCustomer(DemoData.meId);
-    final upcoming = DemoData.upcoming(mine);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final value = ref.watch(myBookingsProvider);
+    final mine = value.valueOrNull ?? const <BookingVO>[];
+    final upcoming = upcomingOf(mine);
     final past = mine.where((b) => !upcoming.contains(b)).toList();
     final l = context.l10n;
     return DefaultTabController(
@@ -43,7 +46,10 @@ class CustomerBookingsScreen extends StatelessWidget {
           ),
           actions: const [TourHelpButton()],
         ),
-        body: TabBarView(
+        body: AsyncValueView<List<BookingVO>>(
+          value: value,
+          onRetry: () => ref.invalidate(myBookingsProvider),
+          data: (_) => TabBarView(
           children: [
             _BookingList(
               bookings: upcoming,
@@ -56,6 +62,7 @@ class CustomerBookingsScreen extends StatelessWidget {
               emptyMessage: l.emptyPastMessage,
             ),
           ],
+          ),
         ),
       ),
     );
@@ -86,7 +93,7 @@ class _BookingListState extends State<_BookingList> {
     final bookings = _stadiumId == null
         ? widget.bookings
         : widget.bookings.where((b) => b.stadiumId == _stadiumId).toList();
-    return PreviewBody(
+    return PageBody(
       children: [
         StadiumFilterBar(
           bookings: widget.bookings,

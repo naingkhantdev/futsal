@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/l10n/l10n.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/widgets/app_snackbar.dart';
 import '../../../core/widgets/content_constraint.dart';
-import '../../../core/widgets/demo_data_banner.dart';
 import '../../../core/widgets/motion.dart';
 import '../../../core/widgets/section_header.dart';
 
-/// Scrollable body for screens that still show `DemoData`: an optional
-/// full-bleed [header] (e.g. a venue photo), then [children] in a centered
-/// column at [width] and a quiet sample-data note at the end.
+/// Scrollable page body: an optional full-bleed [header] (e.g. a venue
+/// photo), then [children] in a centered column at [width].
 ///
 /// Motion: the content column enters once as a whole (fade + short rise);
 /// the header shows at once. Sections are not staggered one by one.
-class PreviewBody extends StatelessWidget {
-  const PreviewBody({
+class PageBody extends StatelessWidget {
+  const PageBody({
     super.key,
     required this.children,
     this.width = ContentWidth.list,
@@ -52,8 +48,6 @@ class PreviewBody extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   ...children,
-                  const SizedBox(height: AppSpacing.xxl),
-                  const DemoDataBanner(),
                 ],
               ),
             ),
@@ -64,13 +58,9 @@ class PreviewBody extends StatelessWidget {
   }
 }
 
-/// Feedback for an action on a preview screen: nothing is written.
-void showPreviewOnly(BuildContext context, String action) =>
-    showAppSnackBar(context, context.l10n.previewOnly(action));
-
-/// Section title inside a [PreviewBody] (no horizontal padding of its own).
-class PreviewSectionTitle extends StatelessWidget {
-  const PreviewSectionTitle(this.title, {super.key, this.action});
+/// Section title inside a [PageBody] (no horizontal padding of its own).
+class PageSectionTitle extends StatelessWidget {
+  const PageSectionTitle(this.title, {super.key, this.action});
 
   final String title;
   final Widget? action;

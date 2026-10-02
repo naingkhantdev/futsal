@@ -65,6 +65,11 @@ class UserDataAgentImpl implements UserDataAgent {
   }
 
   @override
+  Stream<List<UserResponse>> watchUsersByRole(UserRole role) {
+    return _users.watchByRole(role.name).map(_fromQuery);
+  }
+
+  @override
   Future<List<UserResponse>> findUsersByEmail(String email) async =>
       _fromQuery(await _users.findByEmail(email));
 

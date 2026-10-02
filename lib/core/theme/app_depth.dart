@@ -23,7 +23,7 @@ enum DepthLevel {
 
 /// Surface tokens for the "Premium" look (design_system.md §0).
 ///
-/// Cards are white ([base]) on a warm ivory page with a hairline [edge] and
+/// Cards are white ([base]) on a warm sand page with a hairline [edge] and
 /// one soft [shade] shadow. A "well" (search field, icon circle, booked slot)
 /// is a flat [well] fill.
 @immutable
@@ -49,16 +49,16 @@ class AppDepth extends ThemeExtension<AppDepth> {
 
   static const AppDepth light = AppDepth(
     base: Color(0xFFFFFFFF),
-    edge: Color(0xFFECE8DF),
-    shade: Color(0x120F1B33),
-    well: Color(0xFFF1EFE9),
+    edge: Color(0xFFEEE7DC),
+    shade: Color(0x142A1E17),
+    well: Color(0xFFF4EFE7),
   );
 
   static const AppDepth dark = AppDepth(
-    base: Color(0xFF111A2E),
-    edge: Color(0xFF222C44),
+    base: Color(0xFF211B17),
+    edge: Color(0xFF3A312A),
     shade: Color(0x66000000),
-    well: Color(0xFF19233B),
+    well: Color(0xFF2B241F),
   );
 
   /// Shadows for a raised element: none for [DepthLevel.low].

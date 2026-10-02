@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/app_radius.dart';
@@ -7,43 +8,58 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/status_visuals.dart';
 import '../../../../core/theme/theme_context_ext.dart';
 import '../../../../core/widgets/app_card.dart';
+import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/content_constraint.dart';
 import '../../../../core/widgets/detail_row.dart';
+import '../../../../core/widgets/empty_view.dart';
 import '../../../../core/widgets/status_badge.dart';
 import '../../../../core/widgets/venue_location_card.dart';
-import '../../../../data/demo/demo_data.dart';
+import '../../../../data/vos/shop_vo.dart';
 import '../../../shared/widgets/app_tour.dart';
-import '../../../shared/widgets/app_tours.dart';
-import '../../../shared/widgets/preview_body.dart';
+import '../../../shared/widgets/page_body.dart';
+import '../../stadiums/providers/shop_venue_providers.dart';
 
 /// `/shop-admin/settings/shop-profile` — SHOP scope: the public profile of
-/// the admin's own shop. Status and listing are set by the superadmin only.
-/// PREVIEW: sample data; editing arrives with the shop profile phase.
-class ShopProfileScreen extends StatelessWidget {
+/// the admin's own shop. Read-only here: the profile, status and listing
+/// are written by the superadmin only (firestore.rules).
+class ShopProfileScreen extends ConsumerWidget {
   const ShopProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final shop = DemoData.shop(DemoData.myShopId);
-    final styles = context.textStyles;
-    final muted = context.colors.onSurfaceVariant;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final shop = ref.watch(myShopProvider);
     final l = context.l10n;
     return Scaffold(
       appBar: AppBar(
         title: Text(l.settingsShopProfile),
-        actions: [
-          const TourHelpButton(),
-          TourAnchor(
-            id: TourIds.edit,
-            child: TextButton(
-              onPressed: () => showPreviewOnly(context, l.editShopProfile),
-              child: Text(l.commonEdit),
-            ),
-          ),
-          const SizedBox(width: AppSpacing.sm),
-        ],
+        actions: const [TourHelpButton()],
       ),
-      body: PreviewBody(
+      body: AsyncValueView<ShopVO?>(
+        value: shop,
+        onRetry: () => ref.invalidate(myShopProvider),
+        isEmpty: (s) => s == null,
+        empty: EmptyView(
+          icon: Icons.storefront,
+          title: l.shopNotFound,
+          message: l.notFoundRemoved,
+        ),
+        data: (s) => _ShopProfile(shop: s!),
+      ),
+    );
+  }
+}
+
+class _ShopProfile extends StatelessWidget {
+  const _ShopProfile({required this.shop});
+
+  final ShopVO shop;
+
+  @override
+  Widget build(BuildContext context) {
+    final styles = context.textStyles;
+    final muted = context.colors.onSurfaceVariant;
+    final l = context.l10n;
+    return PageBody(
         width: ContentWidth.form,
         children: [
           Row(
@@ -133,7 +149,6 @@ class ShopProfileScreen extends StatelessWidget {
             style: styles.bodySmall?.copyWith(color: muted),
           ),
         ],
-      ),
     );
   }
 }

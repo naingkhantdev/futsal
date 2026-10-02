@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/booking_policy.dart';
 import '../../../../core/constants/domain_enums.dart';
+import '../../../../core/errors/app_exception.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/l10n/l10n_labels.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -11,17 +13,24 @@ import '../../../../core/utils/date_key.dart';
 import '../../../../core/utils/display_format.dart';
 import '../../../../core/utils/time_range.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/content_constraint.dart';
+import '../../../../core/widgets/empty_view.dart';
 import '../../../../core/widgets/sticky_bottom_bar.dart';
-import '../../../../data/demo/demo_data.dart';
+import '../../../../data/vos/court_vo.dart';
+import '../../../../data/vos/stadium_vo.dart';
 import '../../../shared/widgets/app_tour.dart';
 import '../../../shared/widgets/app_tours.dart';
-import '../../../shared/widgets/preview_body.dart';
+import '../../../shared/widgets/page_body.dart';
+import '../../bookings/providers/shop_bookings_providers.dart';
+import '../../stadiums/providers/shop_venue_providers.dart';
 
 /// `/shop-admin/blocked-slots/new?stadiumId=&courtId=&date=` — SHOP scope:
 /// block up to [BookingPolicy.maxSlotsPerBooking] consecutive slots of one
-/// court. PREVIEW: pickers use sample venues; saving writes nothing.
-class BlockedSlotFormScreen extends StatefulWidget {
+/// court. A booked slot in the range makes the whole block fail
+/// (firestore.rules + slot lock docs); decline that booking first.
+class BlockedSlotFormScreen extends ConsumerWidget {
   const BlockedSlotFormScreen({
     super.key,
     this.stadiumId,
@@ -34,30 +43,81 @@ class BlockedSlotFormScreen extends StatefulWidget {
   final String? date;
 
   @override
-  State<BlockedSlotFormScreen> createState() => _BlockedSlotFormScreenState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final stadiums = ref.watch(myStadiumsProvider);
+    final active =
+        stadiums.valueOrNull?.where((s) => s.isActive).toList() ?? const [];
+    if (active.isNotEmpty) {
+      return _BlockForm(
+        stadiums: active,
+        initialStadiumId: stadiumId,
+        initialCourtId: courtId,
+        initialDate: date,
+      );
+    }
+    final l = context.l10n;
+    return Scaffold(
+      appBar: AppBar(title: Text(l.blockTimeTitle)),
+      body: AsyncValueView<List<StadiumVO>>(
+        value: stadiums,
+        onRetry: () => ref.invalidate(myStadiumsProvider),
+        isEmpty: (_) => true,
+        empty: EmptyView(
+          icon: Icons.stadium_outlined,
+          title: l.stadiumsEmptyTitle,
+          message: l.stadiumsEmptyMessage,
+        ),
+        data: (_) => const SizedBox.shrink(),
+      ),
+    );
+  }
 }
 
-class _BlockedSlotFormScreenState extends State<BlockedSlotFormScreen> {
-  final _stadiums = DemoData.stadiumsOf(DemoData.myShopId);
+class _BlockForm extends ConsumerStatefulWidget {
+  const _BlockForm({
+    required this.stadiums,
+    this.initialStadiumId,
+    this.initialCourtId,
+    this.initialDate,
+  });
+
+  /// Active stadiums of the admin's shop (never empty).
+  final List<StadiumVO> stadiums;
+  final String? initialStadiumId;
+  final String? initialCourtId;
+  final String? initialDate;
+
+  @override
+  ConsumerState<_BlockForm> createState() => _BlockFormState();
+}
+
+class _BlockFormState extends ConsumerState<_BlockForm> {
+  List<StadiumVO> get _stadiums => widget.stadiums;
   late String _stadiumId = _stadiums
-      .firstWhere((s) => s.id == widget.stadiumId, orElse: () => _stadiums.first)
+      .firstWhere(
+        (s) => s.id == widget.initialStadiumId,
+        orElse: () => _stadiums.first,
+      )
       .id;
-  late String _courtId = DemoData.courtsOf(_stadiumId)
-      .firstWhere((c) => c.id == widget.courtId,
-          orElse: () => DemoData.courtsOf(_stadiumId).first)
-      .id;
-  late DateTime _date = DateKey.tryParse(widget.date) ??
+  late String? _courtId = widget.initialCourtId;
+  late DateTime _date = DateKey.tryParse(widget.initialDate) ??
       DateTime.now().add(const Duration(days: 1));
   int? _startIndex;
   int _slotCount = 1;
   BlockedSlotReason _reason = BlockedSlotReason.maintenance;
   final _note = TextEditingController();
 
-  List<TimeRange> get _slots {
-    final s = DemoData.stadium(_stadiumId);
-    return DemoData.court(_courtId)
-        .slots(openMinute: s.openMinute, closeMinute: s.closeMinute);
-  }
+  StadiumVO get _stadium => _stadiums.firstWhere(
+        (s) => s.id == _stadiumId,
+        orElse: () => _stadiums.first,
+      );
+
+  List<TimeRange> _slotsOf(CourtVO? court) => court == null
+      ? const []
+      : court.slots(
+          openMinute: _stadium.openMinute,
+          closeMinute: _stadium.closeMinute,
+        );
 
   @override
   void dispose() {
@@ -76,11 +136,46 @@ class _BlockedSlotFormScreenState extends State<BlockedSlotFormScreen> {
     if (picked != null) setState(() => _date = picked);
   }
 
+  Future<void> _save(CourtVO court, List<TimeRange> slots, int count) async {
+    final start = _startIndex!;
+    final note = _note.text.trim();
+    final ok = await ref.read(blockedSlotsControllerProvider.notifier).block(
+          stadium: _stadium,
+          court: court,
+          date: DateKey.fromDate(_date),
+          startMinute: slots[start].startMinute,
+          endMinute: slots[start + count - 1].endMinute,
+          reason: _reason,
+          note: note.isEmpty ? null : note,
+        );
+    if (!mounted) return;
+    final l = context.l10n;
+    if (ok) {
+      showAppSnackBar(context, l.changesSaved, tone: SnackTone.success);
+      context.pop();
+      return;
+    }
+    final error = ref.read(blockedSlotsControllerProvider).error;
+    final failure =
+        error is AppException ? error : UnknownException(cause: error);
+    showAppSnackBar(context, failure.messageIn(l), tone: SnackTone.error);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final slots = _slots;
-    final courts = DemoData.courtsOf(_stadiumId);
-    final start = _startIndex;
+    final courts = ref
+            .watch(adminCourtsProvider(_stadiumId))
+            .valueOrNull
+            ?.where((c) => c.isActive)
+            .toList() ??
+        const <CourtVO>[];
+    final court = courts.where((c) => c.id == _courtId).firstOrNull ??
+        courts.firstOrNull;
+    final slots = _slotsOf(court);
+    final saving = ref.watch(blockedSlotsControllerProvider).isLoading;
+    final start = _startIndex != null && _startIndex! < slots.length
+        ? _startIndex
+        : null;
     final maxCount = start == null
         ? 1
         : (slots.length - start).clamp(1, BookingPolicy.maxSlotsPerBooking);
@@ -97,16 +192,14 @@ class _BlockedSlotFormScreenState extends State<BlockedSlotFormScreen> {
           child: PrimaryButton(
             label: l.blockTimeTitle,
             expand: true,
-            onPressed: start == null
+            isLoading: saving,
+            onPressed: start == null || court == null || saving
                 ? null
-                : () {
-                    showPreviewOnly(context, l.blockTimeTitle);
-                    context.pop();
-                  },
+                : () => _save(court, slots, _slotCount.clamp(1, maxCount)),
           ),
         ),
       ),
-      body: PreviewBody(
+      body: PageBody(
         width: ContentWidth.form,
         children: [
           TourAnchor(
@@ -120,14 +213,15 @@ class _BlockedSlotFormScreenState extends State<BlockedSlotFormScreen> {
               ],
               onChanged: (id) => setState(() {
                 _stadiumId = id!;
-                _courtId = DemoData.courtsOf(id).first.id;
+                _courtId = null;
                 _startIndex = null;
               }),
             ),
           ),
           const SizedBox(height: AppSpacing.lg),
           DropdownButtonFormField<String>(
-            value: _courtId,
+            key: ValueKey(_stadiumId),
+            value: court?.id,
             decoration: InputDecoration(labelText: l.courtLabel),
             items: [
               for (final c in courts)

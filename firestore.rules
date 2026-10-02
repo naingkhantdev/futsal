@@ -38,6 +38,7 @@ rules_version = '2';
 //                 -> where('audience', '==', 'shop')
 //                    + where('recipientId', '==', users/{uid}.shopId)
 //   shops/{shopId}/blacklist -> admins of that shop / superadmin only
+//   announcements -> any query (superadmin); others filter on audience
 // Queries live in lib/firebase/firestore/*_collection.dart.
 //
 // DOCUMENT-ACCESS BUDGET (get/exists/getAfter/existsAfter). Limits: 10 per
@@ -1025,6 +1026,38 @@ service cloud.firestore {
         && request.resource.data.readAt == request.time;
 
       allow delete: if false;
+    }
+
+    // --- announcements/{announcementId} -----------------------------------
+    // PLATFORM scope. Create-only, by an active superadmin; never edited or
+    // deleted. The superadmin lists them all; any other active user may read
+    // the ones whose audience covers their role (list queries must then
+    // filter on `audience`).
+
+    function validNewAnnouncement() {
+      let a = request.resource.data;
+      return isSuperadmin()
+        && a.keys().hasOnly(['title', 'body', 'audience', 'createdBy', 'createdAt'])
+        && a.keys().hasAll(['title', 'body', 'audience', 'createdBy', 'createdAt'])
+        && a.title is string && a.title.size() > 0 && a.title.size() <= 60
+        && a.body is string && a.body.size() > 0 && a.body.size() <= 300
+        && a.audience in ['everyone', 'customers', 'shopAdmins']
+        && a.createdBy == request.auth.uid
+        && a.createdAt == request.time;
+    }
+
+    function canReadAnnouncement(a) {
+      return isSuperadmin()
+        || (isActiveUser()
+            && (a.audience == 'everyone'
+                || (a.audience == 'customers' && role() == 'customer')
+                || (a.audience == 'shopAdmins' && isShopAdmin())));
+    }
+
+    match /announcements/{announcementId} {
+      allow read: if canReadAnnouncement(resource.data);
+      allow create: if validNewAnnouncement();
+      allow update, delete: if false;
     }
 
     // --- Everything else: deny --------------------------------------------

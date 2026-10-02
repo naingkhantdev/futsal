@@ -292,9 +292,6 @@ abstract final class AppTours {
         AppTourStep.intro(
             title: l.tourShopProfileIntroTitle,
             body: l.tourShopProfileIntroBody),
-        AppTourStep.anchor(TourIds.edit,
-            title: l.tourShopProfileEditTitle,
-            body: l.tourShopProfileEditBody),
       ]);
 
   static final shopAdminStadiums = AppTourDef('shop.stadiums', (l) => [

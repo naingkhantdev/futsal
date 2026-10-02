@@ -23,6 +23,9 @@ abstract final class FirestoreCollections {
 
   /// In-app notifications, id = `{bookingId}_{type}` (one per event).
   static const String notifications = 'notifications';
+
+  /// PLATFORM announcements, written by the superadmin.
+  static const String announcements = 'announcements';
 }
 
 /// Document / collection paths. Build every path through here.

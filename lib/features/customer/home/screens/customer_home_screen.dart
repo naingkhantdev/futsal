@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/errors/app_exception.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_radius.dart';
@@ -13,46 +15,53 @@ import '../../../../core/utils/display_format.dart';
 import '../../../../core/utils/time_range.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/day_strip.dart';
+import '../../../../core/widgets/empty_view.dart';
+import '../../../../core/widgets/error_view.dart';
 import '../../../../core/widgets/hero_header.dart';
-import '../../../../data/demo/demo_data.dart';
+import '../../../../core/widgets/loading_view.dart';
 import '../../../../data/vos/court_vo.dart';
 import '../../../../data/vos/stadium_vo.dart';
+import '../../../shared/providers/booking_providers.dart';
 import '../../../shared/widgets/app_tour.dart';
 import '../../../shared/widgets/app_tours.dart';
 import '../../../shared/widgets/booking_ticket.dart';
+import '../../../shared/widgets/page_body.dart';
 import '../../../shared/widgets/person_tile.dart';
-import '../../../shared/widgets/preview_body.dart';
+import '../../bookings/providers/customer_bookings_providers.dart';
+import '../../profile/providers/current_user_profile_provider.dart';
+import '../../stadiums/providers/customer_venue_providers.dart';
 import '../../stadiums/widgets/stadium_list_card.dart';
 
 /// `/customer/home` — CUSTOMER scope. Built around the booking: search,
 /// the next game as a ticket, then a day picker and venues with their next
 /// open start times (one tap into the slot grid with court + day set).
-/// PREVIEW: sample data (`DemoData`) until Phase 6.
-class CustomerHomeScreen extends StatefulWidget {
+class CustomerHomeScreen extends ConsumerStatefulWidget {
   const CustomerHomeScreen({super.key});
 
   @override
-  State<CustomerHomeScreen> createState() => _CustomerHomeScreenState();
+  ConsumerState<CustomerHomeScreen> createState() =>
+      _CustomerHomeScreenState();
 }
 
-class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
+class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
   String _date = DateKey.fromDate(DateTime.now());
 
   @override
   Widget build(BuildContext context) {
-    final me = DemoData.customer(DemoData.meId);
-    final next = DemoData.upcoming(DemoData.bookingsOfCustomer(me.id));
+    final name = ref.watch(currentUserProfileProvider).valueOrNull?.name ?? '';
+    final next = upcomingOf(ref.watch(myBookingsProvider).valueOrNull ?? []);
+    final stadiums = ref.watch(publishedStadiumsProvider);
     final l = context.l10n;
 
     return Scaffold(
       body: SafeArea(
         bottom: false,
-        child: PreviewBody(
+        child: PageBody(
           children: [
             HeroHeader(
-              eyebrow: l.homeGreeting(me.name.split(' ').first),
+              eyebrow: l.homeGreeting(name.split(' ').first),
               title: l.bookACourt,
-              trailing: _ProfileButton(name: me.name),
+              trailing: _ProfileButton(name: name),
               // Tapping the search opens Explore, where filtering happens.
               bottom: TourAnchor(
                 id: TourIds.search,
@@ -71,7 +80,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
               ),
             ),
             if (next.isNotEmpty) ...[
-              PreviewSectionTitle(
+              PageSectionTitle(
                 l.homeNextGame,
                 action: next.length > 1
                     ? TextButton(
@@ -86,7 +95,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                     context.push(AppRoutes.customerBooking(next.first.id)),
               ),
             ],
-            PreviewSectionTitle(
+            PageSectionTitle(
               l.homeOpenSlots(DisplayFormat.dayLabel(_date, l)),
               action: TextButton(
                 onPressed: () => context.go(AppRoutes.customerExplore),
@@ -103,7 +112,25 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
             const SizedBox(height: AppSpacing.lg),
             TourAnchor(
               id: TourIds.venues,
-              child: _VenueCarousel(stadiums: DemoData.stadiums, date: _date),
+              child: switch (stadiums) {
+                AsyncValue(:final valueOrNull?) => valueOrNull.isEmpty
+                    ? EmptyView.inline(
+                        icon: Icons.stadium_outlined,
+                        title: l.homeNoVenuesTitle,
+                        message: l.homeNoVenuesMessage,
+                      )
+                    : _VenueCarousel(stadiums: valueOrNull, date: _date),
+                AsyncValue(:final error?) => ErrorView.inline(
+                    error: error is AppException
+                        ? error
+                        : UnknownException(cause: error),
+                    onRetry: () => ref.invalidate(publishedStadiumsProvider),
+                  ),
+                _ => const Padding(
+                    padding: EdgeInsets.all(AppSpacing.xl),
+                    child: LoadingView(),
+                  ),
+              },
             ),
           ],
         ),
@@ -141,7 +168,7 @@ class _VenueCarousel extends StatelessWidget {
   }
 }
 
-class _OpenVenue extends StatelessWidget {
+class _OpenVenue extends ConsumerWidget {
   const _OpenVenue({required this.stadium, required this.date});
 
   final StadiumVO stadium;
@@ -160,15 +187,19 @@ class _OpenVenue extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l = context.l10n;
-    final open = DemoData.openStarts(stadium.id, date);
+    final openValue =
+        ref.watch(openStartsProvider((stadium: stadium, date: date)));
+    final open = openValue.valueOrNull ?? const <OpenStart>[];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         StadiumListCard(stadium: stadium, aspectRatio: 4 / 3),
         const SizedBox(height: AppSpacing.xs),
-        if (open.isEmpty)
+        if (!openValue.hasValue)
+          const SizedBox(height: AppSizes.minTouchTarget)
+        else if (open.isEmpty)
           SizedBox(
             height: AppSizes.minTouchTarget,
             child: Align(

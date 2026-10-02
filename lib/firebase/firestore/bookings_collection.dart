@@ -20,6 +20,9 @@ class BookingsCollection {
   /// Page size until Phase 10 adds pagination.
   static const int defaultLimit = 100;
 
+  /// Superadmin cross-shop list cap until pagination lands.
+  static const int platformLimit = 500;
+
   CollectionReference<JsonMap> get _bookings =>
       _firestore.collection(FirestoreCollections.bookings);
 
@@ -29,6 +32,18 @@ class BookingsCollection {
 
   Future<DocumentSnapshot<JsonMap>> get(String bookingId) =>
       _firestore.doc(FirestorePaths.booking(bookingId)).get();
+
+  Stream<DocumentSnapshot<JsonMap>> watch(String bookingId) =>
+      _firestore.doc(FirestorePaths.booking(bookingId)).snapshots();
+
+  /// PLATFORM scope (superadmin only): latest bookings of every shop,
+  /// newest first. Single-field ordering, no composite index.
+  Stream<QuerySnapshot<JsonMap>> watchAll({int limit = platformLimit}) {
+    return _bookings
+        .orderBy(BookingFields.startAt, descending: true)
+        .limit(limit)
+        .snapshots();
+  }
 
   /// CUSTOMER scope, newest first. Index: bookings (customerId, startAt desc).
   Stream<QuerySnapshot<JsonMap>> watchCustomerBookings(

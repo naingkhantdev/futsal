@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/l10n/l10n.dart';
@@ -7,27 +8,46 @@ import '../../../../core/theme/status_tone.dart';
 import '../../../../core/theme/theme_context_ext.dart';
 import '../../../../core/utils/display_format.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/empty_view.dart';
 import '../../../../core/widgets/status_badge.dart';
-import '../../../../data/demo/demo_data.dart';
+import '../../../../data/vos/booking_vo.dart';
 import '../../../../data/vos/user_vo.dart';
+import '../../../shared/providers/booking_providers.dart';
 import '../../console/widgets/console_kit.dart';
+import '../../shared/providers/platform_providers.dart';
 
 /// `/superadmin/customers` — PLATFORM scope: every customer account, with
 /// name / phone / email search and an active / disabled filter.
-/// PREVIEW: sample data.
-class SuperadminCustomersScreen extends StatefulWidget {
+class SuperadminCustomersScreen extends ConsumerWidget {
   const SuperadminCustomersScreen({super.key});
 
   @override
-  State<SuperadminCustomersScreen> createState() =>
-      _SuperadminCustomersScreenState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      appBar: ConsoleAppBar(title: context.l10n.navCustomers),
+      body: AsyncValueView<List<UserVO>>(
+        value: ref.watch(allCustomersProvider),
+        onRetry: () => ref.invalidate(allCustomersProvider),
+        data: (all) => _Customers(all: all),
+      ),
+    );
+  }
+}
+
+class _Customers extends ConsumerStatefulWidget {
+  const _Customers({required this.all});
+
+  final List<UserVO> all;
+
+  @override
+  ConsumerState<_Customers> createState() => _CustomersState();
 }
 
 /// `null` = all accounts.
 typedef _ActiveFilter = bool?;
 
-class _SuperadminCustomersScreenState extends State<SuperadminCustomersScreen> {
+class _CustomersState extends ConsumerState<_Customers> {
   _ActiveFilter _active;
   String _query = '';
 
@@ -43,7 +63,12 @@ class _SuperadminCustomersScreenState extends State<SuperadminCustomersScreen> {
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    final all = DemoData.customersOf(null);
+    final all = widget.all;
+    // Stats from the latest platform bookings (capped list).
+    final byCustomer = <String, List<BookingVO>>{};
+    for (final b in ref.watch(allBookingsProvider).valueOrNull ?? const []) {
+      byCustomer.putIfAbsent(b.customerId, () => []).add(b);
+    }
     final active = all.where((c) => c.isActive).length;
     final disabled = all.length - active;
     final shown = all
@@ -51,10 +76,7 @@ class _SuperadminCustomersScreenState extends State<SuperadminCustomersScreen> {
         .where(_matches)
         .toList();
 
-    return Scaffold(
-      appBar: ConsoleAppBar(title: l.navCustomers),
-      body: ConsoleBody(
-        demo: true,
+    return ConsoleBody(
         header: Column(
           children: [
             ConsoleBand(
@@ -110,18 +132,17 @@ class _SuperadminCustomersScreenState extends State<SuperadminCustomersScreen> {
                 ConsoleColumn(l.consoleStatus, flex: 3),
               ],
               rows: [
-                for (final c in shown) _row(context, c),
+                for (final c in shown)
+                  _row(context, c, customerStatsOf(byCustomer[c.id] ?? [])),
               ],
             ),
           ],
         ],
-      ),
     );
   }
 
-  ConsoleRow _row(BuildContext context, UserVO c) {
+  ConsoleRow _row(BuildContext context, UserVO c, CustomerStats stats) {
     final l = context.l10n;
-    final stats = DemoData.customerStats(c.id);
     final last = stats.lastPlayed;
     return ConsoleRow(
       onTap: () => context.push(AppRoutes.superadminCustomer(c.id)),

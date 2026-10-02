@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/booking_policy.dart';
 import '../../../../core/constants/domain_enums.dart';
+import '../../../../core/errors/app_exception.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -13,21 +14,28 @@ import '../../../../core/utils/display_format.dart';
 import '../../../../core/utils/money.dart';
 import '../../../../core/utils/time_range.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/day_strip.dart';
+import '../../../../core/widgets/empty_view.dart';
+import '../../../../core/widgets/error_view.dart';
+import '../../../../core/widgets/loading_view.dart';
 import '../../../../core/widgets/slot_tile.dart';
 import '../../../../core/widgets/sticky_bottom_bar.dart';
-import '../../../../data/demo/demo_data.dart';
 import '../../../../data/vos/booking_draft.dart';
+import '../../../../data/vos/court_availability_vo.dart';
 import '../../../../data/vos/court_vo.dart';
+import '../../../../data/vos/stadium_vo.dart';
 import '../../../shared/widgets/app_tour.dart';
 import '../../../shared/widgets/app_tours.dart';
-import '../../../shared/widgets/preview_body.dart';
+import '../../../shared/widgets/page_body.dart';
+import '../../stadiums/providers/customer_venue_providers.dart';
 import '../providers/booking_draft_provider.dart';
 
 /// `/customer/stadiums/:stadiumId/book?courtId=&date=` — CUSTOMER scope:
 /// pick a court, a day and up to [BookingPolicy.maxSlotsPerBooking]
-/// consecutive slots. PREVIEW: availability from `DemoData` until Phase 8.
-class SlotSelectionScreen extends ConsumerStatefulWidget {
+/// consecutive slots. Availability is live from the slot lock docs; the
+/// booking itself is still checked by firestore.rules.
+class SlotSelectionScreen extends ConsumerWidget {
   const SlotSelectionScreen({
     super.key,
     required this.stadiumId,
@@ -40,21 +48,87 @@ class SlotSelectionScreen extends ConsumerStatefulWidget {
   final String? date;
 
   @override
-  ConsumerState<SlotSelectionScreen> createState() =>
-      _SlotSelectionScreenState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final stadium = ref.watch(customerStadiumProvider(stadiumId));
+    final courts = ref.watch(customerCourtsProvider(stadiumId));
+    final s = stadium.valueOrNull;
+    final bookable = courts.valueOrNull?.where((c) => c.hasPrice).toList();
+    if (s != null && bookable != null && bookable.isNotEmpty) {
+      return _SlotPicker(
+        stadium: s,
+        courts: bookable,
+        initialCourtId: courtId,
+        initialDate: date,
+      );
+    }
+    final l = context.l10n;
+    return Scaffold(
+      appBar: AppBar(title: Text(s?.name ?? l.stadiumLabel)),
+      body: AsyncValueView<void>(
+        value: switch ((stadium, courts)) {
+          (AsyncError(:final error, :final stackTrace), _) ||
+          (_, AsyncError(:final error, :final stackTrace)) =>
+            AsyncError(error, stackTrace),
+          (AsyncData(), AsyncData()) => const AsyncData(null),
+          _ => const AsyncLoading(),
+        },
+        onRetry: () {
+          ref.invalidate(customerStadiumProvider(stadiumId));
+          ref.invalidate(customerCourtsProvider(stadiumId));
+        },
+        isEmpty: (_) => true,
+        empty: s == null
+            ? EmptyView(
+                icon: Icons.stadium_outlined,
+                title: l.stadiumNotFound,
+                message: l.notFoundRemoved,
+              )
+            : EmptyView(icon: Icons.sports_soccer, title: l.noCourtsYet),
+        data: (_) => const SizedBox.shrink(),
+      ),
+    );
+  }
 }
 
-class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
+class _SlotPicker extends ConsumerStatefulWidget {
+  const _SlotPicker({
+    required this.stadium,
+    required this.courts,
+    this.initialCourtId,
+    this.initialDate,
+  });
+
+  final StadiumVO stadium;
+
+  /// Active, priced courts (never empty).
+  final List<CourtVO> courts;
+  final String? initialCourtId;
+  final String? initialDate;
+
+  @override
+  ConsumerState<_SlotPicker> createState() => _SlotPickerState();
+}
+
+class _SlotPickerState extends ConsumerState<_SlotPicker> {
   static const int _days = 7;
 
-  late final stadium = DemoData.stadium(widget.stadiumId);
-  late final List<CourtVO> courts = DemoData.courtsOf(stadium.id);
-  late CourtVO court = courts.firstWhere(
-    (c) => c.id == widget.courtId,
-    orElse: () => courts.first,
-  );
-  late String date = DateKey.isValid(widget.date)
-      ? widget.date!
+  StadiumVO get stadium => widget.stadium;
+  List<CourtVO> get courts => widget.courts;
+
+  late String _courtId = courts
+      .firstWhere(
+        (c) => c.id == widget.initialCourtId,
+        orElse: () => courts.first,
+      )
+      .id;
+
+  /// The picked court, read from the live list (falls back to the first
+  /// court if it was deactivated meanwhile).
+  CourtVO get court =>
+      courts.firstWhere((c) => c.id == _courtId, orElse: () => courts.first);
+
+  late String date = DateKey.isValid(widget.initialDate)
+      ? widget.initialDate!
       : DateKey.fromDate(DateTime.now());
 
   /// Selected consecutive slots: start index and count in [_slots].
@@ -66,24 +140,19 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
         closeMinute: stadium.closeMinute,
       );
 
-  SlotState _stateOf(int i) {
+  CourtDay get _key => (stadiumId: stadium.id, courtId: court.id, date: date);
+
+  SlotState _stateOf(int i, CourtAvailabilityVO busy) {
     final slot = _slots[i];
     if (_first != null && i >= _first! && i < _first! + _count) {
       return SlotState.selected;
     }
-    // Already started today.
-    final now = DateTime.now();
-    if (date == DateKey.fromDate(now) &&
-        slot.startMinute <= now.hour * 60 + now.minute) {
-      return SlotState.unavailable;
-    }
-    if (DemoData.isBlocked(court.id, date, slot.startMinute, slot.endMinute)) {
-      return SlotState.blocked;
-    }
-    if (DemoData.isBusy(court.id, date, slot.startMinute, slot.endMinute)) {
-      return SlotState.booked;
-    }
-    return SlotState.available;
+    if (slotHasStarted(date, slot.startMinute)) return SlotState.unavailable;
+    return switch (busy.busyKindFor(slot)) {
+      BusyKind.blocked => SlotState.blocked,
+      BusyKind.booked => SlotState.booked,
+      null => SlotState.available,
+    };
   }
 
   void _tap(int i) {
@@ -130,6 +199,21 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final court = this.court;
+    final availability = ref.watch(courtAvailabilityProvider(_key));
+    final busy = availability.valueOrNull;
+    // Someone took a selected slot meanwhile: drop the selection.
+    ref.listen(courtAvailabilityProvider(_key), (_, next) {
+      final first = _first;
+      final value = next.valueOrNull;
+      if (first == null || value == null) return;
+      final slots = _slots;
+      final picked = TimeRange(
+        slots[first].startMinute,
+        slots[first + _count - 1].endMinute,
+      );
+      if (!value.isFree(picked)) setState(_reset);
+    });
     final styles = context.textStyles;
     final muted = context.colors.onSurfaceVariant;
     final slots = _slots;
@@ -179,7 +263,7 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
           ],
         ),
       ),
-      body: PreviewBody(
+      body: PageBody(
         children: [
           Text(l.courtLabel, style: styles.titleSmall),
           const SizedBox(height: AppSpacing.sm),
@@ -194,7 +278,7 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
                     label: Text(c.name),
                     selected: c.id == court.id,
                     onSelected: (_) => setState(() {
-                      court = c;
+                      _courtId = c.id;
                       _reset();
                     }),
                   ),
@@ -225,7 +309,20 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
             style: styles.bodySmall?.copyWith(color: muted),
           ),
           const SizedBox(height: AppSpacing.md),
-          TourAnchor(
+          if (availability.hasError && busy == null)
+            ErrorView.inline(
+              error: availability.error is AppException
+                  ? availability.error! as AppException
+                  : UnknownException(cause: availability.error),
+              onRetry: () => ref.invalidate(courtAvailabilityProvider(_key)),
+            )
+          else if (busy == null)
+            const Padding(
+              padding: EdgeInsets.all(AppSpacing.xl),
+              child: LoadingView(),
+            )
+          else
+            TourAnchor(
             id: TourIds.slots,
             child: GridView.builder(
               shrinkWrap: true,
@@ -238,7 +335,7 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
                 mainAxisExtent: 72,
               ),
               itemBuilder: (_, i) {
-                final state = _stateOf(i);
+                final state = _stateOf(i, busy);
                 final label = formatMinuteOfDay(slots[i].startMinute);
                 final tappable = state == SlotState.available ||
                     state == SlotState.selected;
