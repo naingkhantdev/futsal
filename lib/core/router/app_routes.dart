@@ -44,6 +44,7 @@ abstract final class AppRoutes {
   static const String customerProfile = '/customer/profile';
   static const String customerStadiumPattern = '/customer/stadiums/:stadiumId';
   static const String customerProfileEdit = '/customer/profile/edit';
+  static const String customerPlayerCard = '/customer/profile/player';
   static const String customerChangePassword =
       '/customer/profile/change-password';
 

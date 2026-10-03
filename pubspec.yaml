@@ -64,6 +64,9 @@ dependencies:
   # needs a billing account). 7.x is the newest line for Flutter 3.22.
   flutter_map: ^7.0.2
   latlong2: ^0.9.1
+  # "Near me" sort on Explore (asked only when the user taps it). 12.x
+  # supports Dart 3.4 / Flutter 3.22.
+  geolocator: ^12.0.0
 
 dev_dependencies:
   flutter_test:

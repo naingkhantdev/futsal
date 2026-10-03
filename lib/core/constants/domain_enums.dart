@@ -134,6 +134,42 @@ enum AnnouncementAudience {
       _parse(values, value);
 }
 
+/// Playing surface of a court (`courts.surfaceType` wire value). Older
+/// courts may hold free text instead; it is shown as-is and not filterable.
+/// Mirror: firestore.rules `surfaceKeys`.
+enum CourtSurface {
+  artificialTurf,
+  sportsTile,
+  rubber,
+  wood,
+  concrete;
+
+  static CourtSurface? tryParse(String? value) => _parse(values, value);
+}
+
+/// Preferred position on a player card (`players/{uid}.position`).
+/// Mirror: firestore.rules `validPlayer`.
+enum PlayerPosition {
+  goalkeeper,
+  defender,
+  midfielder,
+  forward,
+  anywhere;
+
+  static PlayerPosition? tryParse(String? value) => _parse(values, value);
+}
+
+/// Self-rated level on a player card (`players/{uid}.skillLevel`).
+/// Mirror: firestore.rules `validPlayer`.
+enum SkillLevel {
+  beginner,
+  casual,
+  intermediate,
+  advanced;
+
+  static SkillLevel? tryParse(String? value) => _parse(values, value);
+}
+
 /// Visual state of a bookable time slot (UI only, never persisted).
 enum SlotState { available, selected, booked, blocked, unavailable }
 

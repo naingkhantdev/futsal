@@ -1,3 +1,4 @@
+import '../constants/cancellation_policy.dart';
 import '../constants/domain_enums.dart';
 import '../errors/app_exception.dart';
 import '../utils/validators.dart';
@@ -69,6 +70,64 @@ extension BlockedSlotReasonL10n on BlockedSlotReason {
       };
 }
 
+/// Short chip label for a free-cancellation window ("Until start",
+/// "24 h before").
+String cancelWindowLabel(AppLocalizations l, int hours) =>
+    hours == 0 ? l.cancelWindowUntilStart : l.cancelWindowHours(hours);
+
+/// Customer-facing sentence for a venue's policy (`null` = none stated).
+String cancelPolicySummary(AppLocalizations l, int? hours) => switch (hours) {
+      null => l.cancelPolicyNone,
+      0 => l.cancelPolicyFreeUntilStart,
+      final h => l.cancelPolicyFreeHours(h),
+    };
+
+extension RefundStateL10n on RefundState {
+  /// `null` for [RefundState.none] (nothing to show).
+  String? labelIn(AppLocalizations l) => switch (this) {
+        RefundState.none => null,
+        RefundState.nothingPaid => l.refundNothingPaid,
+        RefundState.due => l.refundDue,
+        RefundState.notEligible => l.refundNotEligible,
+        RefundState.askVenue => l.refundAskVenue,
+        RefundState.refunded => l.refundRefunded,
+      };
+}
+
+extension CourtSurfaceL10n on CourtSurface {
+  String labelIn(AppLocalizations l) => switch (this) {
+        CourtSurface.artificialTurf => l.surfaceArtificialTurf,
+        CourtSurface.sportsTile => l.surfaceSportsTile,
+        CourtSurface.rubber => l.surfaceRubber,
+        CourtSurface.wood => l.surfaceWood,
+        CourtSurface.concrete => l.surfaceConcrete,
+      };
+}
+
+/// A court's `surfaceType` for display: the translated label for a known
+/// surface, older free text as-is, `null` when unset.
+String? surfaceText(AppLocalizations l, String? surfaceType) =>
+    CourtSurface.tryParse(surfaceType)?.labelIn(l) ?? surfaceType;
+
+extension PlayerPositionL10n on PlayerPosition {
+  String labelIn(AppLocalizations l) => switch (this) {
+        PlayerPosition.goalkeeper => l.positionGoalkeeper,
+        PlayerPosition.defender => l.positionDefender,
+        PlayerPosition.midfielder => l.positionMidfielder,
+        PlayerPosition.forward => l.positionForward,
+        PlayerPosition.anywhere => l.positionAnywhere,
+      };
+}
+
+extension SkillLevelL10n on SkillLevel {
+  String labelIn(AppLocalizations l) => switch (this) {
+        SkillLevel.beginner => l.skillBeginner,
+        SkillLevel.casual => l.skillCasual,
+        SkillLevel.intermediate => l.skillIntermediate,
+        SkillLevel.advanced => l.skillAdvanced,
+      };
+}
+
 extension AppExceptionL10n on AppException {
   /// Friendly, translated message for any [AppException].
   String messageIn(AppLocalizations l) => switch (this) {
@@ -85,6 +144,7 @@ extension AppExceptionL10n on AppException {
         PermissionDeniedException() => l.errPermissionDenied,
         NetworkException() => l.errNetwork,
         NotFoundException() => l.errNotFound,
+        LocationUnavailableException() => l.errLocationUnavailable,
         InvalidVenueDetailsException() => l.errInvalidVenueDetails,
         ShopAdminAssignmentException() => l.errShopAdminAssignment,
         BookingConflictException() => l.errBookingConflict,

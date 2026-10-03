@@ -79,6 +79,11 @@ class CourtRepositoryImpl implements CourtRepository {
             (isActive: c.isActive, hourlyPrice: c.hourlyPrice),
           (isActive: request.isActive, hourlyPrice: request.hourlyPrice),
         ]),
+        surfaces: VenuePolicy.surfacesOf([
+          for (final c in others)
+            (isActive: c.isActive, surfaceType: c.surfaceType),
+          (isActive: request.isActive, surfaceType: request.surfaceType),
+        ]),
       );
     });
   }
@@ -105,6 +110,12 @@ class CourtRepositoryImpl implements CourtRepository {
             c.id == courtId
                 ? (isActive: request.isActive, hourlyPrice: request.hourlyPrice)
                 : (isActive: c.isActive, hourlyPrice: c.hourlyPrice),
+        ]),
+        surfaces: VenuePolicy.surfacesOf([
+          for (final c in courts)
+            c.id == courtId
+                ? (isActive: request.isActive, surfaceType: request.surfaceType)
+                : (isActive: c.isActive, surfaceType: c.surfaceType),
         ]),
       );
     });

@@ -138,6 +138,15 @@ class BookingReviewScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
           InlineBanner(tone: StatusTone.info, message: l.payAtVenueNote),
+          const SizedBox(height: AppSpacing.md),
+          // The booking copies this policy; the rules check it matches.
+          InlineBanner(
+            tone: StatusTone.info,
+            message: [
+              cancelPolicySummary(l, draft.stadium.freeCancelHours),
+              if (draft.stadium.cancellationNote case final note?) note,
+            ].join('\n'),
+          ),
         ],
       ),
     );

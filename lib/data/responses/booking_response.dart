@@ -32,6 +32,7 @@ class BookingResponse {
     required this.customerNameSnapshot,
     required this.stadiumNameSnapshot,
     required this.courtNameSnapshot,
+    this.freeCancelHours,
     this.slotMinutes = BookingPolicy.defaultSlotMinutes,
     this.customerPhoneSnapshot,
     this.startAt,
@@ -82,6 +83,8 @@ class BookingResponse {
           FirestoreRead.string(data[BookingFields.customerPhoneSnapshot]),
       stadiumNameSnapshot: str(BookingFields.stadiumNameSnapshot),
       courtNameSnapshot: str(BookingFields.courtNameSnapshot),
+      freeCancelHours:
+          FirestoreRead.integer(data[BookingFields.freeCancelHours]),
       cancelledAt: FirestoreRead.date(data[BookingFields.cancelledAt]),
       cancelReason: FirestoreRead.string(data[BookingFields.cancelReason]),
       createdAt: FirestoreRead.date(data[BookingFields.createdAt]),
@@ -115,6 +118,9 @@ class BookingResponse {
   final String? customerPhoneSnapshot;
   final String stadiumNameSnapshot;
   final String courtNameSnapshot;
+
+  /// Policy snapshot (`CancellationPolicy`); `null` = none stated.
+  final int? freeCancelHours;
   final DateTime? cancelledAt;
   final String? cancelReason;
   final DateTime? createdAt;

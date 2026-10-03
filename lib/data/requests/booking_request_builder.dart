@@ -89,6 +89,7 @@ abstract final class BookingRequestBuilder {
       customerPhoneSnapshot: customerPhone,
       stadiumNameSnapshot: stadium.name,
       courtNameSnapshot: court.name,
+      freeCancelHours: stadium.freeCancelHours,
       slots: _slots(
         shopId: stadium.shopId,
         stadiumId: stadium.id,

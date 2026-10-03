@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/booking_policy.dart';
+import '../../../../core/constants/domain_enums.dart';
 import '../../../../core/constants/venue_policy.dart';
 import '../../../../core/extensions/async_value_ext.dart';
 import '../../../../core/helpers/form_leave_guard.dart';
@@ -96,8 +97,9 @@ class _CourtFormState extends ConsumerState<_CourtForm>
       TextEditingController(text: widget.court?.hourlyPrice?.toString());
   late final _capacity =
       TextEditingController(text: widget.court?.capacity?.toString());
-  late final _surface =
-      TextEditingController(text: widget.court?.surfaceType);
+  /// `CourtSurface` wire value, or a legacy free-text surface kept as-is
+  /// until the admin picks one of the chips.
+  late String? _surface = widget.court?.surfaceType;
   late final _description =
       TextEditingController(text: widget.court?.description);
   final _nameFocus = FocusNode();
@@ -114,7 +116,7 @@ class _CourtFormState extends ConsumerState<_CourtForm>
   bool get _isCreate => widget.court == null;
 
   List<TextEditingController> get _controllers =>
-      [_name, _price, _capacity, _surface, _description];
+      [_name, _price, _capacity, _description];
 
   @override
   void initState() {
@@ -145,6 +147,7 @@ class _CourtFormState extends ConsumerState<_CourtForm>
   bool get hasChanges =>
       _controllers.any((c) => c.text.trim() != _initialText[c]) ||
       _isActive != (widget.court?.isActive ?? true) ||
+      _surface != widget.court?.surfaceType ||
       (_isCreate && _slotMinutes != BookingPolicy.defaultSlotMinutes);
 
   @override
@@ -156,8 +159,6 @@ class _CourtFormState extends ConsumerState<_CourtForm>
         v,
         emptyMessage: context.l10n.courtNameRequired,
       );
-  static String? _surfaceError(String? v) =>
-      VenueValidators.optionalText(v, VenuePolicy.surfaceMaxLength);
   static String? _descriptionError(String? v) =>
       VenueValidators.optionalText(v, VenuePolicy.descriptionMaxLength);
 
@@ -191,7 +192,7 @@ class _CourtFormState extends ConsumerState<_CourtForm>
             name: _name.text,
             hourlyPrice: VenueValidators.parseInt(_price.text)!,
             capacity: VenueValidators.parseInt(_capacity.text),
-            surfaceType: _surface.text,
+            surfaceType: _surface,
             description: _description.text,
             slotMinutes: _slotMinutes,
             isActive: _isActive,
@@ -308,17 +309,38 @@ class _CourtFormState extends ConsumerState<_CourtForm>
                   readOnly: isLoading,
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                AppTextField(
-                  label: l.surfaceOptional,
-                  controller: _surface,
-                  prefixIcon: Icons.grass,
-                  hintText: l.surfaceHint,
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.next,
-                  textCapitalization: TextCapitalization.sentences,
-                  validator: _surfaceError,
-                  autovalidateMode: autovalidate,
-                  readOnly: isLoading,
+                Text(l.surfaceOptional, style: context.textStyles.titleSmall),
+                const SizedBox(height: AppSpacing.md),
+                Wrap(
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.sm,
+                  children: [
+                    // A legacy free-text surface stays selectable so saving
+                    // other fields doesn't silently drop it.
+                    if (widget.court?.surfaceType case final legacy?
+                        when CourtSurface.tryParse(legacy) == null)
+                      ChoiceChip(
+                        label: Text(legacy),
+                        selected: _surface == legacy,
+                        onSelected: isLoading
+                            ? null
+                            : (_) => setState(() => _surface = legacy),
+                      ),
+                    for (final s in CourtSurface.values)
+                      ChoiceChip(
+                        label: Text(s.labelIn(l)),
+                        selected: _surface == s.name,
+                        onSelected: isLoading
+                            ? null
+                            : (on) =>
+                                setState(() => _surface = on ? s.name : null),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Text(
+                  l.surfaceFilterNote,
+                  style: context.textStyles.bodySmall?.copyWith(color: muted),
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 AppTextField(

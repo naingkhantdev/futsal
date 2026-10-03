@@ -23,6 +23,7 @@ extension BookingResponseMapper on BookingResponse {
         customerPhoneSnapshot: customerPhoneSnapshot,
         stadiumNameSnapshot: stadiumNameSnapshot,
         courtNameSnapshot: courtNameSnapshot,
+        freeCancelHours: freeCancelHours,
         cancelledAt: cancelledAt,
         cancelReason: cancelReason,
         createdAt: createdAt,

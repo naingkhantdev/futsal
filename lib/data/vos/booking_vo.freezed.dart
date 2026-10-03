@@ -40,6 +40,9 @@ mixin _$BookingVO {
   String? get customerPhoneSnapshot => throw _privateConstructorUsedError;
   String get stadiumNameSnapshot => throw _privateConstructorUsedError;
   String get courtNameSnapshot => throw _privateConstructorUsedError;
+
+  /// The venue's free-cancellation window when booked (`null` = none).
+  int? get freeCancelHours => throw _privateConstructorUsedError;
   DateTime? get cancelledAt => throw _privateConstructorUsedError;
   String? get cancelReason => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
@@ -76,6 +79,7 @@ abstract class $BookingVOCopyWith<$Res> {
       String? customerPhoneSnapshot,
       String stadiumNameSnapshot,
       String courtNameSnapshot,
+      int? freeCancelHours,
       DateTime? cancelledAt,
       String? cancelReason,
       DateTime? createdAt,
@@ -115,6 +119,7 @@ class _$BookingVOCopyWithImpl<$Res, $Val extends BookingVO>
     Object? customerPhoneSnapshot = freezed,
     Object? stadiumNameSnapshot = null,
     Object? courtNameSnapshot = null,
+    Object? freeCancelHours = freezed,
     Object? cancelledAt = freezed,
     Object? cancelReason = freezed,
     Object? createdAt = freezed,
@@ -201,6 +206,10 @@ class _$BookingVOCopyWithImpl<$Res, $Val extends BookingVO>
           ? _value.courtNameSnapshot
           : courtNameSnapshot // ignore: cast_nullable_to_non_nullable
               as String,
+      freeCancelHours: freezed == freeCancelHours
+          ? _value.freeCancelHours
+          : freeCancelHours // ignore: cast_nullable_to_non_nullable
+              as int?,
       cancelledAt: freezed == cancelledAt
           ? _value.cancelledAt
           : cancelledAt // ignore: cast_nullable_to_non_nullable
@@ -250,6 +259,7 @@ abstract class _$$BookingVOImplCopyWith<$Res>
       String? customerPhoneSnapshot,
       String stadiumNameSnapshot,
       String courtNameSnapshot,
+      int? freeCancelHours,
       DateTime? cancelledAt,
       String? cancelReason,
       DateTime? createdAt,
@@ -287,6 +297,7 @@ class __$$BookingVOImplCopyWithImpl<$Res>
     Object? customerPhoneSnapshot = freezed,
     Object? stadiumNameSnapshot = null,
     Object? courtNameSnapshot = null,
+    Object? freeCancelHours = freezed,
     Object? cancelledAt = freezed,
     Object? cancelReason = freezed,
     Object? createdAt = freezed,
@@ -373,6 +384,10 @@ class __$$BookingVOImplCopyWithImpl<$Res>
           ? _value.courtNameSnapshot
           : courtNameSnapshot // ignore: cast_nullable_to_non_nullable
               as String,
+      freeCancelHours: freezed == freeCancelHours
+          ? _value.freeCancelHours
+          : freeCancelHours // ignore: cast_nullable_to_non_nullable
+              as int?,
       cancelledAt: freezed == cancelledAt
           ? _value.cancelledAt
           : cancelledAt // ignore: cast_nullable_to_non_nullable
@@ -417,6 +432,7 @@ class _$BookingVOImpl extends _BookingVO {
       this.customerPhoneSnapshot,
       required this.stadiumNameSnapshot,
       required this.courtNameSnapshot,
+      this.freeCancelHours,
       this.cancelledAt,
       this.cancelReason,
       this.createdAt,
@@ -468,6 +484,10 @@ class _$BookingVOImpl extends _BookingVO {
   final String stadiumNameSnapshot;
   @override
   final String courtNameSnapshot;
+
+  /// The venue's free-cancellation window when booked (`null` = none).
+  @override
+  final int? freeCancelHours;
   @override
   final DateTime? cancelledAt;
   @override
@@ -479,7 +499,7 @@ class _$BookingVOImpl extends _BookingVO {
 
   @override
   String toString() {
-    return 'BookingVO(id: $id, shopId: $shopId, customerId: $customerId, stadiumId: $stadiumId, courtId: $courtId, bookingDate: $bookingDate, startMinute: $startMinute, endMinute: $endMinute, slotMinutes: $slotMinutes, startAt: $startAt, endAt: $endAt, pricePerHour: $pricePerHour, totalPrice: $totalPrice, currency: $currency, status: $status, paymentStatus: $paymentStatus, customerNameSnapshot: $customerNameSnapshot, customerPhoneSnapshot: $customerPhoneSnapshot, stadiumNameSnapshot: $stadiumNameSnapshot, courtNameSnapshot: $courtNameSnapshot, cancelledAt: $cancelledAt, cancelReason: $cancelReason, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'BookingVO(id: $id, shopId: $shopId, customerId: $customerId, stadiumId: $stadiumId, courtId: $courtId, bookingDate: $bookingDate, startMinute: $startMinute, endMinute: $endMinute, slotMinutes: $slotMinutes, startAt: $startAt, endAt: $endAt, pricePerHour: $pricePerHour, totalPrice: $totalPrice, currency: $currency, status: $status, paymentStatus: $paymentStatus, customerNameSnapshot: $customerNameSnapshot, customerPhoneSnapshot: $customerPhoneSnapshot, stadiumNameSnapshot: $stadiumNameSnapshot, courtNameSnapshot: $courtNameSnapshot, freeCancelHours: $freeCancelHours, cancelledAt: $cancelledAt, cancelReason: $cancelReason, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -521,6 +541,8 @@ class _$BookingVOImpl extends _BookingVO {
                 other.stadiumNameSnapshot == stadiumNameSnapshot) &&
             (identical(other.courtNameSnapshot, courtNameSnapshot) ||
                 other.courtNameSnapshot == courtNameSnapshot) &&
+            (identical(other.freeCancelHours, freeCancelHours) ||
+                other.freeCancelHours == freeCancelHours) &&
             (identical(other.cancelledAt, cancelledAt) ||
                 other.cancelledAt == cancelledAt) &&
             (identical(other.cancelReason, cancelReason) ||
@@ -554,6 +576,7 @@ class _$BookingVOImpl extends _BookingVO {
         customerPhoneSnapshot,
         stadiumNameSnapshot,
         courtNameSnapshot,
+        freeCancelHours,
         cancelledAt,
         cancelReason,
         createdAt,
@@ -589,6 +612,7 @@ abstract class _BookingVO extends BookingVO {
       final String? customerPhoneSnapshot,
       required final String stadiumNameSnapshot,
       required final String courtNameSnapshot,
+      final int? freeCancelHours,
       final DateTime? cancelledAt,
       final String? cancelReason,
       final DateTime? createdAt,
@@ -639,6 +663,10 @@ abstract class _BookingVO extends BookingVO {
   String get stadiumNameSnapshot;
   @override
   String get courtNameSnapshot;
+  @override
+
+  /// The venue's free-cancellation window when booked (`null` = none).
+  int? get freeCancelHours;
   @override
   DateTime? get cancelledAt;
   @override

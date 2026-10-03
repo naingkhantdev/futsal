@@ -1,3 +1,4 @@
+import '../../core/constants/domain_enums.dart';
 import '../responses/court_response.dart';
 import '../responses/court_slot_response.dart';
 
@@ -34,5 +35,6 @@ abstract interface class CourtDataAgent {
     required String shopId,
     required Map<String, Object?> fields,
     required int? minHourlyPrice,
+    required List<CourtSurface> surfaces,
   });
 }

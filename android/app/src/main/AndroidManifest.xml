@@ -2,8 +2,10 @@
     <!-- Push notifications (FCM) on Android 13+: asked at runtime by
          FirebaseMessaging.requestPermission(). -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <!-- Explore "near me" sort: approximate location is enough. -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <application
-        android:label="futsal_booking"
+        android:label="ဘောကန်"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

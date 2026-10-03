@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../core/constants/booking_policy.dart';
+import '../../core/constants/cancellation_policy.dart';
 import '../../core/constants/domain_enums.dart';
 import '../../core/utils/time_range.dart';
 
@@ -40,6 +41,9 @@ class BookingVO with _$BookingVO {
     String? customerPhoneSnapshot,
     required String stadiumNameSnapshot,
     required String courtNameSnapshot,
+
+    /// The venue's free-cancellation window when booked (`null` = none).
+    int? freeCancelHours,
     DateTime? cancelledAt,
     String? cancelReason,
     DateTime? createdAt,
@@ -52,6 +56,23 @@ class BookingVO with _$BookingVO {
 
   /// Whether this booking occupies its court time ([BookingPolicy]).
   bool get blocksAvailability => BookingPolicy.blocksAvailability(status);
+
+  RefundState get refundState => CancellationPolicy.refundStateOf(
+        status: status,
+        paymentStatus: paymentStatus,
+        startAt: startAt,
+        cancelledAt: cancelledAt,
+        freeCancelHours: freeCancelHours,
+      );
+
+  /// Whether cancelling at [now] is inside the free-cancellation window.
+  /// `null` when the booking carries no policy.
+  bool? cancelsFreeAt(DateTime now) {
+    final hours = freeCancelHours;
+    final start = startAt;
+    if (hours == null || start == null) return null;
+    return !now.isAfter(CancellationPolicy.freeCancelDeadline(start, hours));
+  }
 
   /// Pending/confirmed and not yet started at [now].
   bool isUpcoming(DateTime now) {

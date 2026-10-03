@@ -41,10 +41,16 @@ class BrandMark extends StatelessWidget {
               children: [
                 mark,
                 const SizedBox(width: AppSpacing.lg),
+                // Myanmar wordmark: no letter spacing (it splits vowel signs
+                // from their consonants) and no case change.
                 Text(
-                  AppConstants.appName.toUpperCase(),
+                  AppConstants.appName,
                   style: AppTypography.overline(context.textStyles.labelMedium!)
-                      .copyWith(fontSize: 13, color: colors.onSurface),
+                      .copyWith(
+                    fontSize: 15,
+                    letterSpacing: 0,
+                    color: colors.onSurface,
+                  ),
                 ),
               ],
             )

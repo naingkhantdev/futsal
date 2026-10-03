@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/l10n/l10n_labels.dart';
+import '../../../../core/utils/display_format.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_sizes.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -16,6 +18,7 @@ import '../../../auth/widgets/sign_out_button.dart';
 import '../../../shared/widgets/app_tour.dart';
 import '../../../shared/widgets/app_tours.dart';
 import '../providers/current_user_profile_provider.dart';
+import '../providers/player_profile_providers.dart';
 import '../widgets/profile_pending_view.dart';
 
 /// `/customer/profile` — CUSTOMER (self) scope: view name/email/phone, edit
@@ -73,6 +76,8 @@ class _ProfileBody extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
+              const _PlayerCardSection(),
+              const SizedBox(height: AppSpacing.lg),
               AppCard(
                 padding: EdgeInsets.zero,
                 child: Column(
@@ -122,6 +127,88 @@ class _ProfileBody extends ConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Public player card (position, level, bio) plus private playing history.
+/// Tapping opens the editor; with no card yet it invites the user to make
+/// one.
+class _PlayerCardSection extends ConsumerWidget {
+  const _PlayerCardSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
+    final colors = context.colors;
+    final styles = context.textStyles;
+    final card = ref.watch(myPlayerProfileProvider);
+    final history = ref.watch(myPlayingHistoryProvider).valueOrNull;
+    void open() => context.push(AppRoutes.customerPlayerCard);
+
+    final Widget body = switch (card) {
+      AsyncData(value: null) => ListTile(
+          leading: const Icon(Icons.sports_soccer, size: AppSizes.iconLg),
+          title: Text(l.playerCardSetupTitle),
+          subtitle: Text(l.playerCardSetupBody),
+          trailing: Icon(Icons.chevron_right, color: colors.onSurfaceVariant),
+          onTap: open,
+        ),
+      AsyncData(value: final c?) => ListTile(
+          leading: const Icon(Icons.sports_soccer, size: AppSizes.iconLg),
+          title: Text(
+            '${c.position.labelIn(l)} · ${c.skillLevel.labelIn(l)}',
+            style: styles.titleMedium,
+          ),
+          subtitle: c.hasBio ? Text(c.bio!) : null,
+          trailing: Icon(Icons.edit_outlined, color: colors.onSurfaceVariant),
+          onTap: open,
+        ),
+      AsyncError() => ListTile(
+          leading: Icon(Icons.error_outline, color: colors.error),
+          title: Text(l.playerCardTitle),
+          trailing: TextButton(
+            onPressed: () => ref.invalidate(myPlayerProfileProvider),
+            child: Text(l.commonRetry),
+          ),
+        ),
+      _ => ListTile(
+          leading: const Icon(Icons.sports_soccer, size: AppSizes.iconLg),
+          title: Text(l.playerCardTitle),
+          subtitle: Text(l.commonLoading),
+        ),
+    };
+
+    return AppCard(
+      padding: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              AppSpacing.md,
+              AppSpacing.lg,
+              0,
+            ),
+            child: Text(
+              l.playerCardTitle,
+              style: styles.labelMedium
+                  ?.copyWith(color: colors.onSurfaceVariant),
+            ),
+          ),
+          body,
+          if (history != null)
+            _InfoTile(
+              icon: Icons.history,
+              label: l.playerGamesPlayed,
+              value: history.lastPlayed == null
+                  ? '${history.played}'
+                  : '${history.played} · '
+                      '${l.lastPlayedOn(DisplayFormat.shortDate(history.lastPlayed!))}',
+            ),
+        ],
+      ),
     );
   }
 }

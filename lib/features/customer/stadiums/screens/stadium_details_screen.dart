@@ -70,10 +70,11 @@ class _StadiumDetails extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = stadium;
     final shop = ref.watch(publicShopProvider(s.shopId)).valueOrNull;
-    final MapPoint? shopPoint =
-        shop?.latitude != null && shop?.longitude != null
-            ? (latitude: shop!.latitude!, longitude: shop.longitude!)
-            : null;
+    final MapPoint? shopPoint = switch (shop) {
+      ShopVO(latitude: final lat?, longitude: final lng?) =>
+        (latitude: lat, longitude: lng),
+      _ => null,
+    };
     final courtsValue = ref.watch(customerCourtsProvider(s.id));
     final courts = (courtsValue.valueOrNull ?? const <CourtVO>[])
         .where((c) => c.hasPrice)
@@ -187,7 +188,7 @@ class _StadiumDetails extends ConsumerWidget {
                     title: Text(c.name),
                     subtitle: Text(
                       [
-                        c.surfaceType,
+                        surfaceText(l, c.surfaceType),
                         if (c.capacity != null) l.upToPlayers(c.capacity!),
                         l.slotLengthLabel(c.slotMinutes),
                       ].whereType<String>().join(' · '),
@@ -213,6 +214,19 @@ class _StadiumDetails extends ConsumerWidget {
               ],
             ),
           ),
+          // Fine print last: what happens if plans change.
+          PageSectionTitle(l.cancelPolicyTitle),
+          _InfoLine(
+            icon: Icons.policy_outlined,
+            text: cancelPolicySummary(l, s.freeCancelHours),
+          ),
+          if (s.cancellationNote != null) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              s.cancellationNote!,
+              style: styles.bodyMedium?.copyWith(color: muted),
+            ),
+          ],
         ],
       ),
     );

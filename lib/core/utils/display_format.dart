@@ -96,6 +96,11 @@ abstract final class DisplayFormat {
   /// "29 Sep 2026" / "2026၊ စက် 29".
   static String shortDate(DateTime at) => _shortDate.format(at);
 
+  /// Kilometres for a distance label: one decimal under 10 km ("2.4"),
+  /// whole numbers above ("15").
+  static String km(double km) =>
+      km < 10 ? km.toStringAsFixed(1) : km.round().toString();
+
   /// Initials for avatars: "Aung Kyaw" → "AK".
   static String initials(String name) {
     final parts =

@@ -2233,4 +2233,222 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get announcementSentToast => 'Announcement sent';
+
+  @override
+  String get playerCardTitle => 'Player card';
+
+  @override
+  String get playerCardSetupTitle => 'Set up your player card';
+
+  @override
+  String get playerCardSetupBody => 'Add your position and level so teammates know how you play.';
+
+  @override
+  String get playerCardEdit => 'Edit player card';
+
+  @override
+  String get playerCardNeedsName => 'Add your name first. It appears on your player card.';
+
+  @override
+  String get playerPositionLabel => 'Preferred position';
+
+  @override
+  String get playerSkillLabel => 'Skill level';
+
+  @override
+  String get playerBioLabel => 'About you (optional)';
+
+  @override
+  String get playerBioHelper => 'Shown to players you invite or play with.';
+
+  @override
+  String get playerCardSaved => 'Player card saved';
+
+  @override
+  String get playerCardVisibility => 'Other players can see your name, position, level and bio. Your phone and email are never shown.';
+
+  @override
+  String get playerGamesPlayed => 'Games played';
+
+  @override
+  String get positionGoalkeeper => 'Goalkeeper';
+
+  @override
+  String get positionDefender => 'Defender';
+
+  @override
+  String get positionMidfielder => 'Midfielder';
+
+  @override
+  String get positionForward => 'Forward';
+
+  @override
+  String get positionAnywhere => 'Anywhere';
+
+  @override
+  String get skillBeginner => 'Beginner';
+
+  @override
+  String get skillCasual => 'Casual';
+
+  @override
+  String get skillIntermediate => 'Intermediate';
+
+  @override
+  String get skillAdvanced => 'Advanced';
+
+  @override
+  String get playerChoiceRequired => 'Choose one';
+
+  @override
+  String get cancelPolicyTitle => 'Cancellation policy';
+
+  @override
+  String get cancelPolicyNotSet => 'Not set';
+
+  @override
+  String get cancelPolicyFormHelp => 'Customers who cancel before this cutoff get back anything they paid. Each booking keeps the policy it was made under.';
+
+  @override
+  String get cancelPolicyNoteLabel => 'Policy details (optional)';
+
+  @override
+  String get cancelWindowUntilStart => 'Until start';
+
+  @override
+  String cancelWindowHours(int hours) {
+    return '$hours h before';
+  }
+
+  @override
+  String get cancelPolicyNone => 'This venue hasn\'t set a cancellation policy. Ask them about refunds.';
+
+  @override
+  String get cancelPolicyFreeUntilStart => 'Free cancellation until the booking starts.';
+
+  @override
+  String cancelPolicyFreeHours(int hours) {
+    return 'Free cancellation up to $hours hours before the start. Later cancellations aren\'t refunded.';
+  }
+
+  @override
+  String get cancelFreeNow => 'You\'re still within the free-cancellation time, so anything you\'ve paid will be refunded.';
+
+  @override
+  String get cancelLateNow => 'The free-cancellation time has passed. Under the venue\'s policy, payments aren\'t refunded.';
+
+  @override
+  String get refundLabel => 'Refund';
+
+  @override
+  String get refundNothingPaid => 'Nothing was paid, so no refund is needed';
+
+  @override
+  String get refundDue => 'Refund due from the venue';
+
+  @override
+  String get refundNotEligible => 'Not refundable: cancelled after the free-cancellation time';
+
+  @override
+  String get refundAskVenue => 'Ask the venue about a refund';
+
+  @override
+  String get refundRefunded => 'Refunded';
+
+  @override
+  String get staffFilterRefundsDue => 'Refunds due';
+
+  @override
+  String get surfaceArtificialTurf => 'Artificial turf';
+
+  @override
+  String get surfaceSportsTile => 'Sports tiles';
+
+  @override
+  String get surfaceRubber => 'Rubber';
+
+  @override
+  String get surfaceWood => 'Wood';
+
+  @override
+  String get surfaceConcrete => 'Concrete';
+
+  @override
+  String get surfaceFilterNote => 'Customers can filter venues by surface.';
+
+  @override
+  String get errLocationUnavailable => 'Turn on location and allow access to sort courts by distance.';
+
+  @override
+  String distanceKm(String km) {
+    return '$km km';
+  }
+
+  @override
+  String get mapYouAreHere => 'You are here';
+
+  @override
+  String mapVenuesWithoutPin(int count) {
+    return '$count more without a map pin';
+  }
+
+  @override
+  String get exploreFiltersTitle => 'Filters';
+
+  @override
+  String exploreFiltersCount(int count) {
+    return 'Filters ($count)';
+  }
+
+  @override
+  String get sortByName => 'Name';
+
+  @override
+  String get sortByPrice => 'Lowest price';
+
+  @override
+  String get sortByDistance => 'Nearest';
+
+  @override
+  String exploreFreeAtChip(String day, String time) {
+    return 'Free $day, $time';
+  }
+
+  @override
+  String get exploreCheckingTimes => 'Checking free times…';
+
+  @override
+  String get exploreShowList => 'Show list';
+
+  @override
+  String get exploreShowMap => 'Show map';
+
+  @override
+  String get exploreClearFilters => 'Clear filters';
+
+  @override
+  String get exploreFreeAtTitle => 'Free at a specific time';
+
+  @override
+  String get exploreFreeAtSub => 'Only venues with a court free then';
+
+  @override
+  String get exploreStartTime => 'Start time';
+
+  @override
+  String get exploreMaxPrice => 'Price per hour';
+
+  @override
+  String get exploreAnyPrice => 'Any';
+
+  @override
+  String explorePriceUpTo(String price) {
+    return 'Up to $price';
+  }
+
+  @override
+  String get exploreFilterNote => 'Price is the venue\'s cheapest court. A venue counts as free when one of its courts has a slot starting at the chosen time.';
+
+  @override
+  String get exploreApply => 'Show results';
 }

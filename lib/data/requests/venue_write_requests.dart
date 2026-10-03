@@ -121,6 +121,8 @@ class StadiumWriteRequest {
     this.latitude,
     this.longitude,
     this.facilities = const [],
+    this.freeCancelHours,
+    this.cancellationNote,
   });
 
   final String name;
@@ -141,6 +143,10 @@ class StadiumWriteRequest {
   final int closeMinute;
   final bool isActive;
 
+  /// `CancellationPolicy.freeCancelHourOptions` value; `null` = no policy.
+  final int? freeCancelHours;
+  final String? cancellationNote;
+
   Map<String, Object?> toFirestore() => {
         StadiumFields.name: name.trim(),
         StadiumFields.description: _text(description),
@@ -153,6 +159,8 @@ class StadiumWriteRequest {
         StadiumFields.openMinute: openMinute,
         StadiumFields.closeMinute: closeMinute,
         StadiumFields.isActive: isActive,
+        StadiumFields.freeCancelHours: freeCancelHours,
+        StadiumFields.cancellationNote: _text(cancellationNote),
       };
 }
 

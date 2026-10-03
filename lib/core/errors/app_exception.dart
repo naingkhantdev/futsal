@@ -112,6 +112,14 @@ final class NotFoundException extends AppException {
   String get message => "We couldn't find what you were looking for.";
 }
 
+/// The device location is off, or the user refused to share it.
+final class LocationUnavailableException extends AppException {
+  const LocationUnavailableException({super.cause, super.stackTrace});
+  @override
+  String get message =>
+      'Turn on location and allow access to sort courts by distance.';
+}
+
 // --- Venue admin ----------------------------------------------------------
 
 /// A shop / stadium / court save that firestore.rules would refuse for its

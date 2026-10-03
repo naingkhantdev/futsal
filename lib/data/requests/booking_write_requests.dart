@@ -94,6 +94,7 @@ class BookingCreateRequest {
     required this.stadiumNameSnapshot,
     required this.courtNameSnapshot,
     required this.slots,
+    this.freeCancelHours,
   });
 
   final String bookingId;
@@ -116,11 +117,15 @@ class BookingCreateRequest {
   final String? customerPhoneSnapshot;
   final String stadiumNameSnapshot;
   final String courtNameSnapshot;
+
+  /// The stadium's policy at booking time; omitted when it has none.
+  final int? freeCancelHours;
   final List<SlotLockRequest> slots;
 
   String get path => FirestorePaths.booking(bookingId);
 
-  /// Every key the rules require (`bookingKeys()`) except the timestamps.
+  /// Every key the rules require (`bookingKeys()`) except the timestamps
+  /// (`freeCancelHours` is optional).
   /// [toTimestamp] converts the UTC instants to the SDK's Timestamp type
   /// (kept out of this file so it stays SDK-free and unit-testable).
   Map<String, Object?> toFirestore(Object Function(DateTime) toTimestamp) => {
@@ -143,6 +148,8 @@ class BookingCreateRequest {
         BookingFields.customerPhoneSnapshot: customerPhoneSnapshot,
         BookingFields.stadiumNameSnapshot: stadiumNameSnapshot,
         BookingFields.courtNameSnapshot: courtNameSnapshot,
+        if (freeCancelHours != null)
+          BookingFields.freeCancelHours: freeCancelHours,
       };
 }
 

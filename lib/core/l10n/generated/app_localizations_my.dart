@@ -2221,4 +2221,222 @@ class AppLocalizationsMy extends AppLocalizations {
 
   @override
   String get announcementSentToast => 'ကြေညာချက် ပို့ပြီးပါပြီ';
+
+  @override
+  String get playerCardTitle => 'ကစားသမား ကတ်';
+
+  @override
+  String get playerCardSetupTitle => 'ကစားသမား ကတ် ပြုလုပ်ပါ';
+
+  @override
+  String get playerCardSetupBody => 'အသင်းဖော်များ သိစေရန် သင်ကစားသည့် နေရာနှင့် အဆင့်ကို ထည့်ပါ။';
+
+  @override
+  String get playerCardEdit => 'ကစားသမား ကတ် ပြင်ရန်';
+
+  @override
+  String get playerCardNeedsName => 'သင့်အမည်ကို အရင်ထည့်ပါ။ ကစားသမား ကတ်ပေါ်တွင် ပြသပါမည်။';
+
+  @override
+  String get playerPositionLabel => 'နှစ်သက်သော နေရာ';
+
+  @override
+  String get playerSkillLabel => 'ကစားနိုင်မှု အဆင့်';
+
+  @override
+  String get playerBioLabel => 'သင့်အကြောင်း (မထည့်လည်းရ)';
+
+  @override
+  String get playerBioHelper => 'သင်ဖိတ်ခေါ်သော သို့မဟုတ် အတူကစားသော ကစားသမားများ မြင်ရပါမည်။';
+
+  @override
+  String get playerCardSaved => 'ကစားသမား ကတ် သိမ်းပြီးပါပြီ';
+
+  @override
+  String get playerCardVisibility => 'သင့်အမည်၊ နေရာ၊ အဆင့်နှင့် အကြောင်းအရာကို အခြားကစားသမားများ မြင်နိုင်ပါသည်။ ဖုန်းနံပါတ်နှင့် အီးမေးလ်ကို မည်သည့်အခါမှ မပြပါ။';
+
+  @override
+  String get playerGamesPlayed => 'ကစားခဲ့သည့် ပွဲ';
+
+  @override
+  String get positionGoalkeeper => 'ဂိုးသမား';
+
+  @override
+  String get positionDefender => 'နောက်တန်း';
+
+  @override
+  String get positionMidfielder => 'အလယ်တန်း';
+
+  @override
+  String get positionForward => 'ရှေ့တန်း';
+
+  @override
+  String get positionAnywhere => 'နေရာမရွေး';
+
+  @override
+  String get skillBeginner => 'စတင်သူ';
+
+  @override
+  String get skillCasual => 'အပျော်တမ်း';
+
+  @override
+  String get skillIntermediate => 'အလယ်အလတ်';
+
+  @override
+  String get skillAdvanced => 'ကျွမ်းကျင်';
+
+  @override
+  String get playerChoiceRequired => 'တစ်ခု ရွေးပါ';
+
+  @override
+  String get cancelPolicyTitle => 'ပယ်ဖျက်ခြင်း မူဝါဒ';
+
+  @override
+  String get cancelPolicyNotSet => 'မသတ်မှတ်ရသေး';
+
+  @override
+  String get cancelPolicyFormHelp => 'ဤအချိန်မတိုင်မီ ပယ်ဖျက်သော ဖောက်သည်များသည် ပေးချေထားသော ငွေကို ပြန်ရပါမည်။ ဘိုကင်တစ်ခုစီသည် ဘိုကင်လုပ်ချိန်က မူဝါဒအတိုင်း ဆက်ရှိပါမည်။';
+
+  @override
+  String get cancelPolicyNoteLabel => 'မူဝါဒ အသေးစိတ် (မထည့်လည်းရ)';
+
+  @override
+  String get cancelWindowUntilStart => 'စတင်ချိန်အထိ';
+
+  @override
+  String cancelWindowHours(int hours) {
+    return '$hours နာရီ အလို';
+  }
+
+  @override
+  String get cancelPolicyNone => 'ဤကွင်းသည် ပယ်ဖျက်ခြင်း မူဝါဒ မသတ်မှတ်ရသေးပါ။ ငွေပြန်အမ်းခြင်းအကြောင်း ကွင်းကို မေးမြန်းပါ။';
+
+  @override
+  String get cancelPolicyFreeUntilStart => 'ဘိုကင် မစတင်မီအထိ အခမဲ့ ပယ်ဖျက်နိုင်ပါသည်။';
+
+  @override
+  String cancelPolicyFreeHours(int hours) {
+    return 'စတင်ချိန် $hours နာရီ မတိုင်မီအထိ အခမဲ့ ပယ်ဖျက်နိုင်ပါသည်။ ထို့နောက် ပယ်ဖျက်ပါက ငွေပြန်မအမ်းပါ။';
+  }
+
+  @override
+  String get cancelFreeNow => 'အခမဲ့ ပယ်ဖျက်နိုင်သည့် အချိန်အတွင်း ဖြစ်သဖြင့် ပေးချေထားသော ငွေကို ပြန်အမ်းပါမည်။';
+
+  @override
+  String get cancelLateNow => 'အခမဲ့ ပယ်ဖျက်နိုင်သည့် အချိန် ကျော်လွန်သွားပါပြီ။ ကွင်း၏ မူဝါဒအရ ပေးချေထားသော ငွေကို ပြန်မအမ်းပါ။';
+
+  @override
+  String get refundLabel => 'ငွေပြန်အမ်းခြင်း';
+
+  @override
+  String get refundNothingPaid => 'ငွေမပေးချေရသေးသဖြင့် ပြန်အမ်းရန် မလိုပါ';
+
+  @override
+  String get refundDue => 'ကွင်းမှ ငွေပြန်အမ်းရန် ရှိသည်';
+
+  @override
+  String get refundNotEligible => 'အခမဲ့ ပယ်ဖျက်ချိန် ကျော်မှ ပယ်ဖျက်သဖြင့် ငွေပြန်မအမ်းပါ';
+
+  @override
+  String get refundAskVenue => 'ငွေပြန်အမ်းခြင်းအတွက် ကွင်းကို မေးမြန်းပါ';
+
+  @override
+  String get refundRefunded => 'ငွေပြန်အမ်းပြီး';
+
+  @override
+  String get staffFilterRefundsDue => 'ပြန်အမ်းရန်';
+
+  @override
+  String get surfaceArtificialTurf => 'အတုမြက်ခင်း';
+
+  @override
+  String get surfaceSportsTile => 'အားကစား ပလတ်စတစ်ပြား';
+
+  @override
+  String get surfaceRubber => 'ရော်ဘာ';
+
+  @override
+  String get surfaceWood => 'သစ်သား';
+
+  @override
+  String get surfaceConcrete => 'ကွန်ကရစ်';
+
+  @override
+  String get surfaceFilterNote => 'ဖောက်သည်များသည် ကွင်းမျက်နှာပြင်အလိုက် စစ်ထုတ်ရှာဖွေနိုင်ပါသည်။';
+
+  @override
+  String get errLocationUnavailable => 'အကွာအဝေးအလိုက် စီရန် တည်နေရာကို ဖွင့်ပြီး ခွင့်ပြုပါ။';
+
+  @override
+  String distanceKm(String km) {
+    return '$km ကီလိုမီတာ';
+  }
+
+  @override
+  String get mapYouAreHere => 'သင်ရှိသည့်နေရာ';
+
+  @override
+  String mapVenuesWithoutPin(int count) {
+    return 'မြေပုံတွင် နေရာမပြထားသော နောက်ထပ် $count ခု';
+  }
+
+  @override
+  String get exploreFiltersTitle => 'စစ်ထုတ်ရန်';
+
+  @override
+  String exploreFiltersCount(int count) {
+    return 'စစ်ထုတ်ရန် ($count)';
+  }
+
+  @override
+  String get sortByName => 'အမည်';
+
+  @override
+  String get sortByPrice => 'ဈေးအနည်းဆုံး';
+
+  @override
+  String get sortByDistance => 'အနီးဆုံး';
+
+  @override
+  String exploreFreeAtChip(String day, String time) {
+    return '$day $time အားသည်';
+  }
+
+  @override
+  String get exploreCheckingTimes => 'အားလပ်ချိန်များ စစ်ဆေးနေသည်…';
+
+  @override
+  String get exploreShowList => 'စာရင်းဖြင့် ပြရန်';
+
+  @override
+  String get exploreShowMap => 'မြေပုံဖြင့် ပြရန်';
+
+  @override
+  String get exploreClearFilters => 'စစ်ထုတ်မှုများ ဖယ်ရန်';
+
+  @override
+  String get exploreFreeAtTitle => 'သတ်မှတ်ချိန်တွင် အားသည်';
+
+  @override
+  String get exploreFreeAtSub => 'ထိုအချိန်တွင် ကွင်းအားသော နေရာများသာ';
+
+  @override
+  String get exploreStartTime => 'စတင်ချိန်';
+
+  @override
+  String get exploreMaxPrice => 'တစ်နာရီ ဈေးနှုန်း';
+
+  @override
+  String get exploreAnyPrice => 'မည်သည့်ဈေးမဆို';
+
+  @override
+  String explorePriceUpTo(String price) {
+    return '$price အထိ';
+  }
+
+  @override
+  String get exploreFilterNote => 'ဈေးနှုန်းသည် ကွင်း၏ အသက်သာဆုံး ကွင်းဖြစ်ပါသည်။ ရွေးထားသောအချိန်တွင် စတင်သည့် အချိန်ကွက် အားသော ကွင်းတစ်ခု ရှိပါက အားသည်ဟု သတ်မှတ်ပါသည်။';
+
+  @override
+  String get exploreApply => 'ရလဒ်များ ပြရန်';
 }

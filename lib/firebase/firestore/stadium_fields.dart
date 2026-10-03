@@ -34,6 +34,17 @@ abstract final class StadiumFields {
   /// lowest `hourlyPrice` of the stadium's active courts (int MMK), or null.
   /// Display only — bookings are priced from the court doc.
   static const String minHourlyPrice = 'minHourlyPrice';
+
+  /// CLIENT-MAINTAINED with [minHourlyPrice]: `CourtSurface` wire values of
+  /// the stadium's active courts. Discovery filter only.
+  static const String surfaces = 'surfaces';
+
+  /// Hours before start a customer can cancel for a full refund; one of
+  /// `CancellationPolicy.freeCancelHourOptions`, or absent (no policy).
+  static const String freeCancelHours = 'freeCancelHours';
+
+  /// Optional free-text policy details (max 300).
+  static const String cancellationNote = 'cancellationNote';
   static const String createdAt = 'createdAt';
   static const String updatedAt = 'updatedAt';
 }

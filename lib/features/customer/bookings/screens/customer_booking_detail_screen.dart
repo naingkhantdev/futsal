@@ -95,10 +95,16 @@ class _Detail extends ConsumerWidget {
 
   Future<void> _cancel(BuildContext context, WidgetRef ref) async {
     final l = context.l10n;
+    // Tell the customer up front whether the venue's policy refunds this.
+    final message = switch (booking.cancelsFreeAt(DateTime.now())) {
+      true => '${l.cancelBookingMessage}\n\n${l.cancelFreeNow}',
+      false => '${l.cancelBookingMessage}\n\n${l.cancelLateNow}',
+      null => l.cancelBookingMessage,
+    };
     final ok = await showConfirmDialog(
       context,
       title: l.cancelBookingTitle,
-      message: l.cancelBookingMessage,
+      message: message,
       confirmLabel: l.cancelBooking,
       dismissLabel: l.keepIt,
       destructive: true,

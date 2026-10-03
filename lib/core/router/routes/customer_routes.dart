@@ -9,6 +9,7 @@ import '../../../features/customer/home/screens/customer_home_screen.dart';
 import '../../../features/customer/notifications/screens/customer_notifications_screen.dart';
 import '../../../features/customer/profile/screens/change_password_screen.dart';
 import '../../../features/customer/profile/screens/customer_profile_screen.dart';
+import '../../../features/customer/profile/screens/edit_player_card_screen.dart';
 import '../../../features/customer/profile/screens/edit_profile_screen.dart';
 import '../../../features/customer/stadiums/screens/customer_explore_screen.dart';
 import '../../../features/customer/stadiums/screens/stadium_details_screen.dart';
@@ -91,6 +92,11 @@ final List<RouteBase> customerRoutes = [
               builder: (_, __) => AppTours.customerEditProfile.wrap(
                 const EditProfileScreen(),
               ),
+            ),
+            GoRoute(
+              path: 'player',
+              parentNavigatorKey: rootNavigatorKey,
+              builder: (_, __) => const EditPlayerCardScreen(),
             ),
             GoRoute(
               path: 'change-password',

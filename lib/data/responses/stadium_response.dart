@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../../core/constants/booking_policy.dart';
+import '../../core/constants/cancellation_policy.dart';
 import '../../core/constants/domain_enums.dart';
 import '../../firebase/firestore/stadium_fields.dart';
 import 'firestore_read.dart';
@@ -30,6 +31,9 @@ class StadiumResponse {
     this.latitude,
     this.longitude,
     this.minHourlyPrice,
+    this.surfaces = const [],
+    this.freeCancelHours,
+    this.cancellationNote,
     this.createdAt,
     this.updatedAt,
   });
@@ -57,6 +61,17 @@ class StadiumResponse {
       isActive: FirestoreRead.flag(data[StadiumFields.isActive]),
       isPublished: FirestoreRead.flag(data[StadiumFields.isPublished]),
       minHourlyPrice: _amount(data[StadiumFields.minHourlyPrice]),
+      surfaces: [
+        for (final key in FirestoreRead.strings(data[StadiumFields.surfaces]))
+          if (CourtSurface.tryParse(key) case final CourtSurface s) s,
+      ],
+      freeCancelHours: switch (
+          FirestoreRead.integer(data[StadiumFields.freeCancelHours])) {
+        final h? when CancellationPolicy.freeCancelHourOptions.contains(h) => h,
+        _ => null,
+      },
+      cancellationNote:
+          FirestoreRead.string(data[StadiumFields.cancellationNote]),
       createdAt: FirestoreRead.date(data[StadiumFields.createdAt]),
       updatedAt: FirestoreRead.date(data[StadiumFields.updatedAt]),
     );
@@ -83,6 +98,13 @@ class StadiumResponse {
 
   /// Server-maintained; int MMK.
   final int? minHourlyPrice;
+
+  /// Client-maintained; see `StadiumFields.surfaces`.
+  final List<CourtSurface> surfaces;
+
+  /// See `CancellationPolicy`; `null` = no stated policy.
+  final int? freeCancelHours;
+  final String? cancellationNote;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 

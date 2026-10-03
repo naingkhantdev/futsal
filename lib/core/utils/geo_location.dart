@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import '../constants/venue_policy.dart';
 
 /// A map point in WGS84 degrees.
@@ -82,6 +84,20 @@ abstract final class GeoLocation {
         'api': '1',
         'query': address,
       });
+
+  /// Great-circle (haversine) distance in kilometres. Straight-line, not
+  /// road distance: good enough to sort venues by how near they are.
+  static double distanceKm(MapPoint a, MapPoint b) {
+    const earthRadiusKm = 6371.0;
+    double rad(double deg) => deg * math.pi / 180;
+    final dLat = rad(b.latitude - a.latitude);
+    final dLng = rad(b.longitude - a.longitude);
+    final h = math.pow(math.sin(dLat / 2), 2) +
+        math.cos(rad(a.latitude)) *
+            math.cos(rad(b.latitude)) *
+            math.pow(math.sin(dLng / 2), 2);
+    return 2 * earthRadiusKm * math.asin(math.sqrt(h));
+  }
 
   /// Exactly two numbers ("lat, lng" or "lat lng").
   static MapPoint? _pair(String value) {

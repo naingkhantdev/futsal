@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/l10n/l10n_labels.dart';
 import '../../../../core/router/app_routes.dart';
+import '../../../../core/utils/display_format.dart';
 import '../../../../core/utils/money.dart';
 import '../../../../core/widgets/stadium_card.dart';
 import '../../../../data/vos/stadium_vo.dart';
@@ -14,9 +15,13 @@ class StadiumListCard extends StatelessWidget {
     super.key,
     required this.stadium,
     this.aspectRatio = 3 / 2,
+    this.distanceKm,
   });
 
   final StadiumVO stadium;
+
+  /// Straight-line distance from the user, shown after the township.
+  final double? distanceKm;
 
   /// 3:2 in vertical lists, 4:3 in horizontal carousels.
   final double aspectRatio;
@@ -25,7 +30,11 @@ class StadiumListCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = stadium;
     final l = context.l10n;
-    final location = [s.township, s.city].whereType<String>().join(', ');
+    final place = [s.township, s.city].whereType<String>().join(', ');
+    final location = [
+      if (place.isNotEmpty) place,
+      if (distanceKm case final km?) l.distanceKm(DisplayFormat.km(km)),
+    ].join(' · ');
     final price = s.minHourlyPrice == null
         ? l.priceOnRequest
         : l.priceFromPerHour(Money.formatMmk(s.minHourlyPrice!));

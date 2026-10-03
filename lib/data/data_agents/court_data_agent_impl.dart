@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/booking_policy.dart';
+import '../../core/constants/domain_enums.dart';
 import '../../firebase/firestore/court_fields.dart';
 import '../../firebase/firestore/courts_collection.dart';
 import '../responses/court_response.dart';
@@ -62,6 +63,7 @@ class CourtDataAgentImpl implements CourtDataAgent {
     required String shopId,
     required Map<String, Object?> fields,
     required int? minHourlyPrice,
+    required List<CourtSurface> surfaces,
   }) async {
     final create = courtId == null;
     final id = courtId ?? _courts.newId(stadiumId);
@@ -78,6 +80,7 @@ class CourtDataAgentImpl implements CourtDataAgent {
             }
           : fields,
       minHourlyPrice: minHourlyPrice,
+      surfaces: [for (final s in surfaces) s.name],
     );
     return id;
   }

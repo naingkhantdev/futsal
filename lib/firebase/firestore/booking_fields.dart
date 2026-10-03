@@ -36,6 +36,10 @@ abstract final class BookingFields {
   static const String stadiumNameSnapshot = 'stadiumNameSnapshot';
   static const String courtNameSnapshot = 'courtNameSnapshot';
 
+  /// Copy of the stadium's `freeCancelHours` at booking time (absent when
+  /// the stadium had no policy). The rules require it to match.
+  static const String freeCancelHours = 'freeCancelHours';
+
   /// Set (to the server time) when the customer cancels.
   static const String cancelledAt = 'cancelledAt';
 

@@ -39,6 +39,7 @@ rules_version = '2';
 //                    + where('recipientId', '==', users/{uid}.shopId)
 //   shops/{shopId}/blacklist -> admins of that shop / superadmin only
 //   announcements -> any query (superadmin); others filter on audience
+//   players   -> any query (active users; single-doc reads today)
 // Queries live in lib/firebase/firestore/*_collection.dart.
 //
 // DOCUMENT-ACCESS BUDGET (get/exists/getAfter/existsAfter). Limits: 10 per
@@ -512,12 +513,19 @@ service cloud.firestore {
       return ['shopId', 'name', 'description', 'address', 'township', 'city',
               'latitude', 'longitude', 'images', 'facilities', 'openMinute',
               'closeMinute', 'timeZone', 'isActive', 'isPublished',
-              'minHourlyPrice', 'createdAt', 'updatedAt'];
+              'minHourlyPrice', 'surfaces', 'freeCancelHours',
+              'cancellationNote',
+              'createdAt', 'updatedAt'];
     }
 
     function facilityKeys() {
       return ['parking', 'shower', 'changingRoom', 'drinkingWater',
               'floodLights', 'seating', 'restroom', 'cafe', 'equipmentRental'];
+    }
+
+    // Mirror: CourtSurface (lib/core/constants/domain_enums.dart).
+    function surfaceKeys() {
+      return ['artificialTurf', 'sportsTile', 'rubber', 'wood', 'concrete'];
     }
 
     function validOpeningHours(d) {
@@ -549,7 +557,18 @@ service cloud.firestore {
         && d.isPublished is bool
         && (d.get('minHourlyPrice', null) == null
             || (d.minHourlyPrice is int && d.minHourlyPrice >= 0))
+        && optStringList(d.get('surfaces', []), 5)
+        && d.get('surfaces', []).hasOnly(surfaceKeys())
+        && validFreeCancelHours(d.get('freeCancelHours', null))
+        && optText(d.get('cancellationNote', null), 300)
         && d.updatedAt == request.time;
+    }
+
+    // Cancellation policy: hours before start a customer can cancel for a
+    // full refund, or null (no stated policy). Bookings copy it.
+    // Mirror: CancellationPolicy (lib/core/constants/cancellation_policy.dart).
+    function validFreeCancelHours(v) {
+      return v == null || v in [0, 2, 6, 12, 24, 48];
     }
 
     // Mirror: VenuePolicy.isPublished.
@@ -743,11 +762,16 @@ service cloud.firestore {
               'updatedAt'];
     }
 
+    // bookingKeys() plus the optional ones (present only when set).
+    function bookingAllowedKeys() {
+      return bookingKeys().concat(['freeCancelHours']);
+    }
+
     // Everything the old booking Cloud Function validated.
     function validNewBooking(bookingId) {
       let b = request.resource.data;
       return isCustomer()
-        && b.keys().hasOnly(bookingKeys())
+        && b.keys().hasOnly(bookingAllowedKeys())
         && b.keys().hasAll(bookingKeys())
         && b.status == 'pending'
         && b.paymentStatus == 'unpaid'
@@ -793,6 +817,8 @@ service cloud.firestore {
         && shop.isListed == true
         && b.stadiumNameSnapshot == stadium.name
         && b.courtNameSnapshot == court.name
+        // The customer agrees to the policy the stadium has right now.
+        && b.get('freeCancelHours', null) == stadium.get('freeCancelHours', null)
         && validWindow(b, stadium, courtSlotMinutes(court));
     }
 
@@ -1058,6 +1084,34 @@ service cloud.firestore {
       allow read: if canReadAnnouncement(resource.data);
       allow create: if validNewAnnouncement();
       allow update, delete: if false;
+    }
+
+    // --- players/{uid} ---------------------------------------------------
+    // CUSTOMER (self) scope, no shopId: a public player card (display name,
+    // position, skill level, short bio; no contact details). Read by any
+    // active user (match invites, find a game); written only by its owner.
+    // displayName must equal the owner's users/{uid}.name, so nobody can
+    // pose as someone else. Mirror: lib/core/constants/player_policy.dart.
+
+    function validPlayer() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['displayName', 'position', 'skillLevel',
+                               'bio', 'updatedAt'])
+        && d.keys().hasAll(['displayName', 'position', 'skillLevel',
+                            'updatedAt'])
+        && validName(d.displayName)
+        && d.displayName == me().get('name', '')
+        && d.position in ['goalkeeper', 'defender', 'midfielder', 'forward',
+                          'anywhere']
+        && d.skillLevel in ['beginner', 'casual', 'intermediate', 'advanced']
+        && optText(d.get('bio', null), 200)
+        && d.updatedAt == request.time;
+    }
+
+    match /players/{uid} {
+      allow read: if isActiveUser();
+      allow create, update: if isSelf(uid) && isActiveUser() && validPlayer();
+      allow delete: if isSelf(uid) && isActiveUser();
     }
 
     // --- Everything else: deny --------------------------------------------

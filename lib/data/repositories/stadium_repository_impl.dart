@@ -1,3 +1,4 @@
+import '../../core/constants/cancellation_policy.dart';
 import '../../core/constants/venue_policy.dart';
 import '../../core/errors/app_exception.dart';
 import '../../core/errors/error_guard.dart';
@@ -112,7 +113,13 @@ class StadiumRepositoryImpl implements StadiumRepository {
             null &&
         SlotRules.isValidOpeningHours(r.openMinute, r.closeMinute) &&
         r.openMinute % VenuePolicy.openingHourStep == 0 &&
-        VenuePolicy.isValidLocation(r.latitude, r.longitude);
+        VenuePolicy.isValidLocation(r.latitude, r.longitude) &&
+        CancellationPolicy.isValidFreeCancelHours(r.freeCancelHours) &&
+        VenueValidators.optionalText(
+              r.cancellationNote,
+              CancellationPolicy.noteMaxLength,
+            ) ==
+            null;
     if (!ok) throw const InvalidVenueDetailsException();
   }
 

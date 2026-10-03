@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/constants/cancellation_policy.dart';
 import '../../../../core/constants/domain_enums.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/router/app_routes.dart';
@@ -10,6 +11,7 @@ import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/async_value_view.dart';
 import '../../../../core/widgets/empty_view.dart';
 import '../../../../data/vos/booking_vo.dart';
+import '../../../../data/vos/shop_vo.dart';
 import '../../../shared/widgets/staff_booking_views.dart';
 import '../../console/widgets/console_booking_table.dart';
 import '../../console/widgets/console_kit.dart';
@@ -67,6 +69,8 @@ class _BookingsState extends ConsumerState<_Bookings> {
         list.where((b) => b.isUpcoming(now)).toList()
           ..sort((a, b) => a.startAt!.compareTo(b.startAt!)),
       StaffBookingFilter.past => list.where((b) => !b.isUpcoming(now)).toList(),
+      StaffBookingFilter.refundsDue =>
+        list.where((b) => b.refundState == RefundState.due).toList(),
       StaffBookingFilter.all => list.toList(),
     };
   }
@@ -75,8 +79,8 @@ class _BookingsState extends ConsumerState<_Bookings> {
   Widget build(BuildContext context) {
     final l = context.l10n;
     final all = widget.all;
-    final shopNames = {
-      for (final s in ref.watch(allShopsProvider).valueOrNull ?? const [])
+    final shopNames = <String, String>{
+      for (final s in ref.watch(allShopsProvider).valueOrNull ?? const <ShopVO>[])
         s.id: s.name,
     };
     final now = DateTime.now();

@@ -80,7 +80,7 @@ class _Dashboard extends ConsumerWidget {
               value: '${pending.length}',
               label: l.toReview,
               attention: pending.isNotEmpty,
-              onTap: () => context.go(_onboarding),
+              onTap: () => context.go(SuperadminDashboardScreen._onboarding),
             ),
             ConsoleMetric(
               value: '$recentCount',
@@ -99,7 +99,7 @@ class _Dashboard extends ConsumerWidget {
             l.waitingForReview,
             count: pending.length,
             action: TextButton(
-              onPressed: () => context.go(_onboarding),
+              onPressed: () => context.go(SuperadminDashboardScreen._onboarding),
               child: Text(l.reviewAction),
             ),
           ),

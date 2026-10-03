@@ -97,6 +97,7 @@ void main() {
   setUpAll(() {
     registerFallbackValue(<String, Object?>{});
     registerFallbackValue(<String, bool>{});
+    registerFallbackValue(<CourtSurface>[]);
   });
 
   setUp(() {
@@ -264,6 +265,7 @@ void main() {
             shopId: any(named: 'shopId'),
             fields: any(named: 'fields'),
             minHourlyPrice: any(named: 'minHourlyPrice'),
+            surfaces: any(named: 'surfaces'),
           )).thenAnswer((_) async => 'c-new');
     });
 
@@ -283,6 +285,7 @@ void main() {
             shopId: 'shopA',
             fields: any(named: 'fields'),
             minHourlyPrice: 20000,
+            surfaces: any(named: 'surfaces'),
           )).called(1);
     });
 
@@ -300,6 +303,7 @@ void main() {
             shopId: 'shopA',
             fields: any(named: 'fields'),
             minHourlyPrice: 30000,
+            surfaces: any(named: 'surfaces'),
           )).called(1);
     });
 

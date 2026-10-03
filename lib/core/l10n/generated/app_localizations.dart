@@ -4304,6 +4304,414 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Announcement sent'**
   String get announcementSentToast;
+
+  /// No description provided for @playerCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Player card'**
+  String get playerCardTitle;
+
+  /// No description provided for @playerCardSetupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up your player card'**
+  String get playerCardSetupTitle;
+
+  /// No description provided for @playerCardSetupBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your position and level so teammates know how you play.'**
+  String get playerCardSetupBody;
+
+  /// No description provided for @playerCardEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit player card'**
+  String get playerCardEdit;
+
+  /// No description provided for @playerCardNeedsName.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your name first. It appears on your player card.'**
+  String get playerCardNeedsName;
+
+  /// No description provided for @playerPositionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferred position'**
+  String get playerPositionLabel;
+
+  /// No description provided for @playerSkillLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Skill level'**
+  String get playerSkillLabel;
+
+  /// No description provided for @playerBioLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'About you (optional)'**
+  String get playerBioLabel;
+
+  /// No description provided for @playerBioHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Shown to players you invite or play with.'**
+  String get playerBioHelper;
+
+  /// No description provided for @playerCardSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Player card saved'**
+  String get playerCardSaved;
+
+  /// No description provided for @playerCardVisibility.
+  ///
+  /// In en, this message translates to:
+  /// **'Other players can see your name, position, level and bio. Your phone and email are never shown.'**
+  String get playerCardVisibility;
+
+  /// No description provided for @playerGamesPlayed.
+  ///
+  /// In en, this message translates to:
+  /// **'Games played'**
+  String get playerGamesPlayed;
+
+  /// No description provided for @positionGoalkeeper.
+  ///
+  /// In en, this message translates to:
+  /// **'Goalkeeper'**
+  String get positionGoalkeeper;
+
+  /// No description provided for @positionDefender.
+  ///
+  /// In en, this message translates to:
+  /// **'Defender'**
+  String get positionDefender;
+
+  /// No description provided for @positionMidfielder.
+  ///
+  /// In en, this message translates to:
+  /// **'Midfielder'**
+  String get positionMidfielder;
+
+  /// No description provided for @positionForward.
+  ///
+  /// In en, this message translates to:
+  /// **'Forward'**
+  String get positionForward;
+
+  /// No description provided for @positionAnywhere.
+  ///
+  /// In en, this message translates to:
+  /// **'Anywhere'**
+  String get positionAnywhere;
+
+  /// No description provided for @skillBeginner.
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner'**
+  String get skillBeginner;
+
+  /// No description provided for @skillCasual.
+  ///
+  /// In en, this message translates to:
+  /// **'Casual'**
+  String get skillCasual;
+
+  /// No description provided for @skillIntermediate.
+  ///
+  /// In en, this message translates to:
+  /// **'Intermediate'**
+  String get skillIntermediate;
+
+  /// No description provided for @skillAdvanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get skillAdvanced;
+
+  /// No description provided for @playerChoiceRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose one'**
+  String get playerChoiceRequired;
+
+  /// No description provided for @cancelPolicyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancellation policy'**
+  String get cancelPolicyTitle;
+
+  /// No description provided for @cancelPolicyNotSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get cancelPolicyNotSet;
+
+  /// No description provided for @cancelPolicyFormHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Customers who cancel before this cutoff get back anything they paid. Each booking keeps the policy it was made under.'**
+  String get cancelPolicyFormHelp;
+
+  /// No description provided for @cancelPolicyNoteLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Policy details (optional)'**
+  String get cancelPolicyNoteLabel;
+
+  /// No description provided for @cancelWindowUntilStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Until start'**
+  String get cancelWindowUntilStart;
+
+  /// No description provided for @cancelWindowHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} h before'**
+  String cancelWindowHours(int hours);
+
+  /// No description provided for @cancelPolicyNone.
+  ///
+  /// In en, this message translates to:
+  /// **'This venue hasn\'t set a cancellation policy. Ask them about refunds.'**
+  String get cancelPolicyNone;
+
+  /// No description provided for @cancelPolicyFreeUntilStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Free cancellation until the booking starts.'**
+  String get cancelPolicyFreeUntilStart;
+
+  /// No description provided for @cancelPolicyFreeHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Free cancellation up to {hours} hours before the start. Later cancellations aren\'t refunded.'**
+  String cancelPolicyFreeHours(int hours);
+
+  /// No description provided for @cancelFreeNow.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re still within the free-cancellation time, so anything you\'ve paid will be refunded.'**
+  String get cancelFreeNow;
+
+  /// No description provided for @cancelLateNow.
+  ///
+  /// In en, this message translates to:
+  /// **'The free-cancellation time has passed. Under the venue\'s policy, payments aren\'t refunded.'**
+  String get cancelLateNow;
+
+  /// No description provided for @refundLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund'**
+  String get refundLabel;
+
+  /// No description provided for @refundNothingPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing was paid, so no refund is needed'**
+  String get refundNothingPaid;
+
+  /// No description provided for @refundDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund due from the venue'**
+  String get refundDue;
+
+  /// No description provided for @refundNotEligible.
+  ///
+  /// In en, this message translates to:
+  /// **'Not refundable: cancelled after the free-cancellation time'**
+  String get refundNotEligible;
+
+  /// No description provided for @refundAskVenue.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask the venue about a refund'**
+  String get refundAskVenue;
+
+  /// No description provided for @refundRefunded.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunded'**
+  String get refundRefunded;
+
+  /// No description provided for @staffFilterRefundsDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunds due'**
+  String get staffFilterRefundsDue;
+
+  /// No description provided for @surfaceArtificialTurf.
+  ///
+  /// In en, this message translates to:
+  /// **'Artificial turf'**
+  String get surfaceArtificialTurf;
+
+  /// No description provided for @surfaceSportsTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Sports tiles'**
+  String get surfaceSportsTile;
+
+  /// No description provided for @surfaceRubber.
+  ///
+  /// In en, this message translates to:
+  /// **'Rubber'**
+  String get surfaceRubber;
+
+  /// No description provided for @surfaceWood.
+  ///
+  /// In en, this message translates to:
+  /// **'Wood'**
+  String get surfaceWood;
+
+  /// No description provided for @surfaceConcrete.
+  ///
+  /// In en, this message translates to:
+  /// **'Concrete'**
+  String get surfaceConcrete;
+
+  /// No description provided for @surfaceFilterNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Customers can filter venues by surface.'**
+  String get surfaceFilterNote;
+
+  /// No description provided for @errLocationUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on location and allow access to sort courts by distance.'**
+  String get errLocationUnavailable;
+
+  /// No description provided for @distanceKm.
+  ///
+  /// In en, this message translates to:
+  /// **'{km} km'**
+  String distanceKm(String km);
+
+  /// No description provided for @mapYouAreHere.
+  ///
+  /// In en, this message translates to:
+  /// **'You are here'**
+  String get mapYouAreHere;
+
+  /// No description provided for @mapVenuesWithoutPin.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} more without a map pin'**
+  String mapVenuesWithoutPin(int count);
+
+  /// No description provided for @exploreFiltersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get exploreFiltersTitle;
+
+  /// No description provided for @exploreFiltersCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters ({count})'**
+  String exploreFiltersCount(int count);
+
+  /// No description provided for @sortByName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get sortByName;
+
+  /// No description provided for @sortByPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Lowest price'**
+  String get sortByPrice;
+
+  /// No description provided for @sortByDistance.
+  ///
+  /// In en, this message translates to:
+  /// **'Nearest'**
+  String get sortByDistance;
+
+  /// No description provided for @exploreFreeAtChip.
+  ///
+  /// In en, this message translates to:
+  /// **'Free {day}, {time}'**
+  String exploreFreeAtChip(String day, String time);
+
+  /// No description provided for @exploreCheckingTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking free times…'**
+  String get exploreCheckingTimes;
+
+  /// No description provided for @exploreShowList.
+  ///
+  /// In en, this message translates to:
+  /// **'Show list'**
+  String get exploreShowList;
+
+  /// No description provided for @exploreShowMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Show map'**
+  String get exploreShowMap;
+
+  /// No description provided for @exploreClearFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear filters'**
+  String get exploreClearFilters;
+
+  /// No description provided for @exploreFreeAtTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Free at a specific time'**
+  String get exploreFreeAtTitle;
+
+  /// No description provided for @exploreFreeAtSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Only venues with a court free then'**
+  String get exploreFreeAtSub;
+
+  /// No description provided for @exploreStartTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Start time'**
+  String get exploreStartTime;
+
+  /// No description provided for @exploreMaxPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Price per hour'**
+  String get exploreMaxPrice;
+
+  /// No description provided for @exploreAnyPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Any'**
+  String get exploreAnyPrice;
+
+  /// No description provided for @explorePriceUpTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to {price}'**
+  String explorePriceUpTo(String price);
+
+  /// No description provided for @exploreFilterNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Price is the venue\'s cheapest court. A venue counts as free when one of its courts has a slot starting at the chosen time.'**
+  String get exploreFilterNote;
+
+  /// No description provided for @exploreApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Show results'**
+  String get exploreApply;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

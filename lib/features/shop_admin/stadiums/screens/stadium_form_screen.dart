@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/booking_policy.dart';
+import '../../../../core/constants/cancellation_policy.dart';
 import '../../../../core/constants/domain_enums.dart';
 import '../../../../core/constants/domain_labels.dart';
 import '../../../../core/constants/venue_policy.dart';
@@ -102,12 +103,15 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
   late final _city = TextEditingController(text: widget.stadium?.city);
   late final _description =
       TextEditingController(text: widget.stadium?.description);
+  late final _cancelNote =
+      TextEditingController(text: widget.stadium?.cancellationNote);
   final _nameFocus = FocusNode();
 
   late int _open = _initialOpen;
   late int _close = _initialClose;
   late Set<Facility> _facilities = {...?widget.stadium?.facilities};
   late bool _isActive = widget.stadium?.isActive ?? true;
+  late int? _freeCancelHours = widget.stadium?.freeCancelHours;
   late MapPoint? _location = _initialLocation;
   late final Map<TextEditingController, String> _initialText;
   bool _submitted = false;
@@ -133,7 +137,7 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
   }
 
   List<TextEditingController> get _controllers =>
-      [_name, _address, _township, _city, _description];
+      [_name, _address, _township, _city, _description, _cancelNote];
 
   @override
   void initState() {
@@ -180,6 +184,7 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
         _open != _initialOpen ||
         _close != _initialClose ||
         _isActive != (s?.isActive ?? true) ||
+        _freeCancelHours != s?.freeCancelHours ||
         _location != _initialLocation ||
         !_sameFacilities(_facilities, s?.facilities ?? const []);
   }
@@ -198,6 +203,8 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
       );
   static String? _descriptionError(String? v) =>
       VenueValidators.optionalText(v, VenuePolicy.descriptionMaxLength);
+  static String? _cancelNoteError(String? v) =>
+      VenueValidators.optionalText(v, CancellationPolicy.noteMaxLength);
 
   List<int> get _openOptions => [
         for (var m = 0;
@@ -249,6 +256,8 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
             openMinute: _open,
             closeMinute: _close,
             isActive: _isActive,
+            freeCancelHours: _freeCancelHours,
+            cancellationNote: _cancelNote.text,
           ),
         );
     if (id == null || !mounted) return;
@@ -411,6 +420,38 @@ class _StadiumFormState extends ConsumerState<_StadiumForm>
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xl),
+                Text(l.cancelPolicyTitle, style: context.textStyles.titleSmall),
+                const SizedBox(height: AppSpacing.md),
+                Wrap(
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.sm,
+                  children: [
+                    for (final h in <int?>[
+                      null,
+                      ...CancellationPolicy.freeCancelHourOptions,
+                    ])
+                      ChoiceChip(
+                        label: Text(h == null
+                            ? l.cancelPolicyNotSet
+                            : cancelWindowLabel(l, h)),
+                        selected: _freeCancelHours == h,
+                        onSelected: isLoading
+                            ? null
+                            : (_) => setState(() => _freeCancelHours = h),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Text(
+                  l.cancelPolicyFormHelp,
+                  style: context.textStyles.bodySmall?.copyWith(color: muted),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                text(l.cancelPolicyNoteLabel, _cancelNote,
+                    icon: Icons.policy_outlined,
+                    multiline: true,
+                    validator: _cancelNoteError),
+                const SizedBox(height: AppSpacing.sm),
                 AppCard(
                   padding: EdgeInsets.zero,
                   child: SwitchListTile(

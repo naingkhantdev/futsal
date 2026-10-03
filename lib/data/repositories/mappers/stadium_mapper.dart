@@ -20,6 +20,9 @@ extension StadiumResponseMapper on StadiumResponse {
         isActive: isActive,
         isPublished: isPublished,
         minHourlyPrice: minHourlyPrice,
+        surfaces: surfaces,
+        freeCancelHours: freeCancelHours,
+        cancellationNote: cancellationNote,
         createdAt: createdAt,
         updatedAt: updatedAt,
       );

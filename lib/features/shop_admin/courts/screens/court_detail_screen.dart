@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/l10n/l10n_labels.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_sizes.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -129,7 +130,7 @@ class _CourtBody extends StatelessWidget {
                     DetailRow(
                       icon: Icons.grass,
                       label: l.surfaceLabel,
-                      value: court.surfaceType,
+                      value: surfaceText(l, court.surfaceType),
                     ),
                     if ((court.description ?? '').trim().isNotEmpty)
                       DetailRow(

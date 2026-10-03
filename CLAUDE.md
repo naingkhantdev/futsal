@@ -96,6 +96,11 @@ Rules:
 notifications, `announcements` (PLATFORM: superadmin create-only; readable by the audience it targets).
 `shops/{shopId}/blacklist/{customerId}`: SHOP-scope no-show blacklist; the booking create rule refuses
 blacklisted customers at that shop only.
+`players/{uid}`: public player card (position, skill, bio; no contact info), owner-written, readable by any active
+user; `displayName` must equal `users/{uid}.name`.
+Stadium cancellation policy (`freeCancelHours` in 0/2/6/12/24/48 + `cancellationNote`) is copied onto each new
+booking (rules check it matches); refund eligibility is derived (`CancellationPolicy`), staff record `paid -> refunded`.
+Stadium `surfaces` (court surfaces, `CourtSurface` enum) is client-maintained with `minHourlyPrice` on court save.
 Shop-owned docs include `shopId`. Bookings store name snapshots (customer/stadium/court).
 Booking status: pending, confirmed, rejected, cancelled, completed. Payment status (separate): unpaid, pending, paid, refunded.
 Shop status: pending, active, suspended, rejected, inactive (+ `isListed`).

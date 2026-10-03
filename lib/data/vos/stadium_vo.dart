@@ -35,6 +35,14 @@ class StadiumVO with _$StadiumVO {
 
     /// Int MMK; `null` when the stadium has no active priced court.
     int? minHourlyPrice,
+
+    /// Known surfaces of the active courts (client-maintained, filter only).
+    @Default(<CourtSurface>[]) List<CourtSurface> surfaces,
+
+    /// Free-cancellation window in hours (`CancellationPolicy`); `null` when
+    /// the venue has not stated a policy.
+    int? freeCancelHours,
+    String? cancellationNote,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) = _StadiumVO;
@@ -47,4 +55,8 @@ class StadiumVO with _$StadiumVO {
   String? get coverImage => images.isEmpty ? null : images.first;
 
   bool get hasLocation => latitude != null && longitude != null;
+
+  bool get hasCancellationPolicy =>
+      freeCancelHours != null ||
+      (cancellationNote != null && cancellationNote!.trim().isNotEmpty);
 }

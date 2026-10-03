@@ -35,6 +35,14 @@ mixin _$StadiumVO {
 
   /// Int MMK; `null` when the stadium has no active priced court.
   int? get minHourlyPrice => throw _privateConstructorUsedError;
+
+  /// Known surfaces of the active courts (client-maintained, filter only).
+  List<CourtSurface> get surfaces => throw _privateConstructorUsedError;
+
+  /// Free-cancellation window in hours (`CancellationPolicy`); `null` when
+  /// the venue has not stated a policy.
+  int? get freeCancelHours => throw _privateConstructorUsedError;
+  String? get cancellationNote => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
   DateTime? get updatedAt => throw _privateConstructorUsedError;
 
@@ -66,6 +74,9 @@ abstract class $StadiumVOCopyWith<$Res> {
       bool isActive,
       bool isPublished,
       int? minHourlyPrice,
+      List<CourtSurface> surfaces,
+      int? freeCancelHours,
+      String? cancellationNote,
       DateTime? createdAt,
       DateTime? updatedAt});
 }
@@ -100,6 +111,9 @@ class _$StadiumVOCopyWithImpl<$Res, $Val extends StadiumVO>
     Object? isActive = null,
     Object? isPublished = null,
     Object? minHourlyPrice = freezed,
+    Object? surfaces = null,
+    Object? freeCancelHours = freezed,
+    Object? cancellationNote = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
@@ -172,6 +186,18 @@ class _$StadiumVOCopyWithImpl<$Res, $Val extends StadiumVO>
           ? _value.minHourlyPrice
           : minHourlyPrice // ignore: cast_nullable_to_non_nullable
               as int?,
+      surfaces: null == surfaces
+          ? _value.surfaces
+          : surfaces // ignore: cast_nullable_to_non_nullable
+              as List<CourtSurface>,
+      freeCancelHours: freezed == freeCancelHours
+          ? _value.freeCancelHours
+          : freeCancelHours // ignore: cast_nullable_to_non_nullable
+              as int?,
+      cancellationNote: freezed == cancellationNote
+          ? _value.cancellationNote
+          : cancellationNote // ignore: cast_nullable_to_non_nullable
+              as String?,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -210,6 +236,9 @@ abstract class _$$StadiumVOImplCopyWith<$Res>
       bool isActive,
       bool isPublished,
       int? minHourlyPrice,
+      List<CourtSurface> surfaces,
+      int? freeCancelHours,
+      String? cancellationNote,
       DateTime? createdAt,
       DateTime? updatedAt});
 }
@@ -242,6 +271,9 @@ class __$$StadiumVOImplCopyWithImpl<$Res>
     Object? isActive = null,
     Object? isPublished = null,
     Object? minHourlyPrice = freezed,
+    Object? surfaces = null,
+    Object? freeCancelHours = freezed,
+    Object? cancellationNote = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
@@ -314,6 +346,18 @@ class __$$StadiumVOImplCopyWithImpl<$Res>
           ? _value.minHourlyPrice
           : minHourlyPrice // ignore: cast_nullable_to_non_nullable
               as int?,
+      surfaces: null == surfaces
+          ? _value._surfaces
+          : surfaces // ignore: cast_nullable_to_non_nullable
+              as List<CourtSurface>,
+      freeCancelHours: freezed == freeCancelHours
+          ? _value.freeCancelHours
+          : freeCancelHours // ignore: cast_nullable_to_non_nullable
+              as int?,
+      cancellationNote: freezed == cancellationNote
+          ? _value.cancellationNote
+          : cancellationNote // ignore: cast_nullable_to_non_nullable
+              as String?,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -347,10 +391,14 @@ class _$StadiumVOImpl extends _StadiumVO {
       required this.isActive,
       required this.isPublished,
       this.minHourlyPrice,
+      final List<CourtSurface> surfaces = const <CourtSurface>[],
+      this.freeCancelHours,
+      this.cancellationNote,
       this.createdAt,
       this.updatedAt})
       : _images = images,
         _facilities = facilities,
+        _surfaces = surfaces,
         super._();
 
   @override
@@ -403,6 +451,25 @@ class _$StadiumVOImpl extends _StadiumVO {
   /// Int MMK; `null` when the stadium has no active priced court.
   @override
   final int? minHourlyPrice;
+
+  /// Known surfaces of the active courts (client-maintained, filter only).
+  final List<CourtSurface> _surfaces;
+
+  /// Known surfaces of the active courts (client-maintained, filter only).
+  @override
+  @JsonKey()
+  List<CourtSurface> get surfaces {
+    if (_surfaces is EqualUnmodifiableListView) return _surfaces;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_surfaces);
+  }
+
+  /// Free-cancellation window in hours (`CancellationPolicy`); `null` when
+  /// the venue has not stated a policy.
+  @override
+  final int? freeCancelHours;
+  @override
+  final String? cancellationNote;
   @override
   final DateTime? createdAt;
   @override
@@ -410,7 +477,7 @@ class _$StadiumVOImpl extends _StadiumVO {
 
   @override
   String toString() {
-    return 'StadiumVO(id: $id, shopId: $shopId, name: $name, description: $description, address: $address, township: $township, city: $city, latitude: $latitude, longitude: $longitude, images: $images, facilities: $facilities, openMinute: $openMinute, closeMinute: $closeMinute, timeZone: $timeZone, isActive: $isActive, isPublished: $isPublished, minHourlyPrice: $minHourlyPrice, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'StadiumVO(id: $id, shopId: $shopId, name: $name, description: $description, address: $address, township: $township, city: $city, latitude: $latitude, longitude: $longitude, images: $images, facilities: $facilities, openMinute: $openMinute, closeMinute: $closeMinute, timeZone: $timeZone, isActive: $isActive, isPublished: $isPublished, minHourlyPrice: $minHourlyPrice, surfaces: $surfaces, freeCancelHours: $freeCancelHours, cancellationNote: $cancellationNote, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -446,6 +513,11 @@ class _$StadiumVOImpl extends _StadiumVO {
                 other.isPublished == isPublished) &&
             (identical(other.minHourlyPrice, minHourlyPrice) ||
                 other.minHourlyPrice == minHourlyPrice) &&
+            const DeepCollectionEquality().equals(other._surfaces, _surfaces) &&
+            (identical(other.freeCancelHours, freeCancelHours) ||
+                other.freeCancelHours == freeCancelHours) &&
+            (identical(other.cancellationNote, cancellationNote) ||
+                other.cancellationNote == cancellationNote) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -472,6 +544,9 @@ class _$StadiumVOImpl extends _StadiumVO {
         isActive,
         isPublished,
         minHourlyPrice,
+        const DeepCollectionEquality().hash(_surfaces),
+        freeCancelHours,
+        cancellationNote,
         createdAt,
         updatedAt
       ]);
@@ -502,6 +577,9 @@ abstract class _StadiumVO extends StadiumVO {
       required final bool isActive,
       required final bool isPublished,
       final int? minHourlyPrice,
+      final List<CourtSurface> surfaces,
+      final int? freeCancelHours,
+      final String? cancellationNote,
       final DateTime? createdAt,
       final DateTime? updatedAt}) = _$StadiumVOImpl;
   const _StadiumVO._() : super._();
@@ -542,6 +620,17 @@ abstract class _StadiumVO extends StadiumVO {
 
   /// Int MMK; `null` when the stadium has no active priced court.
   int? get minHourlyPrice;
+  @override
+
+  /// Known surfaces of the active courts (client-maintained, filter only).
+  List<CourtSurface> get surfaces;
+  @override
+
+  /// Free-cancellation window in hours (`CancellationPolicy`); `null` when
+  /// the venue has not stated a policy.
+  int? get freeCancelHours;
+  @override
+  String? get cancellationNote;
   @override
   DateTime? get createdAt;
   @override

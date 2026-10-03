@@ -1,6 +1,6 @@
 /// App-wide constants (no magic numbers in widgets / router).
 abstract final class AppConstants {
-  static const String appName = 'Futsal Booking';
+  static const String appName = 'ဘောကန်';
 
   /// Splash shows a spinner only after this delay (design_system.md §7.1).
   static const Duration splashSpinnerDelay = Duration(milliseconds: 600);

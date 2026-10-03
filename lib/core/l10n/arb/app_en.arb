@@ -1107,5 +1107,125 @@
   "noBlockedTimesTitle": "No blocked times",
   "removeBlockMessage": "Customers will be able to book this time again.",
   "noAnnouncementsYet": "No announcements sent yet",
-  "announcementSentToast": "Announcement sent"
+  "announcementSentToast": "Announcement sent",
+  "playerCardTitle": "Player card",
+  "playerCardSetupTitle": "Set up your player card",
+  "playerCardSetupBody": "Add your position and level so teammates know how you play.",
+  "playerCardEdit": "Edit player card",
+  "playerCardNeedsName": "Add your name first. It appears on your player card.",
+  "playerPositionLabel": "Preferred position",
+  "playerSkillLabel": "Skill level",
+  "playerBioLabel": "About you (optional)",
+  "playerBioHelper": "Shown to players you invite or play with.",
+  "playerCardSaved": "Player card saved",
+  "playerCardVisibility": "Other players can see your name, position, level and bio. Your phone and email are never shown.",
+  "playerGamesPlayed": "Games played",
+  "positionGoalkeeper": "Goalkeeper",
+  "positionDefender": "Defender",
+  "positionMidfielder": "Midfielder",
+  "positionForward": "Forward",
+  "positionAnywhere": "Anywhere",
+  "skillBeginner": "Beginner",
+  "skillCasual": "Casual",
+  "skillIntermediate": "Intermediate",
+  "skillAdvanced": "Advanced",
+  "playerChoiceRequired": "Choose one",
+  "cancelPolicyTitle": "Cancellation policy",
+  "cancelPolicyNotSet": "Not set",
+  "cancelPolicyFormHelp": "Customers who cancel before this cutoff get back anything they paid. Each booking keeps the policy it was made under.",
+  "cancelPolicyNoteLabel": "Policy details (optional)",
+  "cancelWindowUntilStart": "Until start",
+  "cancelWindowHours": "{hours} h before",
+  "@cancelWindowHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "cancelPolicyNone": "This venue hasn't set a cancellation policy. Ask them about refunds.",
+  "cancelPolicyFreeUntilStart": "Free cancellation until the booking starts.",
+  "cancelPolicyFreeHours": "Free cancellation up to {hours} hours before the start. Later cancellations aren't refunded.",
+  "@cancelPolicyFreeHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "cancelFreeNow": "You're still within the free-cancellation time, so anything you've paid will be refunded.",
+  "cancelLateNow": "The free-cancellation time has passed. Under the venue's policy, payments aren't refunded.",
+  "refundLabel": "Refund",
+  "refundNothingPaid": "Nothing was paid, so no refund is needed",
+  "refundDue": "Refund due from the venue",
+  "refundNotEligible": "Not refundable: cancelled after the free-cancellation time",
+  "refundAskVenue": "Ask the venue about a refund",
+  "refundRefunded": "Refunded",
+  "staffFilterRefundsDue": "Refunds due",
+  "surfaceArtificialTurf": "Artificial turf",
+  "surfaceSportsTile": "Sports tiles",
+  "surfaceRubber": "Rubber",
+  "surfaceWood": "Wood",
+  "surfaceConcrete": "Concrete",
+  "surfaceFilterNote": "Customers can filter venues by surface.",
+  "errLocationUnavailable": "Turn on location and allow access to sort courts by distance.",
+  "distanceKm": "{km} km",
+  "@distanceKm": {
+    "placeholders": {
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "mapYouAreHere": "You are here",
+  "mapVenuesWithoutPin": "{count} more without a map pin",
+  "@mapVenuesWithoutPin": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exploreFiltersTitle": "Filters",
+  "exploreFiltersCount": "Filters ({count})",
+  "@exploreFiltersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sortByName": "Name",
+  "sortByPrice": "Lowest price",
+  "sortByDistance": "Nearest",
+  "exploreFreeAtChip": "Free {day}, {time}",
+  "@exploreFreeAtChip": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "exploreCheckingTimes": "Checking free times…",
+  "exploreShowList": "Show list",
+  "exploreShowMap": "Show map",
+  "exploreClearFilters": "Clear filters",
+  "exploreFreeAtTitle": "Free at a specific time",
+  "exploreFreeAtSub": "Only venues with a court free then",
+  "exploreStartTime": "Start time",
+  "exploreMaxPrice": "Price per hour",
+  "exploreAnyPrice": "Any",
+  "explorePriceUpTo": "Up to {price}",
+  "@explorePriceUpTo": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "exploreFilterNote": "Price is the venue's cheapest court. A venue counts as free when one of its courts has a slot starting at the chosen time.",
+  "exploreApply": "Show results"
 }

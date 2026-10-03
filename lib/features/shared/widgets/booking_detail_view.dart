@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/l10n/l10n.dart';
+import '../../../core/l10n/l10n_labels.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/theme/status_visuals.dart';
@@ -139,6 +140,26 @@ class BookingDetailSections extends StatelessWidget {
                 value: Money.formatMmk(b.totalPrice),
                 emphasize: true,
               ),
+            ],
+          ),
+        ),
+        const SizedBox(height: AppSpacing.lg),
+        AppCard(
+          padding: EdgeInsets.zero,
+          child: Column(
+            children: [
+              // The policy agreed at booking time, not the venue's current one.
+              DetailRow(
+                icon: Icons.policy_outlined,
+                label: l.cancelPolicyTitle,
+                value: cancelPolicySummary(l, b.freeCancelHours),
+              ),
+              if (b.refundState.labelIn(l) case final refund?)
+                DetailRow(
+                  icon: Icons.currency_exchange,
+                  label: l.refundLabel,
+                  value: refund,
+                ),
             ],
           ),
         ),

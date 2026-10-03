@@ -53,13 +53,14 @@ class CourtsCollection {
       _firestore.collection(FirestorePaths.courts(stadiumId)).doc().id;
 
   /// Creates ([create] true) or updates the court and, in the same batch,
-  /// the parent stadium's display-only `minHourlyPrice`.
+  /// the parent stadium's display-only `minHourlyPrice` and `surfaces`.
   Future<void> save(
     String stadiumId,
     String courtId, {
     required bool create,
     required JsonMap court,
     required int? minHourlyPrice,
+    required List<String> surfaces,
   }) async {
     final now = FieldValue.serverTimestamp();
     final ref = _firestore.doc(FirestorePaths.court(stadiumId, courtId));
@@ -75,6 +76,7 @@ class CourtsCollection {
     }
     batch.update(_firestore.doc(FirestorePaths.stadium(stadiumId)), {
       StadiumFields.minHourlyPrice: minHourlyPrice,
+      StadiumFields.surfaces: surfaces,
       StadiumFields.updatedAt: now,
     });
     await batch.commit();

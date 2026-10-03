@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/booking_policy.dart';
+import '../../../core/constants/cancellation_policy.dart';
 import '../../../core/constants/domain_enums.dart';
 import '../../../core/errors/app_exception.dart';
 import '../../../core/l10n/l10n.dart';
@@ -24,12 +25,16 @@ enum StaffBookingFilter {
   pending,
   upcoming,
   past,
+
+  /// Paid, cancelled/rejected and owed a refund (`RefundState.due`).
+  refundsDue,
   all;
 
   String labelIn(AppLocalizations l) => switch (this) {
         StaffBookingFilter.pending => l.bookingPending,
         StaffBookingFilter.upcoming => l.staffFilterUpcoming,
         StaffBookingFilter.past => l.staffFilterPast,
+        StaffBookingFilter.refundsDue => l.staffFilterRefundsDue,
         StaffBookingFilter.all => l.staffFilterAll,
       };
 }
@@ -69,6 +74,8 @@ class _StaffBookingListState extends State<StaffBookingList> {
         ),
       StaffBookingFilter.past =>
         list.where((b) => !b.isUpcoming(now)).toList(),
+      StaffBookingFilter.refundsDue =>
+        list.where((b) => b.refundState == RefundState.due).toList(),
       StaffBookingFilter.all => list,
     };
   }

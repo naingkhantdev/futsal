@@ -26,6 +26,9 @@ abstract final class FirestoreCollections {
 
   /// PLATFORM announcements, written by the superadmin.
   static const String announcements = 'announcements';
+
+  /// Public player cards, doc id = uid. Written only by their owner.
+  static const String players = 'players';
 }
 
 /// Document / collection paths. Build every path through here.

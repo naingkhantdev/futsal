@@ -60,6 +60,19 @@ abstract final class VenuePolicy {
   }) =>
       shopStatus == ShopStatus.active && shopIsListed && stadiumIsActive;
 
+  /// `stadiums.surfaces`: the distinct known surfaces of active courts, in
+  /// enum order. Display / filtering only.
+  static List<CourtSurface> surfacesOf(
+    Iterable<({bool isActive, String? surfaceType})> courts,
+  ) {
+    final found = {
+      for (final c in courts)
+        if (c.isActive)
+          if (CourtSurface.tryParse(c.surfaceType) case final s?) s,
+    };
+    return [for (final s in CourtSurface.values) if (found.contains(s)) s];
+  }
+
   /// `stadiums.minHourlyPrice`: lowest price among active, priced courts,
   /// or `null` when there is none. Display only.
   static int? minHourlyPrice(
