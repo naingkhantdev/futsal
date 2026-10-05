@@ -30,20 +30,21 @@ class ShopAdminStadiumsScreen extends ConsumerWidget {
     final stadiums = ref.watch(myStadiumsProvider);
     void addStadium() => context.push(AppRoutes.shopAdminStadiumNew);
     final l = context.l10n;
+    final canAddStadium = stadiums.valueOrNull?.isEmpty ?? true;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(l.navStadiums),
         actions: const [TourHelpButton()],
       ),
-      floatingActionButton: TourAnchor(
+      floatingActionButton: canAddStadium ? TourAnchor(
         id: TourIds.fab,
         child: FloatingActionButton.extended(
           onPressed: addStadium,
           icon: const Icon(Icons.add),
           label: Text(l.stadiumNew),
         ),
-      ),
+      ) : null,
       body: AsyncValueView<List<StadiumVO>>(
         value: stadiums,
         onRetry: () => ref.invalidate(myStadiumsProvider),
@@ -58,7 +59,7 @@ class ShopAdminStadiumsScreen extends ConsumerWidget {
                 title: l.stadiumsEmptyTitle,
                 message: l.stadiumsEmptyMessage,
                 actionLabel: l.stadiumNew,
-                onAction: addStadium,
+                onAction: canAddStadium ? addStadium : null,
               ),
             ),
           ],

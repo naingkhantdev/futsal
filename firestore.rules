@@ -597,6 +597,24 @@ service cloud.firestore {
             || d.isPublished == stadiumPublished(getAfter(shopPath(d.shopId)).data, d));
     }
 
+    // A court save also refreshes the stadium's display-only court summary.
+    // Keep this update narrow so older stadium documents with legacy fields
+    // can still receive court summary updates without passing the full shape
+    // validator used by stadium edits.
+    function shopAdminUpdatesCourtSummary() {
+      let d = request.resource.data;
+      let changed = d.diff(resource.data).affectedKeys();
+      return isAdminOfShop(resource.data.shopId)
+        && d.shopId == resource.data.shopId
+        && changed.hasOnly(['minHourlyPrice', 'surfaces', 'updatedAt'])
+        && changed.hasAll(['updatedAt'])
+        && d.updatedAt == request.time
+        && (d.get('minHourlyPrice', null) == null
+            || (d.minHourlyPrice is int && d.minHourlyPrice >= 0))
+        && d.get('surfaces', []) is list
+        && d.get('surfaces', []).hasOnly(surfaceKeys());
+    }
+
     // PLATFORM scope: re-sync isPublished in the same batch that changes the
     // shop's status / isListed (getAfter sees the new shop state).
     function superadminSyncsStadium() {
@@ -612,7 +630,9 @@ service cloud.firestore {
         || isSuperadmin()
         || isAdminOfShop(resource.data.shopId);
       allow create: if shopAdminCreatesStadium();
-      allow update: if shopAdminUpdatesStadium() || superadminSyncsStadium();
+      allow update: if shopAdminUpdatesStadium()
+        || shopAdminUpdatesCourtSummary()
+        || superadminSyncsStadium();
       // Never deleted (bookings reference it): set isActive false instead.
       allow delete: if false;
 

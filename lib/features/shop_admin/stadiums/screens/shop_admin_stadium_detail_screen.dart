@@ -60,7 +60,8 @@ class ShopAdminStadiumDetailScreen extends ConsumerWidget {
             ),
         ],
       ),
-      floatingActionButton: found
+      floatingActionButton: found &&
+              (ref.watch(adminCourtsProvider(stadiumId)).valueOrNull?.length ?? 0) < 4
           ? TourAnchor(
               id: TourIds.fab,
               child: FloatingActionButton.extended(

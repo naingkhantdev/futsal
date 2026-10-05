@@ -67,9 +67,13 @@ class CourtRepositoryImpl implements CourtRepository {
   Future<String> createCourt(String stadiumId, CourtWriteRequest request) {
     return guardAppException(() async {
       _check(request);
-      final stadium = await _stadiums.getStadium(stadiumId);
+      // Start both reads together: neither depends on the other's result.
+      // Sequential reads add a full Firestore round trip to every court create.
+      final stadiumFuture = _stadiums.getStadium(stadiumId);
+      final courtsFuture = _courts.getAllCourts(stadiumId);
+      final stadium = await stadiumFuture;
       if (stadium == null) throw const NotFoundException();
-      final others = await _courts.getAllCourts(stadiumId);
+      final others = await courtsFuture;
       return _courts.saveCourt(
         stadiumId,
         shopId: stadium.shopId,

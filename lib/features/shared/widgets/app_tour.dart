@@ -50,9 +50,10 @@ class AppTourDef {
       AppTourLauncher(key: ValueKey('tour:$id'), tour: this, child: page);
 }
 
-/// Runs [tour] once, the first time the page is shown; again when
-/// [appTourRequestProvider] asks for it or a [TourHelpButton] is tapped.
-/// Widgets the tour points at are [TourAnchor]s below it.
+/// Runs [tour] when a [TourHelpButton] is tapped, or when
+/// [appTourRequestProvider] asks for it (Profile / Settings "App tour").
+/// Does not start on its own. Widgets the tour points at are [TourAnchor]s
+/// below it.
 class AppTourLauncher extends ConsumerStatefulWidget {
   const AppTourLauncher({super.key, required this.tour, required this.child});
 
@@ -78,12 +79,13 @@ class _AppTourLauncherState extends ConsumerState<AppTourLauncher> {
   @override
   void initState() {
     super.initState();
-    if (!ref.read(appTourStoreProvider).isSeen(_id)) _schedule();
     ref.listenManual<String?>(appTourRequestProvider, (_, request) {
       if (request == _id) _schedule();
     }, fireImmediately: true);
   }
 
+  /// After navigation (replay from settings): wait for the page to settle
+  /// so arrows can point at real widgets.
   void _schedule() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
@@ -91,6 +93,13 @@ class _AppTourLauncherState extends ConsumerState<AppTourLauncher> {
         MediaQuery.disableAnimationsOf(context) ? Duration.zero : _startDelay,
         _run,
       );
+    });
+  }
+
+  /// "?" in the app bar: start on the next frame, no extra wait.
+  Future<void> _startFromHelp() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _run();
     });
   }
 
@@ -110,13 +119,23 @@ class _AppTourLauncherState extends ConsumerState<AppTourLauncher> {
     // Read before awaiting: this page may be gone when the tour ends.
     final store = ref.read(appTourStoreProvider);
     try {
-      final steps = <CoachMarkStep>[];
+      final pointed = <CoachMarkStep>[];
+      final intros = <CoachMarkStep>[];
       for (final s in widget.tour.steps(context.l10n)) {
         final target = _target(s);
-        if (s.isIntro || target != null) {
-          steps.add(CoachMarkStep(target: target, title: s.title, body: s.body));
+        if (target != null) {
+          pointed.add(
+            CoachMarkStep(target: target, title: s.title, body: s.body),
+          );
+        } else if (s.isIntro) {
+          intros.add(
+            CoachMarkStep(target: null, title: s.title, body: s.body),
+          );
         }
       }
+      // Prefer steps with an arrow at a control; intro cards only if
+      // nothing on the page can be pointed at.
+      final steps = pointed.isNotEmpty ? pointed : intros;
       await showCoachMarkTour(context, steps: steps);
       await store.markSeen(_id);
     } finally {
@@ -134,7 +153,7 @@ class _AppTourLauncherState extends ConsumerState<AppTourLauncher> {
 
   @override
   Widget build(BuildContext context) {
-    return _TourScope(keyFor: _keyFor, start: _run, child: widget.child);
+    return _TourScope(keyFor: _keyFor, start: _startFromHelp, child: widget.child);
   }
 }
 
