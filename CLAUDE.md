@@ -123,6 +123,9 @@ Shop status: pending, active, suspended, rejected, inactive (+ `isListed`).
 - Stadium `isPublished` = shop active + listed + stadium active, client-maintained: stadium writes re-derive it, and
   the superadmin's shop status/listing change re-syncs the shop's stadiums in the same batch.
 - Client price, role, payment status and availability are never authoritative.
+- Rules tests: `firestore-tests/` (Node + Firestore emulator, offline project `demo-futsal`; see its README).
+  Run `npm test` there after any `firestore.rules` change. A 4-slot booking is near Firestore's
+  1,000-expressions-per-request limit: keep `get()`s and key lists `let`-bound in `validNewBooking`.
 - Slot states: available, selected, booked, blocked, unavailable — never conveyed by color alone.
 
 ## Commands — do NOT run automatically

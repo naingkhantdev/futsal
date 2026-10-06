@@ -706,9 +706,10 @@ service cloud.firestore {
 
     function validNewSlot(stadiumId, courtId, slotId) {
       let s = request.resource.data;
+      let k = slotKeys();
       return isActiveUser()
-        && s.keys().hasOnly(slotKeys())
-        && s.keys().hasAll(slotKeys())
+        && s.keys().hasOnly(k)
+        && s.keys().hasAll(k)
         && s.stadiumId == stadiumId
         && s.courtId == courtId
         && s.shopId is string
@@ -782,29 +783,34 @@ service cloud.firestore {
               'updatedAt'];
     }
 
-    // bookingKeys() plus the optional ones (present only when set).
-    function bookingAllowedKeys() {
-      return bookingKeys().concat(['freeCancelHours']);
-    }
-
     // Everything the old booking Cloud Function validated.
+    //
+    // EXPRESSION BUDGET: a request may evaluate at most 1,000 expressions
+    // (all its writes together). A 4-slot booking (1 booking + 4 slot docs)
+    // is close to that limit, so each document is fetched and each key list
+    // built once here (let), not once per helper call. firestore-tests/
+    // "a valid 4-slot booking succeeds" guards this; run it after editing.
     function validNewBooking(bookingId) {
       let b = request.resource.data;
-      return isCustomer()
-        && b.keys().hasOnly(bookingAllowedKeys())
-        && b.keys().hasAll(bookingKeys())
+      let u = me();
+      let court = get(courtPath(b.stadiumId, b.courtId)).data;
+      let required = bookingKeys();
+      return u.get('isActive', false) == true
+        && u.get('role', '') == 'customer'
+        && b.keys().hasAll(required)
+        // Optional keys: freeCancelHours only.
+        && b.keys().removeAll(required).hasOnly(['freeCancelHours'])
         && b.status == 'pending'
         && b.paymentStatus == 'unpaid'
         && b.currency == 'MMK'
         && b.createdAt == request.time
         && b.updatedAt == request.time
-        && newBookingCustomerOk(b, me())
+        && newBookingCustomerOk(b, u)
         && newBookingTimesOk(b)
-        && newBookingVenueOk(b,
-             get(courtPath(b.stadiumId, b.courtId)).data,
+        && newBookingVenueOk(b, court,
              get(stadiumPath(b.stadiumId)).data,
              get(shopPath(b.shopId)).data)
-        && newBookingPriceOk(b, get(courtPath(b.stadiumId, b.courtId)).data)
+        && newBookingPriceOk(b, court)
         // Not blacklisted by this shop (b.shopId is checked against the
         // court/stadium/shop above).
         && !exists(blacklistPath(b.shopId, request.auth.uid))

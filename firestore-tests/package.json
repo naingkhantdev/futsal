@@ -1,0 +1,16 @@
+{
+  "name": "futsal-firestore-rules-tests",
+  "private": true,
+  "description": "Security Rules tests for firestore.rules, run against the Firestore emulator.",
+  "scripts": {
+    "test": "firebase emulators:exec --only firestore --project demo-futsal \"npm run test:run\"",
+    "test:run": "node --test --test-concurrency=1 \"tests/*.test.js\""
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^4.0.1",
+    "firebase": "^11.10.0"
+  }
+}
